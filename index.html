@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>사진 갤러리</title>
+  <title>하늘 기도제목</title>
   <style>
     body {
       font-family: sans-serif;
@@ -23,39 +23,59 @@
       margin-top: 30px;
     }
 
-    .gallery a {
-      text-decoration: none;
-    }
-
     .gallery img {
       width: 200px;
       height: auto;
       border-radius: 10px;
       border: 2px solid #ccc;
-      transition: transform 0.2s ease;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      z-index: 1;
     }
 
-    .gallery img:hover {
-      transform: scale(1.05);
-      border-color: #007bff;
+    .gallery img.enlarged {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: auto;
+      height: 90%;
+      max-width: 90%;
+      transform: translate(-50%, -50%);
+      border: 3px solid #007bff;
+      border-radius: 12px;
+      background-color: white;
+      z-index: 9999;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
     }
   </style>
 </head>
 <body>
 
-  <h1>📷 사진 갤러리</h1>
+  <h1>하늘 기도제목</h1>
 
   <div class="gallery">
-    <a href="https://example.com/page1" target="_blank">
-      <img src="main_bn02_250620.png" alt="사진1">
-    </a>
-    <a href="https://example.com/page2" target="_blank">
-      <img src="main_bn02_250620.png" alt="사진2">
-    </a>
-    <a href="https://example.com/page3" target="_blank">
-      <img src="main_bn02_250620.png" alt="사진3">
-    </a>
+    <img src="main_bn02_250620.png" alt="사진1">
+    <img src="main_bn02_250620.png" alt="사진2">
+    <img src="main_bn02_250620.png" alt="사진3">
   </div>
+
+  <script>
+    const images = document.querySelectorAll('.gallery img');
+
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        if (img.classList.contains('enlarged')) {
+          img.classList.remove('enlarged');
+        } else {
+          // 다른 이미지의 확대 상태 제거
+          document.querySelectorAll('.gallery img.enlarged').forEach(el => {
+            el.classList.remove('enlarged');
+          });
+          img.classList.add('enlarged');
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>
