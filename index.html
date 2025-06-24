@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>사진 갤러리</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 30px;
+    }
+
+    .gallery a {
+      text-decoration: none;
+    }
+
+    .gallery img {
+      width: 200px;
+      height: auto;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      transition: transform 0.2s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+      border-color: #007bff;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📷 사진 갤러리</h1>
+
+  <div class="gallery">
+    <a href="https://example.com/page1" target="_blank">
+      <img src="image1.jpg" alt="사진1">
+    </a>
+    <a href="https://example.com/page2" target="_blank">
+      <img src="image2.jpg" alt="사진2">
+    </a>
+    <a href="https://example.com/page3" target="_blank">
+      <img src="image3.jpg" alt="사진3">
+    </a>
+  </div>
+
+</body>
+</html>
