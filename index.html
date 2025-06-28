@@ -282,12 +282,62 @@
       }
       
       .gallery {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
       }
       
       .container {
         padding: 20px 15px;
+      }
+      
+      .image-card img {
+        height: 200px;
+      }
+      
+      .image-overlay {
+        padding: 15px;
+      }
+      
+      .image-title {
+        font-size: 1rem;
+      }
+      
+      .image-description {
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .subtitle {
+        font-size: 1rem;
+      }
+      
+      .gallery {
+        gap: 12px;
+      }
+      
+      .container {
+        padding: 20px 10px;
+      }
+      
+      .image-card img {
+        height: 180px;
+      }
+      
+      .image-overlay {
+        padding: 12px;
+      }
+      
+      .image-title {
+        font-size: 0.9rem;
+      }
+      
+      .image-description {
+        font-size: 0.75rem;
       }
     }
   </style>
