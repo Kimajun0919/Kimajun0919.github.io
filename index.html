@@ -135,6 +135,7 @@
     <div id="controls">
         <button class="btn active" onclick="showGallery(1)">갤러리 1</button>
         <button class="btn" onclick="showGallery(2)">갤러리 2</button>
+        <button class="btn" onclick="toggleDebug()">디버그</button>
         <button class="btn" onclick="showInfo()">정보</button>
     </div>
 
@@ -149,10 +150,12 @@
     <a-scene 
         vr-mode-ui="enabled: false;" 
         embedded 
-        arjs="sourceType: webcam; debugUIEnabled: true; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+        arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: true;"
         gesture-detector
         id="scene"
-        inspector="url: https://cdn.aframe.io/releases/1.5.0/aframe-inspector.min.js">
+        background="color: transparent"
+        renderer="antialias: true; alpha: true"
+        camera-controls>
         
         <!-- 갤러리 1: 아시아 지역 (8개) -->
         <a-entity id="gallery1" visible="true">
@@ -459,8 +462,7 @@
         <a-light type="ambient" intensity="0.8" color="#ffffff"></a-light>
         <a-light type="directional" position="2 4 5" intensity="0.5" color="#ffffff"></a-light>
         
-        <!-- 배경 -->
-        <a-sky color="#000011"></a-sky>
+        <!-- 배경 제거 (카메라 피드가 배경이 됨) -->
         
         <!-- 바닥 -->
         <a-plane 
@@ -469,16 +471,11 @@
             width="20" 
             height="20" 
             color="#111111" 
-            opacity="0.3">
+            opacity="0.1">
         </a-plane>
 
         <!-- 카메라 -->
-        <a-camera 
-            gps-camera 
-            rotation-reader
-            wasd-controls="enabled: false"
-            look-controls="enabled: true">
-        </a-camera>
+        <a-entity camera look-controls wasd-controls="false"></a-entity>
     </a-scene>
 
     <script>
