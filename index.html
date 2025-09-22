@@ -75,6 +75,33 @@
             max-width: 400px;
         }
         
+        #errorMessage {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 3000;
+            display: none;
+        }
+        
+        #cameraStatus {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 100, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            z-index: 1500;
+            display: none;
+        }
         #closeInfo {
             position: absolute;
             top: 10px;
@@ -88,6 +115,18 @@
     </style>
 </head>
 <body>
+    <div id="errorMessage">
+        <h3>⚠️ 카메라 오류</h3>
+        <p>카메라에 접근할 수 없습니다.</p>
+        <p>• HTTPS 사이트에서 접속하세요<br>
+        • 카메라 권한을 허용하세요<br>
+        • 브라우저를 새로고침 해보세요</p>
+        <button onclick="retryCamera()" style="margin-top: 10px; padding: 8px 16px; background: white; color: black; border: none; border-radius: 5px;">다시 시도</button>
+    </div>
+    
+    <div id="cameraStatus">
+        📹 카메라 연결 중...
+    </div>
     <div id="ui">
         <h2>🎨 세계 여행 AR 전시회</h2>
         <p>카메라를 켜고 주변을 둘러보세요. 16개국의 아름다운 풍경을 만나보실 수 있습니다.</p>
@@ -110,9 +149,10 @@
     <a-scene 
         vr-mode-ui="enabled: false;" 
         embedded 
-        arjs="sourceType: webcam; debugUIEnabled: false;"
+        arjs="sourceType: webcam; debugUIEnabled: true; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
         gesture-detector
-        id="scene">
+        id="scene"
+        inspector="url: https://cdn.aframe.io/releases/1.5.0/aframe-inspector.min.js">
         
         <!-- 갤러리 1: 아시아 지역 (8개) -->
         <a-entity id="gallery1" visible="true">
@@ -442,7 +482,50 @@
     </a-scene>
 
     <script>
-        // 갤러리 전환
+        // 카메라 상태 확인 및 에러 처리
+        function checkCameraStatus() {
+            const cameraStatus = document.getElementById('cameraStatus');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            cameraStatus.style.display = 'block';
+            
+            // 5초 후에도 카메라가 안되면 에러 표시
+            setTimeout(() => {
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    showCameraError('이 브라우저는 카메라를 지원하지 않습니다.');
+                    return;
+                }
+                
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(() => {
+                        cameraStatus.innerHTML = '✅ 카메라 연결됨!';
+                        setTimeout(() => {
+                            cameraStatus.style.display = 'none';
+                        }, 2000);
+                    })
+                    .catch((err) => {
+                        console.error('카메라 오류:', err);
+                        showCameraError('카메라 권한을 허용해주세요.');
+                    });
+            }, 2000);
+        }
+        
+        function showCameraError(message) {
+            const cameraStatus = document.getElementById('cameraStatus');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            cameraStatus.style.display = 'none';
+            errorMessage.style.display = 'block';
+            
+            if (message) {
+                errorMessage.querySelector('p').innerHTML = message;
+            }
+        }
+        
+        function retryCamera() {
+            document.getElementById('errorMessage').style.display = 'none';
+            window.location.reload();
+        }
         function showGallery(num) {
             const gallery1 = document.getElementById('gallery1');
             const gallery2 = document.getElementById('gallery2');
@@ -501,6 +584,9 @@
         // 페이지 로드 후 초기화
         window.addEventListener('load', function() {
             console.log('AR 전시회가 로드되었습니다!');
+            
+            // 카메라 상태 확인
+            checkCameraStatus();
             
             // 3초 후 안내 메시지 업데이트
             setTimeout(() => {
