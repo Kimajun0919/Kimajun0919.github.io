@@ -5,6 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>사원증 등록 및 조회</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Adobe Fonts -->
+  <script>
+    (function(d) {
+      var config = {
+        kitId: 'wcb3eag',
+        scriptTimeout: 3000,
+        async: true
+      },
+      h=d.documentElement,t=setTimeout(function(){
+        h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";
+      },config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;
+      h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';
+      tk.async=true;tk.onload=tk.onreadystatechange=function(){
+        a=this.readyState;
+        if(f||a&&a!="complete"&&a!="loaded")return;
+        f=true;clearTimeout(t);
+        try{Typekit.load(config)}catch(e){}
+      };
+      s.parentNode.insertBefore(tk,s)
+    })(document);
+  </script>
   <style>
     * {
       margin: 0;
@@ -29,27 +50,16 @@
     /* 메인 페이지 */
     .main-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      background-image: url('https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=1920');
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       overflow: hidden;
-    }
-
-    .main-container::before {
-      content: '';
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-      background-size: 50px 50px;
-      animation: float 20s linear infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(50px, 50px); }
     }
 
     .main-content {
@@ -60,20 +70,24 @@
     }
 
     .main-title {
-      font-size: clamp(36px, 8vw, 64px);
-      color: #fff;
-      font-weight: 300;
+      font-family: "flirt-script-regular", sans-serif;
+      font-size: clamp(36px, 8vw, 72px);
+      color: rgba(12, 68, 59, 1);
+      font-weight: 400;
+      font-style: normal;
       margin-bottom: 20px;
-      letter-spacing: 8px;
-      text-shadow: 0 0 30px rgba(255,255,255,0.3);
+      letter-spacing: 2px;
+      line-height: 1.2;
+      text-shadow: 0 0 30px rgba(255,255,255,0.5);
     }
 
     .main-subtitle {
-      font-size: clamp(18px, 3vw, 24px);
-      color: rgba(255,255,255,0.9);
+      font-family: "grandiflora-one", "Noto Serif KR", serif;
+      font-size: clamp(30px, 3vw, 42px);
+      color: rgba(12, 68, 59, 1);
       font-weight: 300;
-      letter-spacing: 4px;
-      margin-top: 20px;
+      letter-spacing: clamp(2px, 1vw, 8px);
+      margin-top: 30px;
       margin-bottom: 60px;
     }
 
@@ -87,10 +101,10 @@
     }
 
     .menu-button {
-      padding: 20px 50px;
-      background: rgba(255,255,255,0.15);
-      border: 2px solid rgba(255,255,255,0.3);
-      color: #fff;
+      padding: 18px 50px;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(12, 68, 59, 0.4);
+      color: rgba(12, 68, 59, 1);
       font-size: clamp(16px, 2vw, 18px);
       border-radius: 50px;
       cursor: pointer;
@@ -103,16 +117,21 @@
     }
 
     .menu-button:hover {
-      background: rgba(255,255,255,0.25);
-      border-color: rgba(255,255,255,0.5);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      background: rgba(12, 68, 59, 0.12);
+      border-color: rgba(12, 68, 59, 0.6);
+      color: rgba(12, 68, 59, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(12, 68, 59, 0.18);
     }
 
     /* 등록 페이지 */
     .register-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      background-image: url('./back.jpg');
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -253,7 +272,11 @@
     /* 조회 페이지 */
     .search-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      background-image: url('./back.jpg');
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -275,7 +298,11 @@
     /* 결과 페이지 */
     .result-container {
       min-height: 100vh;
-      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      background-image: url('./back.jpg');
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -291,7 +318,7 @@
       padding: clamp(40px, 5vw, 60px);
       max-width: 500px;
       width: 90%;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
       position: relative;
       z-index: 10;
       margin-bottom: 30px;
@@ -302,8 +329,8 @@
     .result-container.saving-mode {
       width: 1080px;
       height: 1920px;
-      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
-      padding-top: 300px;
+      background: url('./back.jpg') no-repeat center/cover;
+      padding-top: 220px;
     }
 
     .result-container.saving-mode .result-card {
@@ -313,6 +340,10 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      background: #fff;
+      border-radius: 40px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+      margin: 0 auto 200px;
     }
 
     .employee-photo {
@@ -384,9 +415,9 @@
     .result-button {
       flex: 1;
       padding: clamp(14px, 2vw, 18px) clamp(20px, 3vw, 30px);
-      background: rgba(255,255,255,0.2);
-      border: 2px solid rgba(255,255,255,0.4);
-      color: #fff;
+      background: rgba(255,255,255,0.3);
+      border: 2px solid rgba(12, 68, 59, 0.4);
+      color: rgba(12, 68, 59, 1);
       font-size: clamp(14px, 2vw, 16px);
       border-radius: 50px;
       cursor: pointer;
@@ -398,17 +429,53 @@
     }
 
     .result-button:hover {
-      background: rgba(255,255,255,0.3);
-      border-color: rgba(255,255,255,0.6);
+      background: rgba(12, 68, 59, 0.12);
+      border-color: rgba(12, 68, 59, 0.6);
+      color: rgba(12, 68, 59, 1);
       transform: translateY(-2px);
     }
 
-    @media (max-width: 640px) {
-      .menu-buttons {
-        flex-direction: column;
+    /* 반응형 */
+    @media (max-width: 768px) {
+      body {
+        background-attachment: scroll;
+      }
+      
+      .main-container,
+      .register-container,
+      .search-container,
+      .result-container {
+        background-attachment: scroll;
+      }
+      
+      .main-title {
+        margin-bottom: 15px;
+      }
+      
+      .main-subtitle {
+        margin-top: 20px;
+      }
+      
+      .menu-button {
+        margin-top: 40px;
+        padding: 16px 40px;
+      }
+      
+      .result-card {
+        padding: 35px 25px;
+        border-radius: 20px;
+      }
+      
+      .button-container {
         gap: 15px;
       }
+    }
 
+    @media (max-width: 640px) {
+      .result-container {
+        padding: 30px 15px;
+      }
+      
       .button-container {
         flex-direction: column;
         gap: 12px;
@@ -416,6 +483,38 @@
 
       .result-button {
         width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .main-content {
+        padding: 20px 15px;
+      }
+      
+      .menu-button {
+        margin-top: 30px;
+        padding: 14px 30px;
+      }
+      
+      .result-container {
+        padding: 20px 10px;
+      }
+      
+      .result-card {
+        padding: 30px 20px;
+        border-radius: 15px;
+        width: 95%;
+      }
+      
+      .button-container {
+        width: 95%;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .result-card {
+        padding: 25px 15px;
       }
     }
   </style>
