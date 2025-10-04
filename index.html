@@ -4,77 +4,509 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>사원증 등록 및 조회</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: #f5f7f7;
+    * {
       margin: 0;
-      padding: 40px;
-      text-align: center;
+      padding: 0;
+      box-sizing: border-box;
     }
-    h1 { color: #0c443b; }
-    .container {
+
+    body {
+      font-family: 'Noto Serif KR', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    /* 메인 페이지 */
+    .main-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main-container::before {
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .main-content {
+      text-align: center;
+      z-index: 10;
+      position: relative;
+      padding: 40px 20px;
+    }
+
+    .main-title {
+      font-size: clamp(36px, 8vw, 64px);
+      color: #fff;
+      font-weight: 300;
+      margin-bottom: 20px;
+      letter-spacing: 8px;
+      text-shadow: 0 0 30px rgba(255,255,255,0.3);
+    }
+
+    .main-subtitle {
+      font-size: clamp(18px, 3vw, 24px);
+      color: rgba(255,255,255,0.9);
+      font-weight: 300;
+      letter-spacing: 4px;
+      margin-top: 20px;
+      margin-bottom: 60px;
+    }
+
+    .menu-buttons {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      flex-wrap: wrap;
       max-width: 600px;
       margin: 0 auto;
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      padding: 30px;
     }
-    input, button {
+
+    .menu-button {
+      padding: 20px 50px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: #fff;
+      font-size: clamp(16px, 2vw, 18px);
+      border-radius: 50px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      font-family: 'Noto Serif KR', serif;
+      font-weight: 300;
+      letter-spacing: 2px;
+      min-width: 200px;
+    }
+
+    .menu-button:hover {
+      background: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    /* 등록 페이지 */
+    .register-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    .register-card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: clamp(40px, 5vw, 60px);
+      max-width: 500px;
       width: 90%;
-      margin: 10px 0;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 15px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
     }
-    button {
+
+    .register-title {
+      font-size: clamp(24px, 4vw, 32px);
+      color: #0c443b;
+      text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: 4px;
+      font-weight: 400;
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      font-size: 16px;
+      font-family: 'Noto Serif KR', serif;
+      transition: all 0.3s;
+      background: #fff;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #0c443b;
+      box-shadow: 0 0 0 3px rgba(12,68,59,0.1);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .file-input-label {
+      display: block;
+      padding: 15px 20px;
+      background: #f5f7f7;
+      border: 2px dashed #0c443b;
+      border-radius: 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: #0c443b;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .file-input-label:hover {
+      background: rgba(12,68,59,0.05);
+      border-color: #1a5f52;
+    }
+
+    input[type="file"] {
+      position: absolute;
+      left: -9999px;
+    }
+
+    .preview-image {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 15px;
+      margin: 15px auto;
+      display: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .action-button {
+      width: 100%;
+      padding: 18px;
       background: #0c443b;
       color: white;
       border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-family: 'Noto Serif KR', serif;
       cursor: pointer;
       transition: all 0.3s;
+      letter-spacing: 2px;
+      font-weight: 300;
+      margin-top: 10px;
     }
-    button:hover { background: #0f5a4f; }
-    img {
-      max-width: 150px;
-      border-radius: 10px;
+
+    .action-button:hover {
+      background: #1a5f52;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(12,68,59,0.3);
+    }
+
+    .action-button.secondary {
+      background: rgba(12,68,59,0.1);
+      color: #0c443b;
+      border: 2px solid #0c443b;
+    }
+
+    .action-button.secondary:hover {
+      background: rgba(12,68,59,0.15);
+    }
+
+    .status-message {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #666;
+      min-height: 20px;
+    }
+
+    /* 조회 페이지 */
+    .search-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .search-card {
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: clamp(40px, 5vw, 60px);
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+    }
+
+    /* 결과 페이지 */
+    .result-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    .result-card {
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: clamp(40px, 5vw, 60px);
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      position: relative;
+      z-index: 10;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    /* 저장 모드 */
+    .result-container.saving-mode {
+      width: 1080px;
+      height: 1920px;
+      background: linear-gradient(135deg, #0c443b 0%, #1a5f52 50%, #0c443b 100%);
+      padding-top: 300px;
+    }
+
+    .result-container.saving-mode .result-card {
+      width: 720px;
+      min-height: 1100px;
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .employee-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border: 5px solid #fff;
+    }
+
+    .result-container.saving-mode .employee-photo {
+      width: 300px;
+      height: 300px;
+      margin-bottom: 60px;
+    }
+
+    .employee-name {
+      font-size: clamp(28px, 4vw, 36px);
+      color: #0c443b;
+      font-weight: 400;
+      letter-spacing: 4px;
+      margin-bottom: 15px;
+    }
+
+    .result-container.saving-mode .employee-name {
+      font-size: 48px;
+      margin-bottom: 25px;
+    }
+
+    .employee-team {
+      font-size: clamp(18px, 3vw, 22px);
+      color: #666;
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+    }
+
+    .result-container.saving-mode .employee-team {
+      font-size: 32px;
+      margin-bottom: 80px;
+    }
+
+    .employee-id {
+      font-size: 14px;
+      color: #999;
+      letter-spacing: 1px;
       margin-top: 20px;
     }
-    .card {
-      margin-top: 30px;
-      border: 1px solid #ccc;
-      border-radius: 15px;
-      padding: 20px;
-      background: #fafafa;
+
+    .result-container.saving-mode .employee-id {
+      font-size: 20px;
+      margin-top: auto;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 20px;
+      max-width: 500px;
+      width: 90%;
+      z-index: 10;
+    }
+
+    .result-container.saving-mode .button-container {
+      display: none !important;
+    }
+
+    .result-button {
+      flex: 1;
+      padding: clamp(14px, 2vw, 18px) clamp(20px, 3vw, 30px);
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.4);
+      color: #fff;
+      font-size: clamp(14px, 2vw, 16px);
+      border-radius: 50px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      font-family: 'Noto Serif KR', serif;
+      font-weight: 300;
+      letter-spacing: 1px;
+    }
+
+    .result-button:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: rgba(255,255,255,0.6);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 640px) {
+      .menu-buttons {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .button-container {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .result-button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>사원증 등록</h1>
-  <div class="container">
-    <input type="text" id="name" placeholder="이름">
-    <input type="text" id="team" placeholder="팀명">
-    <input type="file" id="photo" accept="image/*">
-    <button id="uploadBtn">등록하기</button>
-    <p id="status"></p>
+  <!-- 메인 페이지 -->
+  <div id="mainPage" class="page active">
+    <div class="main-container">
+      <div class="main-content">
+        <h1 class="main-title">사원증 시스템</h1>
+        <p class="main-subtitle">Employee ID Card System</p>
+        <div class="menu-buttons">
+          <button class="menu-button" onclick="showPage('registerPage')">사원증 등록</button>
+          <button class="menu-button" onclick="showPage('searchPage')">사원증 조회</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <h1>사원증 조회</h1>
-  <div class="container">
-    <input type="text" id="searchName" placeholder="이름으로 조회">
-    <input type="text" id="searchTeam" placeholder="팀명으로 조회">
-    <button id="searchBtn">조회하기</button>
-    <div id="result"></div>
+  <!-- 등록 페이지 -->
+  <div id="registerPage" class="page">
+    <div class="register-container">
+      <div class="register-card">
+        <h2 class="register-title">사원증 등록</h2>
+        <div class="input-group">
+          <label class="input-label">이름</label>
+          <input type="text" id="name" placeholder="이름을 입력하세요">
+        </div>
+        <div class="input-group">
+          <label class="input-label">팀명</label>
+          <input type="text" id="team" placeholder="팀명을 입력하세요">
+        </div>
+        <div class="input-group">
+          <label class="input-label">사진</label>
+          <div class="file-input-wrapper">
+            <label for="photo" class="file-input-label" id="fileLabel">
+              📷 사진을 선택하세요
+            </label>
+            <input type="file" id="photo" accept="image/*" onchange="previewImage(this)">
+          </div>
+          <img id="preview" class="preview-image" alt="미리보기">
+        </div>
+        <button class="action-button" onclick="registerEmployee()">등록하기</button>
+        <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
+        <p id="status" class="status-message"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 조회 페이지 -->
+  <div id="searchPage" class="page">
+    <div class="search-container">
+      <div class="search-card">
+        <h2 class="register-title">사원증 조회</h2>
+        <div class="input-group">
+          <label class="input-label">이름</label>
+          <input type="text" id="searchName" placeholder="이름을 입력하세요">
+        </div>
+        <div class="input-group">
+          <label class="input-label">팀명</label>
+          <input type="text" id="searchTeam" placeholder="팀명을 입력하세요">
+        </div>
+        <button class="action-button" onclick="searchEmployee()">조회하기</button>
+        <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
+        <p id="searchStatus" class="status-message"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 결과 페이지 -->
+  <div id="resultPage" class="page">
+    <div class="result-container" id="resultContainer">
+      <div class="result-card" id="resultCard">
+        <img id="resultPhoto" class="employee-photo" src="" alt="사원 사진">
+        <div class="employee-name" id="resultName"></div>
+        <div class="employee-team" id="resultTeam"></div>
+        <div class="employee-id" id="resultId"></div>
+      </div>
+      <div class="button-container">
+        <button class="result-button" onclick="saveAsImage()">이미지 저장</button>
+        <button class="result-button" onclick="showPage('searchPage')">다시 조회</button>
+        <button class="result-button" onclick="showPage('mainPage')">메인으로</button>
+      </div>
+    </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
     import { getDatabase, ref, push, get, child } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-    // ✅ Firebase 설정
     const firebaseConfig = {
       apiKey: "AIzaSyCXaqnaoQYWZGywi_PPRohGaAJj_dBVDK0",
       authDomain: "haneulcard.firebaseapp.com",
@@ -89,16 +521,53 @@
 
     const scriptURL = "https://script.google.com/macros/s/AKfycbw6ONYzMtPA5n709KSYL83Ck24R560gj3nuEORIxtea9MW2GdCNdpCVJO-6z4tHtItl/exec";
 
-    // ✅ 등록 버튼 이벤트
-    document.getElementById("uploadBtn").onclick = async () => {
+    window.showPage = function(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      
+      if (pageId === 'registerPage') {
+        document.getElementById('status').textContent = '';
+        document.getElementById('name').value = '';
+        document.getElementById('team').value = '';
+        document.getElementById('photo').value = '';
+        document.getElementById('preview').style.display = 'none';
+        document.getElementById('fileLabel').textContent = '📷 사진을 선택하세요';
+      }
+      
+      if (pageId === 'searchPage') {
+        document.getElementById('searchStatus').textContent = '';
+        document.getElementById('searchName').value = '';
+        document.getElementById('searchTeam').value = '';
+      }
+    };
+
+    window.previewImage = function(input) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('preview');
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          document.getElementById('fileLabel').textContent = '✅ ' + input.files[0].name;
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    };
+
+    window.registerEmployee = async function() {
       const name = document.getElementById("name").value.trim();
       const team = document.getElementById("team").value.trim();
       const file = document.getElementById("photo").files[0];
       const status = document.getElementById("status");
 
-      if (!name || !team || !file) return alert("모든 항목을 입력해주세요!");
+      if (!name || !team || !file) {
+        status.textContent = "❌ 모든 항목을 입력해주세요!";
+        status.style.color = "#e74c3c";
+        return;
+      }
 
       status.textContent = "📤 업로드 중...";
+      status.style.color = "#3498db";
 
       const reader = new FileReader();
       reader.onloadend = async () => {
@@ -115,33 +584,40 @@
         const imageURL = await res.text();
         if (imageURL.startsWith("ERROR")) {
           status.textContent = "❌ 업로드 실패: " + imageURL;
+          status.style.color = "#e74c3c";
           return;
         }
 
-        await push(ref(db, "employees"), {
+        const newRef = await push(ref(db, "employees"), {
           name,
           team,
           photoURL: imageURL,
           createdAt: new Date().toISOString()
         });
 
-        status.innerHTML = `✅ 등록 완료!<br><a href="${imageURL}" target="_blank">이미지 보기</a>`;
-        document.getElementById("name").value = "";
-        document.getElementById("team").value = "";
-        document.getElementById("photo").value = "";
+        status.innerHTML = `✅ 등록 완료!`;
+        status.style.color = "#27ae60";
+        
+        setTimeout(() => {
+          showPage('mainPage');
+        }, 1500);
       };
       reader.readAsDataURL(file);
     };
 
-    // ✅ 조회 기능
-    document.getElementById("searchBtn").onclick = async () => {
+    window.searchEmployee = async function() {
       const name = document.getElementById("searchName").value.trim();
       const team = document.getElementById("searchTeam").value.trim();
-      const resultDiv = document.getElementById("result");
+      const searchStatus = document.getElementById("searchStatus");
 
-      if (!name || !team) return alert("이름과 팀을 모두 입력하세요.");
+      if (!name || !team) {
+        searchStatus.textContent = "❌ 이름과 팀을 모두 입력하세요.";
+        searchStatus.style.color = "#e74c3c";
+        return;
+      }
 
-      resultDiv.innerHTML = "🔍 조회 중...";
+      searchStatus.textContent = "🔍 조회 중...";
+      searchStatus.style.color = "#3498db";
 
       const snapshot = await get(child(ref(db), "employees"));
       if (snapshot.exists()) {
@@ -151,20 +627,50 @@
         for (const key in employees) {
           const emp = employees[key];
           if (emp.name === name && emp.team === team) {
-            resultDiv.innerHTML = `
-              <div class="card">
-                <img src="${emp.photoURL}" alt="사원증 사진">
-                <p><b>${emp.name}</b> / ${emp.team}</p>
-              </div>`;
+            document.getElementById('resultPhoto').src = emp.photoURL;
+            document.getElementById('resultName').textContent = emp.name;
+            document.getElementById('resultTeam').textContent = emp.team;
+            document.getElementById('resultId').textContent = 'ID: ' + key.substring(0, 8).toUpperCase();
+            showPage('resultPage');
             found = true;
             break;
           }
         }
 
-        if (!found) resultDiv.textContent = "❌ 해당 직원 정보를 찾을 수 없습니다.";
+        if (!found) {
+          searchStatus.textContent = "❌ 해당 직원 정보를 찾을 수 없습니다.";
+          searchStatus.style.color = "#e74c3c";
+        }
       } else {
-        resultDiv.textContent = "등록된 직원이 없습니다.";
+        searchStatus.textContent = "등록된 직원이 없습니다.";
+        searchStatus.style.color = "#999";
       }
+    };
+
+    window.saveAsImage = async function() {
+      const container = document.getElementById('resultContainer');
+      container.classList.add('saving-mode');
+
+      const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
+      
+      const canvas = await html2canvas.default(container, {
+        width: 1080,
+        height: 1920,
+        scale: 2,
+        backgroundColor: null,
+        logging: false
+      });
+
+      container.classList.remove('saving-mode');
+
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `사원증_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
     };
   </script>
 </body>
