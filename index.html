@@ -1,322 +1,281 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>사원증 관리 시스템</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>사원증 관리 시스템</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Noto Serif KR', serif;
+      background: linear-gradient(135deg, rgba(93,201,190,0.15) 0%, rgba(12,68,59,0.1) 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .page { display: none; }
+    .page.active { display: block; }
 
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Noto Serif KR', serif;
-            background: linear-gradient(135deg, rgba(93, 201, 190, 0.1) 0%, rgba(12, 68, 59, 0.1) 100%);
-            min-height: 100vh; overflow-x: hidden;
-        }
-        .page { display: none; }
-        .page.active { display: block; }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      padding: 40px;
+      width: 90%;
+      max-width: 500px;
+      position: relative;
+    }
 
-        .main-container, .register-container, .view-container {
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
-            padding: 40px 20px;
-        }
+    /* 버튼 공통 */
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(12,68,59,0.9);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+    button:hover { background: rgba(12,68,59,1); }
 
-        .main-title {
-            font-size: clamp(36px, 8vw, 72px);
-            color: rgba(12, 68, 59, 1);
-            font-weight: 400;
-            margin-bottom: 10px;
-        }
-        .main-subtitle {
-            font-size: clamp(24px, 3vw, 36px);
-            color: rgba(12, 68, 59, 1);
-            font-weight: 300;
-            letter-spacing: 4px;
-            margin-bottom: 50px;
-        }
+    /* 텍스트 입력 */
+    label { display:block; margin:10px 0 5px; font-weight:500; color:#0c443b; }
+    input {
+      width:100%; padding:12px; border:2px solid rgba(12,68,59,0.2);
+      border-radius:10px; font-size:15px;
+    }
+    input:focus { outline:none; border-color:#0c443b; }
 
-        .button-group {
-            display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
-        }
-        .start-button {
-            padding: 18px 50px;
-            border-radius: 50px;
-            border: 2px solid rgba(12, 68, 59, 0.4);
-            background: rgba(255,255,255,0.2);
-            cursor: pointer;
-            font-size: 18px;
-            color: rgba(12, 68, 59, 1);
-            transition: 0.3s;
-        }
-        .start-button:hover {
-            background: rgba(12, 68, 59, 0.12);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(12,68,59,0.2);
-        }
+    /* 메시지 */
+    .message { text-align:center; margin-top:10px; padding:10px; border-radius:10px; }
+    .success { background:rgba(93,201,190,0.2); color:#0c443b; }
+    .error { background:rgba(220,53,69,0.1); color:#721c24; }
 
-        .form-card, .search-card, .result-card {
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-        }
-        .form-title, .search-title {
-            text-align: center;
-            font-size: clamp(24px, 3vw, 32px);
-            color: rgba(12, 68, 59, 1);
-            margin-bottom: 10px;
-        }
-        .form-subtitle, .search-subtitle {
-            text-align: center;
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 30px;
-        }
+    /* 사원증 카드 디자인 */
+    .idcard {
+      background: linear-gradient(180deg, rgba(93,201,190,0.3) 0%, rgba(12,68,59,0.15) 100%);
+      border-radius: 20px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      max-width: 350px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .idcard::before {
+      content: "";
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 180px;
+      height: 180px;
+      background: rgba(12,68,59,0.1);
+      border-radius: 50%;
+    }
+    .idcard-logo {
+      width: 100px;
+      margin: 10px auto 20px;
+    }
+    .idcard-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(12,68,59,0.2);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    .idcard-name {
+      font-size: 22px;
+      font-weight: 500;
+      color: #0c443b;
+      margin-top: 15px;
+    }
+    .idcard-team {
+      font-size: 16px;
+      color: #333;
+      margin-top: 5px;
+    }
+    .idcard-line {
+      width: 60%;
+      height: 1px;
+      background: rgba(12,68,59,0.3);
+      margin: 20px auto;
+    }
+    .idcard-footer {
+      font-size: 13px;
+      color: #777;
+      letter-spacing: 1px;
+    }
 
-        label { display: block; margin-bottom: 8px; font-weight: 500; color: rgba(12, 68, 59, 1); }
-        input[type="text"], input[type="file"] {
-            width: 100%;
-            padding: 14px;
-            border-radius: 15px;
-            border: 2px solid rgba(12, 68, 59, 0.2);
-            font-size: 16px;
-            font-family: 'Noto Serif KR', serif;
-            margin-bottom: 20px;
-        }
-        input:focus { outline: none; border-color: rgba(12,68,59,0.5); background: #fff; }
-
-        .submit-btn {
-            width: 100%;
-            padding: 16px;
-            border-radius: 50px;
-            border: 2px solid rgba(12, 68, 59, 0.4);
-            background: rgba(255,255,255,0.3);
-            cursor: pointer;
-            font-size: 18px;
-            color: rgba(12,68,59,1);
-            transition: 0.3s;
-        }
-        .submit-btn:hover {
-            background: rgba(12, 68, 59, 0.12);
-            transform: translateY(-2px);
-        }
-
-        .back-button {
-            position: fixed;
-            top: 25px; left: 25px;
-            padding: 10px 25px;
-            border-radius: 50px;
-            border: 2px solid rgba(12,68,59,0.4);
-            background: rgba(255,255,255,0.4);
-            cursor: pointer;
-            color: rgba(12,68,59,1);
-            font-size: 14px;
-            z-index: 100;
-        }
-
-        .employee-photo {
-            width: 150px; height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 20px auto;
-            display: block;
-            border: 4px solid rgba(12,68,59,0.2);
-        }
-        .info-item {
-            background: rgba(12, 68, 59, 0.05);
-            padding: 15px;
-            border-radius: 15px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .message {
-            text-align: center;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 15px;
-            font-weight: 300;
-        }
-        .success {
-            background: rgba(93, 201, 190, 0.2);
-            color: rgba(12, 68, 59, 1);
-            border: 1px solid rgba(93, 201, 190, 0.4);
-        }
-        .error {
-            background: rgba(220,53,69,0.1);
-            color: #721c24;
-            border: 1px solid rgba(220,53,69,0.3);
-        }
-    </style>
+    .back-button {
+      position:absolute; top:20px; left:20px;
+      background:rgba(255,255,255,0.7);
+      color:#0c443b;
+      padding:8px 20px;
+      border-radius:30px;
+      font-size:14px;
+      border:1px solid rgba(12,68,59,0.3);
+      cursor:pointer;
+    }
+  </style>
 </head>
 
 <body>
-    <!-- 메인 -->
-    <div id="mainPage" class="page active">
-        <div class="main-container">
-            <div class="main-content" style="text-align:center;">
-                <h1 class="main-title">Employee ID System</h1>
-                <p class="main-subtitle">사원증 관리 시스템</p>
-                <div class="button-group">
-                    <button class="start-button" onclick="showRegister()">등록하기</button>
-                    <button class="start-button" onclick="showView()">조회하기</button>
-                </div>
-            </div>
-        </div>
+  <!-- 메인 -->
+  <div id="mainPage" class="page active">
+    <div class="card" style="text-align:center;">
+      <h1>사원증 관리 시스템</h1>
+      <p style="margin:20px 0; color:#0c443b;">Employee ID Management System</p>
+      <button onclick="showRegister()">등록하기</button>
+      <button onclick="showView()">조회하기</button>
     </div>
+  </div>
 
-    <!-- 등록 -->
-    <div id="registerPage" class="page">
-        <div class="register-container">
-            <button class="back-button" onclick="showMain()">← 돌아가기</button>
-            <div class="form-card">
-                <h2 class="form-title">직원 등록</h2>
-                <p class="form-subtitle">이름, 팀, 사진을 등록합니다</p>
-                <form id="employeeForm">
-                    <label for="name">이름</label>
-                    <input type="text" id="name" required placeholder="이름 입력">
-                    <label for="team">팀</label>
-                    <input type="text" id="team" required placeholder="팀 입력">
-                    <label for="photo">사진</label>
-                    <input type="file" id="photo" accept="image/*" required>
-                    <button type="submit" class="submit-btn">등록하기</button>
-                </form>
-                <div id="message"></div>
-            </div>
-        </div>
+  <!-- 등록 -->
+  <div id="registerPage" class="page">
+    <div class="card">
+      <button class="back-button" onclick="showMain()">←</button>
+      <h2>직원 등록</h2>
+      <form id="employeeForm">
+        <label for="name">이름</label>
+        <input type="text" id="name" required>
+        <label for="team">팀</label>
+        <input type="text" id="team" required>
+        <label for="photoURL">GitHub 이미지 URL</label>
+        <input type="text" id="photoURL" required placeholder="https://raw.githubusercontent.com/...">
+        <button type="submit">등록하기</button>
+      </form>
+      <div id="message"></div>
     </div>
+  </div>
 
-    <!-- 조회 -->
-    <div id="viewPage" class="page">
-        <div class="view-container">
-            <button class="back-button" onclick="showMain()">← 돌아가기</button>
-            <div class="search-card">
-                <h2 class="search-title">사원증 조회</h2>
-                <p class="search-subtitle">이름과 팀을 입력하세요</p>
-                <form id="searchForm">
-                    <label for="searchName">이름</label>
-                    <input type="text" id="searchName" required>
-                    <label for="searchTeam">팀</label>
-                    <input type="text" id="searchTeam" required>
-                    <button type="submit" class="submit-btn">조회하기</button>
-                </form>
-                <div id="searchMessage"></div>
-            </div>
+  <!-- 조회 -->
+  <div id="viewPage" class="page">
+    <div class="card">
+      <button class="back-button" onclick="showMain()">←</button>
+      <h2>사원증 조회</h2>
+      <form id="searchForm">
+        <label for="searchName">이름</label>
+        <input type="text" id="searchName" required>
+        <label for="searchTeam">팀</label>
+        <input type="text" id="searchTeam" required>
+        <button type="submit">조회하기</button>
+      </form>
+      <div id="searchMessage"></div>
+      <div id="resultContainer" style="display:none; margin-top:30px;">
+        <div class="idcard">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Firebase_Logo.svg/512px-Firebase_Logo.svg.png" class="idcard-logo" alt="회사로고">
+          <img id="resultPhoto" class="idcard-photo" alt="Employee Photo">
+          <div class="idcard-name" id="resultName"></div>
+          <div class="idcard-team" id="resultTeam"></div>
+          <div class="idcard-line"></div>
+          <div class="idcard-footer">HANEUL CORPORATION</div>
         </div>
-        <div class="view-container">
-            <div class="result-card" id="resultContainer" style="display:none;">
-                <img id="resultPhoto" class="employee-photo" alt="">
-                <div class="info-item"><strong>이름:</strong> <span id="resultName"></span></div>
-                <div class="info-item"><strong>소속:</strong> <span id="resultTeam"></span></div>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Firebase Logic -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-        import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
-        import { getStorage, ref as sRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
+  <!-- Firebase 연결 -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getDatabase, ref, push, get } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
-        // ✅ Firebase 설정
-        const firebaseConfig = {
-            apiKey: "AIzaSyCXaqnaoQYWZGywi_PPRohGaAJj_dBVDK0",
-            authDomain: "haneulcard.firebaseapp.com",
-            databaseURL: "https://haneulcard-default-rtdb.firebaseio.com",
-            projectId: "haneulcard",
-            storageBucket: "haneulcard.appspot.com",
-            messagingSenderId: "814685525921",
-            appId: "1:814685525921:web:eacd7b62ca15e983875de0",
-            measurementId: "G-QDXY1HJVCV"
-        };
+    const firebaseConfig = {
+      apiKey: "AIzaSyCXaqnaoQYWZGywi_PPRohGaAJj_dBVDK0",
+      authDomain: "haneulcard.firebaseapp.com",
+      databaseURL: "https://haneulcard-default-rtdb.firebaseio.com",
+      projectId: "haneulcard",
+      storageBucket: "haneulcard.appspot.com",
+      messagingSenderId: "814685525921",
+      appId: "1:814685525921:web:eacd7b62ca15e983875de0"
+    };
 
-        // ✅ Firebase 초기화
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const storage = getStorage(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-        // ✅ 페이지 전환
-        window.showMain = () => switchPage('mainPage');
-        window.showRegister = () => switchPage('registerPage');
-        window.showView = () => switchPage('viewPage');
-        function switchPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+    // 페이지 전환
+    window.showMain = () => switchPage('mainPage');
+    window.showRegister = () => switchPage('registerPage');
+    window.showView = () => switchPage('viewPage');
+    function switchPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // 등록
+    document.getElementById("employeeForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = document.getElementById("name").value.trim();
+      const team = document.getElementById("team").value.trim();
+      const photoURL = document.getElementById("photoURL").value.trim();
+
+      if (!photoURL.startsWith("http")) {
+        showMessage("유효한 GitHub 이미지 URL을 입력하세요.", "error", "message");
+        return;
+      }
+
+      try {
+        await push(ref(db, "employees"), {
+          name, team, photoURL, createdAt: new Date().toISOString()
+        });
+        showMessage("직원이 성공적으로 등록되었습니다!", "success", "message");
+        e.target.reset();
+      } catch (err) {
+        console.error(err);
+        showMessage("등록 중 오류가 발생했습니다.", "error", "message");
+      }
+    });
+
+    // 조회
+    document.getElementById("searchForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const searchName = document.getElementById("searchName").value.trim();
+      const searchTeam = document.getElementById("searchTeam").value.trim();
+
+      try {
+        const snapshot = await get(ref(db, "employees"));
+        if (!snapshot.exists()) {
+          showMessage("등록된 직원이 없습니다.", "error", "searchMessage");
+          return;
         }
 
-        // ✅ 직원 등록
-        document.getElementById("employeeForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const name = document.getElementById("name").value.trim();
-            const team = document.getElementById("team").value.trim();
-            const file = document.getElementById("photo").files[0];
-            if (!file) return showMessage("사진을 선택해주세요.", "error", "message");
-
-            try {
-                const photoRef = sRef(storage, `employee_photos/${name}_${Date.now()}.jpg`);
-                await uploadBytes(photoRef, file);
-                const photoURL = await getDownloadURL(photoRef);
-
-                const employeesRef = ref(database, "employees");
-                await push(employeesRef, {
-                    name, team, photoURL,
-                    createdAt: new Date().toISOString()
-                });
-
-                showMessage("등록이 완료되었습니다!", "success", "message");
-                e.target.reset();
-            } catch (err) {
-                console.error(err);
-                showMessage("등록 중 오류가 발생했습니다.", "error", "message");
-            }
-        });
-
-        // ✅ 직원 조회
-        document.getElementById("searchForm").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const name = document.getElementById("searchName").value.trim();
-            const team = document.getElementById("searchTeam").value.trim();
-            try {
-                const snapshot = await get(ref(database, "employees"));
-                if (!snapshot.exists()) return showMessage("등록된 직원이 없습니다.", "error", "searchMessage");
-
-                const employees = snapshot.val();
-                let found = null;
-                for (let key in employees) {
-                    const emp = employees[key];
-                    if (emp.name === name && emp.team === team) found = emp;
-                }
-
-                if (found) {
-                    document.getElementById("resultPhoto").src = found.photoURL;
-                    document.getElementById("resultName").textContent = found.name;
-                    document.getElementById("resultTeam").textContent = found.team;
-                    document.getElementById("resultContainer").style.display = "block";
-                    document.getElementById("searchMessage").style.display = "none";
-                } else {
-                    showMessage("해당 직원 정보를 찾을 수 없습니다.", "error", "searchMessage");
-                    document.getElementById("resultContainer").style.display = "none";
-                }
-            } catch (err) {
-                console.error(err);
-                showMessage("조회 중 오류가 발생했습니다.", "error", "searchMessage");
-            }
-        });
-
-        // ✅ 메시지 표시
-        function showMessage(text, type, targetId) {
-            const el = document.getElementById(targetId);
-            el.className = `message ${type}`;
-            el.textContent = text;
-            el.style.display = "block";
-            setTimeout(() => el.style.display = "none", 3000);
+        const employees = snapshot.val();
+        let found = null;
+        for (let key in employees) {
+          const emp = employees[key];
+          if (emp.name === searchName && emp.team === searchTeam) found = emp;
         }
-    </script>
+
+        if (found) {
+          document.getElementById("resultPhoto").src = found.photoURL;
+          document.getElementById("resultName").textContent = found.name;
+          document.getElementById("resultTeam").textContent = found.team;
+          document.getElementById("resultContainer").style.display = "block";
+          document.getElementById("searchMessage").style.display = "none";
+        } else {
+          showMessage("해당 직원 정보를 찾을 수 없습니다.", "error", "searchMessage");
+          document.getElementById("resultContainer").style.display = "none";
+        }
+      } catch (err) {
+        console.error(err);
+        showMessage("조회 중 오류가 발생했습니다.", "error", "searchMessage");
+      }
+    });
+
+    // 메시지
+    function showMessage(text, type, targetId) {
+      const el = document.getElementById(targetId);
+      el.className = `message ${type}`;
+      el.textContent = text;
+      el.style.display = "block";
+      setTimeout(() => el.style.display = "none", 3000);
+    }
+  </script>
 </body>
 </html>
