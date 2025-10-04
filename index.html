@@ -50,7 +50,7 @@
     /* 메인 페이지 */
     .main-container {
       min-height: 100vh;
-      background-image: url('https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=1920');
+      background-image: url('./back.jpg');
       background-position: center center;
       background-size: cover;
       background-repeat: no-repeat;
@@ -70,25 +70,44 @@
     }
 
     .main-title {
-      font-family: "flirt-script-regular", sans-serif;
-      font-size: clamp(36px, 8vw, 72px);
-      color: rgba(12, 68, 59, 1);
-      font-weight: 400;
-      font-style: normal;
-      margin-bottom: 20px;
-      letter-spacing: 2px;
-      line-height: 1.2;
-      text-shadow: 0 0 30px rgba(255,255,255,0.5);
+        font-family: "flirt-script-regular", sans-serif;
+        font-size: clamp(36px, 8vw, 72px);
+        color: rgba(12, 68, 59, 1);
+        font-weight: 400;
+        font-style: normal;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+        line-height: 1.2;
+        text-shadow: 0 0 30px rgba(255,255,255,0.5);
+    }
+    
+    .main-subtitle {
+        font-family: "grandiflora-one", "Noto Serif KR", serif;
+        font-size: clamp(30px, 3vw, 42px);
+        color: rgba(12, 68, 59, 1);
+        font-weight: 300;
+        letter-spacing: clamp(2px, 1vw, 8px);
+        margin-top: 30px;
     }
 
-    .main-subtitle {
-      font-family: "grandiflora-one", "Noto Serif KR", serif;
-      font-size: clamp(30px, 3vw, 42px);
-      color: rgba(12, 68, 59, 1);
-      font-weight: 300;
-      letter-spacing: clamp(2px, 1vw, 8px);
-      margin-top: 30px;
-      margin-bottom: 60px;
+    .bible-verse {
+        font-size: clamp(12px, 2vw, 18px); /* 반응형: 화면에 따라 유동 */
+        font-weight: 400;
+        color: #444;
+        margin-top: 14px;
+        line-height: 1.6;
+        text-align: center;    /* 가운데 정렬 */
+        white-space: pre-line; /* 줄바꿈 반영 */
+        word-break: keep-all;
+    }
+    
+    .bible-reference {
+        display: block;
+        font-size: clamp(10px, 1.8vw, 16px); /* 더 작게 */
+        margin-top: 0px;
+        color: #666;
+        text-align: center;
+        letter-spacing: 1px;
     }
 
     .menu-buttons {
@@ -525,8 +544,12 @@
   <div id="mainPage" class="page active">
     <div class="main-container">
       <div class="main-content">
-        <h1 class="main-title">사원증 시스템</h1>
-        <p class="main-subtitle">Employee ID Card System</p>
+        <h1 class="main-title">The Steps of Haneul</h1>
+        <p class="main-subtitle">하늘의 걸음</p>
+        <p class="bible-verse">
+            선한 사람의 걸음을 여호와께서 정하시니<br>그분은 그 길을 기뻐하십니다.<br>
+            <span class="bible-reference">시편 37편 23절</span>
+        </p>
         <div class="menu-buttons">
           <button class="menu-button" onclick="showPage('registerPage')">사원증 등록</button>
           <button class="menu-button" onclick="showPage('searchPage')">사원증 조회</button>
