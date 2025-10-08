@@ -201,7 +201,7 @@ window.searchEmployee = async function() {
 // 오프스크린 고정 레이아웃 생성 (저장용) - 애플 감성 미니멀 디자인
 function buildExportContainer(name, team, photoSrc, verseHTML) {
   const root = document.createElement('div');
-  root.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:#f8f8f8;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;`;
+  root.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url('assets/back.jpg') center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;`;
   
   const card = document.createElement('div');
   card.style.cssText = `width:760px;background:transparent;overflow:visible;box-sizing:border-box;`;
