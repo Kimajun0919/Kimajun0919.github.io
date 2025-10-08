@@ -198,33 +198,33 @@ window.searchEmployee = async function() {
 };
 
 
-// 오프스크린 고정 레이아웃 생성 (저장용) - 미니멀 디자인
+// 오프스크린 고정 레이아웃 생성 (저장용) - 애플 감성 미니멀 디자인
 function buildExportContainer(name, team, photoSrc, verseHTML) {
   const root = document.createElement('div');
-  root.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:#f5f5f5;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;`;
+  root.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:#f8f8f8;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;`;
   
   const card = document.createElement('div');
-  card.style.cssText = `width:800px;background:#fff;border-radius:40px;box-shadow:0 20px 80px rgba(0,0,0,0.15);overflow:hidden;box-sizing:border-box;`;
+  card.style.cssText = `width:760px;background:transparent;overflow:visible;box-sizing:border-box;`;
   
   const img = document.createElement('img');
   img.src = photoSrc;
   img.alt = '사원 사진';
-  img.style.cssText = `width:100%;height:700px;object-fit:cover;display:block;border-radius:40px 40px 0 0;clip-path:ellipse(100% 100% at 50% 0%);`;
+  img.style.cssText = `width:calc(100% - 64px);height:640px;object-fit:cover;display:block;border-radius:32px 32px 0 0;margin:32px 32px 0 32px;box-shadow:0 8px 32px rgba(0,0,0,0.1);clip-path:polygon(0 0,100% 0,100% 85%,90% 88%,80% 90%,70% 91%,60% 90%,50% 88%,40% 90%,30% 91%,20% 90%,10% 88%,0 85%);`;
   
   const infoContainer = document.createElement('div');
-  infoContainer.style.cssText = `padding:40px 80px 80px 80px;background:#fff;`;
+  infoContainer.style.cssText = `margin-top:-100px;padding:120px 70px 70px 70px;background:#fff;border-radius:56px 56px 24px 24px;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.08);`;
   
   const nameEl = document.createElement('div');
   nameEl.textContent = name;
-  nameEl.style.cssText = `font-size:72px;color:#1a1a1a;font-weight:500;letter-spacing:0;margin:0 0 24px 0;font-family:'Noto Serif KR',serif;text-align:left;`;
+  nameEl.style.cssText = `font-size:64px;color:#1d1d1f;font-weight:600;letter-spacing:-1px;margin:0 0 20px 0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;text-align:left;`;
   
   const teamEl = document.createElement('div');
   teamEl.textContent = team;
-  teamEl.style.cssText = `font-size:36px;color:#666;font-weight:400;letter-spacing:0;margin:0 0 30px 0;font-family:'Noto Serif KR',serif;text-align:left;`;
+  teamEl.style.cssText = `font-size:32px;color:#86868b;font-weight:500;letter-spacing:0;margin:0 0 30px 0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;text-align:left;`;
   
   const verseEl = document.createElement('div');
   verseEl.innerHTML = verseHTML;
-  verseEl.style.cssText = `font-size:28px;line-height:1.6;color:#999;text-align:left;font-family:'Noto Serif KR',serif;font-weight:400;letter-spacing:0.3px;`;
+  verseEl.style.cssText = `font-size:24px;line-height:1.6;color:#a1a1a6;text-align:left;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;font-weight:400;letter-spacing:0.2px;`;
 
   infoContainer.appendChild(nameEl);
   infoContainer.appendChild(teamEl);
