@@ -185,46 +185,111 @@ window.saveAsImage = async function() {
         const clonedVerse = clonedDoc.getElementById('resultId');
         
         if (clonedContainer) {
-          clonedContainer.style.width = '1080px';
-          clonedContainer.style.height = '1920px';
-          clonedContainer.style.padding = '220px 90px 180px';
+          clonedContainer.style.cssText = `
+            width: 1080px !important;
+            height: 1920px !important;
+            padding: 220px 90px 180px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            background-image: url('./assets/back.jpg') !important;
+            background-position: center center !important;
+            background-size: cover !important;
+            background-repeat: no-repeat !important;
+          `;
         }
         
         if (clonedCard) {
-          clonedCard.style.width = '780px';
-          clonedCard.style.padding = '90px 70px';
-          clonedCard.style.borderRadius = '50px';
+          clonedCard.style.cssText = `
+            width: 780px !important;
+            height: auto !important;
+            padding: 90px 70px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            background: rgba(255, 255, 255, 0.96) !important;
+            backdrop-filter: blur(30px) !important;
+            border-radius: 50px !important;
+            box-shadow: 0 30px 90px rgba(0,0,0,0.25), 0 10px 30px rgba(12, 68, 59, 0.1) !important;
+            margin: 0 !important;
+            border: 4px solid rgba(12, 68, 59, 0.12) !important;
+            text-align: center !important;
+          `;
         }
         
         if (clonedTitle) {
-          clonedTitle.style.fontSize = '64px';
-          clonedTitle.style.marginBottom = '65px';
+          clonedTitle.style.cssText = `
+            display: block !important;
+            font-family: "flirt-script-regular", sans-serif !important;
+            font-size: 64px !important;
+            color: rgba(12, 68, 59, 1) !important;
+            text-align: center !important;
+            margin-bottom: 65px !important;
+            text-shadow: 0 2px 20px rgba(255,255,255,0.9), 0 0 40px rgba(255,255,255,0.6) !important;
+            letter-spacing: 3px !important;
+          `;
         }
         
         if (clonedPhoto) {
-          clonedPhoto.style.width = '380px';
-          clonedPhoto.style.height = '380px';
-          clonedPhoto.style.marginTop = '10px';
-          clonedPhoto.style.marginBottom = '55px';
+          clonedPhoto.style.cssText = `
+            width: 380px !important;
+            height: 380px !important;
+            margin-top: 10px !important;
+            margin-bottom: 55px !important;
+            border-radius: 50% !important;
+            object-fit: cover !important;
+            border: 7px solid #fff !important;
+            box-shadow: 0 18px 60px rgba(0,0,0,0.22), 0 0 0 1px rgba(12, 68, 59, 0.08) !important;
+          `;
         }
         
         if (clonedName) {
-          clonedName.style.fontSize = '68px';
-          clonedName.style.marginBottom = '28px';
-          clonedName.style.letterSpacing = '4px';
+          clonedName.style.cssText = `
+            font-size: 68px !important;
+            margin-bottom: 28px !important;
+            letter-spacing: 4px !important;
+            color: #0c443b !important;
+            font-weight: 500 !important;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
+          `;
         }
         
         if (clonedTeam) {
-          clonedTeam.style.fontSize = '40px';
-          clonedTeam.style.marginBottom = '65px';
-          clonedTeam.style.letterSpacing = '4px';
+          clonedTeam.style.cssText = `
+            font-size: 40px !important;
+            margin-bottom: 65px !important;
+            letter-spacing: 4px !important;
+            color: #777 !important;
+            font-weight: 300 !important;
+          `;
         }
         
         if (clonedVerse) {
-          clonedVerse.style.fontSize = '22px';
-          clonedVerse.style.paddingTop = '60px';
-          clonedVerse.style.lineHeight = '2';
-          clonedVerse.style.maxWidth = '620px';
+          clonedVerse.style.cssText = `
+            font-size: 22px !important;
+            margin-top: 0px !important;
+            padding-top: 60px !important;
+            border-top: 2px solid rgba(12, 68, 59, 0.12) !important;
+            line-height: 2 !important;
+            color: #666 !important;
+            max-width: 620px !important;
+            text-align: center !important;
+            width: 100% !important;
+          `;
+          
+          // 성경 구절 참조 스타일
+          const verseRef = clonedVerse.querySelector('span');
+          if (verseRef) {
+            verseRef.style.cssText = `
+              font-size: 18px !important;
+              margin-top: 22px !important;
+              color: #999 !important;
+              letter-spacing: 1px !important;
+              display: block !important;
+            `;
+          }
         }
       }
     });
