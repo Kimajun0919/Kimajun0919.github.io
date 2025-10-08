@@ -36,6 +36,39 @@ window.showPage = function(pageId) {
   }
 };
 
+// 이미지 압축 함수 (속도 향상을 위해)
+function compressImage(file, maxWidth = 800, quality = 0.8) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        
+        // 이미지 크기 조정 (비율 유지)
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // 압축된 이미지를 Base64로 변환
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, 'image/jpeg', quality);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 window.previewImage = function(input) {
   if (input.files && input.files[0]) {
     const reader = new FileReader();
@@ -43,7 +76,8 @@ window.previewImage = function(input) {
       const preview = document.getElementById('preview');
       preview.src = e.target.result;
       preview.style.display = 'block';
-      document.getElementById('fileLabel').textContent = '✅ ' + input.files[0].name;
+      const fileSize = (input.files[0].size / 1024).toFixed(0);
+      document.getElementById('fileLabel').textContent = `✅ ${input.files[0].name} (${fileSize}KB)`;
     };
     reader.readAsDataURL(input.files[0]);
   }
@@ -61,43 +95,55 @@ window.registerEmployee = async function() {
     return;
   }
 
-  status.textContent = "📤 업로드 중...";
+  status.textContent = "🔄 이미지 압축 중...";
   status.style.color = "#3498db";
 
-  const reader = new FileReader();
-  reader.onloadend = async () => {
-    const base64 = reader.result.split(",")[1];
-    const res = await fetch(scriptURL, {
-      method: "POST",
-      body: new URLSearchParams({
-        file: base64,
-        filename: file.name,
-        mimeType: file.type
-      })
-    });
-
-    const imageURL = await res.text();
-    if (imageURL.startsWith("ERROR")) {
-      status.textContent = "❌ 업로드 실패: " + imageURL;
-      status.style.color = "#e74c3c";
-      return;
-    }
-
-    const newRef = await push(ref(db, "employees"), {
-      name,
-      team,
-      photoURL: imageURL,
-      createdAt: new Date().toISOString()
-    });
-
-    status.innerHTML = `✅ 등록 완료!`;
-    status.style.color = "#27ae60";
+  try {
+    // 이미지 압축 (속도 향상)
+    const compressedBlob = await compressImage(file, 800, 0.85);
     
-    setTimeout(() => {
-      showPage('mainPage');
-    }, 1500);
-  };
-  reader.readAsDataURL(file);
+    status.textContent = "📤 업로드 중...";
+    
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64 = reader.result.split(",")[1];
+      const res = await fetch(scriptURL, {
+        method: "POST",
+        body: new URLSearchParams({
+          file: base64,
+          filename: file.name.replace(/\.[^/.]+$/, ".jpg"),
+          mimeType: "image/jpeg"
+        })
+      });
+
+      const imageURL = await res.text();
+      if (imageURL.startsWith("ERROR")) {
+        status.textContent = "❌ 업로드 실패: " + imageURL;
+        status.style.color = "#e74c3c";
+        return;
+      }
+
+      status.textContent = "💾 데이터 저장 중...";
+
+      const newRef = await push(ref(db, "employees"), {
+        name,
+        team,
+        photoURL: imageURL,
+        createdAt: new Date().toISOString()
+      });
+
+      status.innerHTML = `✅ 등록 완료!`;
+      status.style.color = "#27ae60";
+      
+      setTimeout(() => {
+        showPage('mainPage');
+      }, 1500);
+    };
+    reader.readAsDataURL(compressedBlob);
+  } catch (error) {
+    status.textContent = "❌ 오류 발생: " + error.message;
+    status.style.color = "#e74c3c";
+  }
 };
 
 window.searchEmployee = async function() {
