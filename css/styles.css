@@ -301,6 +301,20 @@ input[type="file"] {
   position: relative;
 }
 
+.card-title {
+  display: none;
+  font-family: "flirt-script-regular", sans-serif;
+  font-size: 48px;
+  color: rgba(12, 68, 59, 1);
+  text-align: center;
+  margin-bottom: 40px;
+  text-shadow: 0 0 30px rgba(255,255,255,0.8);
+}
+
+.result-container.saving-mode .card-title {
+  display: block;
+}
+
 .result-card {
   background: rgba(255,255,255,0.98);
   backdrop-filter: blur(20px);
@@ -317,25 +331,34 @@ input[type="file"] {
 
 /* 저장 모드 */
 .result-container.saving-mode {
-  width: 720px;
-  height: 1100px;
-  background: #f8f9fa;
-  padding: 50px;
+  width: 1080px;
+  height: 1920px;
+  background-image: url('../assets/back.jpg');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 150px 80px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .result-container.saving-mode .result-card {
-  width: 100%;
-  height: 100%;
-  padding: 80px 60px;
+  width: 800px;
+  height: auto;
+  min-height: 1200px;
+  padding: 100px 80px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  background: #fff;
-  border-radius: 40px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+  justify-content: space-evenly;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 50px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.3);
   margin: 0;
-  border: 3px solid #0c443b;
+  border: 5px solid rgba(12, 68, 59, 0.8);
 }
 
 .employee-photo {
@@ -349,9 +372,11 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-photo {
-  width: 300px;
-  height: 300px;
-  margin-bottom: 60px;
+  width: 380px;
+  height: 380px;
+  margin-bottom: 50px;
+  border: 8px solid rgba(12, 68, 59, 0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
 }
 
 .employee-name {
@@ -363,8 +388,10 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-name {
-  font-size: 48px;
-  margin-bottom: 25px;
+  font-size: 64px;
+  margin-bottom: 30px;
+  font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
 .employee-team {
@@ -376,8 +403,9 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-team {
-  font-size: 32px;
-  margin-bottom: 80px;
+  font-size: 42px;
+  margin-bottom: 60px;
+  color: #555;
 }
 
 .employee-id {
@@ -396,12 +424,18 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-id {
-  font-size: 16px;
+  font-size: 22px;
   margin-top: auto;
+  padding-top: 40px;
+  line-height: 1.8;
+  color: #555;
+  max-width: 650px;
 }
 
 .result-container.saving-mode .employee-id .verse-reference {
-  font-size: 12px;
+  font-size: 18px;
+  margin-top: 15px;
+  color: #888;
 }
 
 .button-container {

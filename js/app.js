@@ -150,7 +150,6 @@ window.searchEmployee = async function() {
 
 window.saveAsImage = async function() {
   const container = document.getElementById('resultContainer');
-  const resultCard = document.getElementById('resultCard');
   const buttonContainer = document.querySelector('.button-container');
   
   try {
@@ -160,13 +159,15 @@ window.saveAsImage = async function() {
     container.classList.add('saving-mode');
     buttonContainer.style.display = 'none';
     
-    // 스타일 적용 대기
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // 스타일 적용 대기 (배경 이미지 로딩 포함)
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // 간단하고 안정적인 방법으로 캔버스 생성
-    const canvas = await html2canvas.default(resultCard, {
-      scale: 2,
-      backgroundColor: '#ffffff',
+    // 전체 컨테이너를 캔버스로 생성 (배경 이미지 포함)
+    const canvas = await html2canvas.default(container, {
+      width: 1080,
+      height: 1920,
+      scale: 1,
+      backgroundColor: null,
       useCORS: true,
       allowTaint: true,
       logging: false,
