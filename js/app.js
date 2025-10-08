@@ -147,152 +147,114 @@ window.searchEmployee = async function() {
   }
 };
 
-// 간단한 이미지 저장 함수 (대체 방법)
-window.saveAsImageSimple = function() {
-  const employeeName = document.getElementById('resultName').textContent;
-  const employeeTeam = document.getElementById('resultTeam').textContent;
-  const employeeVerse = document.getElementById('resultId').innerHTML;
-  const photoSrc = document.getElementById('resultPhoto').src;
-  
-  // 새 창 열기
-  const newWindow = window.open('', '_blank', 'width=720,height=1100');
-  
-  newWindow.document.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>하늘의 걸음 - ${employeeName}</title>
-      <style>
-        body {
-          margin: 0;
-          padding: 50px;
-          background: #f8f9fa;
-          font-family: 'Noto Serif KR', serif;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 100vh;
-        }
-        .card {
-          width: 600px;
-          height: 900px;
-          background: white;
-          border-radius: 40px;
-          padding: 60px;
-          box-shadow: 0 30px 80px rgba(0,0,0,0.15);
-          border: 3px solid #0c443b;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-          text-align: center;
-        }
-        .photo {
-          width: 250px;
-          height: 250px;
-          border-radius: 50%;
-          object-fit: cover;
-          border: 5px solid #fff;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        .name {
-          font-size: 42px;
-          color: #0c443b;
-          font-weight: 400;
-          letter-spacing: 4px;
-          margin: 20px 0;
-        }
-        .team {
-          font-size: 28px;
-          color: #666;
-          font-weight: 300;
-          letter-spacing: 2px;
-          margin: 20px 0;
-        }
-        .verse {
-          font-size: 14px;
-          color: #666;
-          line-height: 1.4;
-          margin-top: 20px;
-          text-align: center;
-        }
-        .verse-reference {
-          font-size: 11px;
-          color: #999;
-          margin-top: 8px;
-          display: block;
-        }
-        .title {
-          font-size: 24px;
-          color: #0c443b;
-          margin-bottom: 20px;
-          font-weight: 300;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="card">
-        <div class="title">The Steps of Haneul</div>
-        <img src="${photoSrc}" alt="프로필" class="photo">
-        <div class="name">${employeeName}</div>
-        <div class="team">${employeeTeam}</div>
-        <div class="verse">${employeeVerse}</div>
-      </div>
-    </body>
-    </html>
-  `);
-  
-  newWindow.document.close();
-  
-  // 인쇄 대화상자 열기 (사용자가 이미지로 저장할 수 있음)
-  setTimeout(() => {
-    newWindow.print();
-  }, 1000);
-};
 
 window.saveAsImage = async function() {
-  // 먼저 간단한 방법 시도
-  try {
-    window.saveAsImageSimple();
-    alert('새 창이 열렸습니다. 브라우저의 인쇄 기능을 사용하여 이미지로 저장하세요.');
-    return;
-  } catch (error) {
-    console.log('간단한 방법 실패, html2canvas 시도...');
-  }
-  
-  // html2canvas 방법 시도
   const container = document.getElementById('resultContainer');
   const resultCard = document.getElementById('resultCard');
   
-  alert('이미지 저장을 시작합니다...');
+  // 로딩 메시지 표시
+  const statusDiv = document.createElement('div');
+  statusDiv.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    z-index: 10000;
+    font-family: 'Noto Serif KR', serif;
+  `;
+  statusDiv.textContent = '이미지 저장 중...';
+  document.body.appendChild(statusDiv);
   
   try {
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
     // 저장 모드로 전환
     container.classList.add('saving-mode');
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
+    statusDiv.textContent = '이미지 생성 중...';
+    
+    // 고품질 캔버스 생성
     const canvas = await html2canvas.default(resultCard, {
+      width: 720,
+      height: 1100,
       scale: 2,
       backgroundColor: '#ffffff',
       useCORS: true,
-      allowTaint: true
+      allowTaint: true,
+      foreignObjectRendering: true,
+      imageTimeout: 15000,
+      logging: false
     });
 
     container.classList.remove('saving-mode');
+    statusDiv.textContent = '파일 다운로드 중...';
 
-    // 다운로드
-    const link = document.createElement('a');
-    link.download = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
-    link.href = canvas.toDataURL();
-    link.click();
-    
-    alert('이미지가 저장되었습니다!');
+    // 고품질로 이미지 저장
+    canvas.toBlob(function(blob) {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      // 로딩 메시지 제거
+      document.body.removeChild(statusDiv);
+      
+      // 성공 메시지
+      const successDiv = document.createElement('div');
+      successDiv.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #27ae60;
+        color: white;
+        padding: 20px 40px;
+        border-radius: 10px;
+        z-index: 10000;
+        font-family: 'Noto Serif KR', serif;
+      `;
+      successDiv.textContent = '✅ 이미지가 저장되었습니다!';
+      document.body.appendChild(successDiv);
+      
+      setTimeout(() => {
+        document.body.removeChild(successDiv);
+      }, 2000);
+      
+    }, 'image/png', 0.95);
 
   } catch (error) {
     console.error('이미지 저장 오류:', error);
-    alert('이미지 저장에 실패했습니다. 브라우저를 새로고침 후 다시 시도해주세요.');
+    container.classList.remove('saving-mode');
+    document.body.removeChild(statusDiv);
+    
+    // 오류 메시지
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #e74c3c;
+      color: white;
+      padding: 20px 40px;
+      border-radius: 10px;
+      z-index: 10000;
+      font-family: 'Noto Serif KR', serif;
+    `;
+    errorDiv.textContent = '❌ 이미지 저장에 실패했습니다. 다시 시도해주세요.';
+    document.body.appendChild(errorDiv);
+    
+    setTimeout(() => {
+      document.body.removeChild(errorDiv);
+    }, 3000);
   }
 };
