@@ -209,7 +209,7 @@ function buildExportContainer(name, team, photoSrc, verseHTML) {
   const img = document.createElement('img');
   img.src = photoSrc;
   img.alt = '사원 사진';
-  img.style.cssText = `width:100%;height:700px;object-fit:cover;display:block;border-radius:40px 40px 0 0;clip-path:polygon(0 0,100% 0,100% calc(100% - 80px),95% calc(100% - 70px),90% calc(100% - 50px),85% calc(100% - 60px),80% calc(100% - 80px),75% calc(100% - 70px),70% calc(100% - 50px),65% calc(100% - 60px),60% calc(100% - 80px),55% calc(100% - 70px),50% calc(100% - 50px),45% calc(100% - 60px),40% calc(100% - 80px),35% calc(100% - 70px),30% calc(100% - 50px),25% calc(100% - 60px),20% calc(100% - 80px),15% calc(100% - 70px),10% calc(100% - 50px),5% calc(100% - 60px),0 calc(100% - 80px));`;
+  img.style.cssText = `width:100%;height:700px;object-fit:cover;display:block;border-radius:40px 40px 0 0;clip-path:ellipse(100% 100% at 50% 0%);`;
   
   const infoContainer = document.createElement('div');
   infoContainer.style.cssText = `padding:40px 80px 80px 80px;background:#fff;`;

@@ -375,31 +375,7 @@ input[type="file"] {
   border: none;
   display: block;
   border-radius: 20px 20px 0 0;
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% calc(100% - 40px),
-    95% calc(100% - 35px),
-    90% calc(100% - 25px),
-    85% calc(100% - 30px),
-    80% calc(100% - 40px),
-    75% calc(100% - 35px),
-    70% calc(100% - 25px),
-    65% calc(100% - 30px),
-    60% calc(100% - 40px),
-    55% calc(100% - 35px),
-    50% calc(100% - 25px),
-    45% calc(100% - 30px),
-    40% calc(100% - 40px),
-    35% calc(100% - 35px),
-    30% calc(100% - 25px),
-    25% calc(100% - 30px),
-    20% calc(100% - 40px),
-    15% calc(100% - 35px),
-    10% calc(100% - 25px),
-    5% calc(100% - 30px),
-    0 calc(100% - 40px)
-  );
+  clip-path: ellipse(100% 100% at 50% 0%);
 }
 
 .result-container.saving-mode .employee-photo {
