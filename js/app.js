@@ -197,17 +197,30 @@ window.saveAsImage = async function() {
     // 고품질로 이미지 저장
     canvas.toBlob(function(blob) {
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      
+      const filename = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
+
+      // 모바일 여부 감지
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        // 모바일이면 새 탭으로 이미지 열기 (사용자가 갤러리에 직접 저장 가능)
+        const dataUrl = canvas.toDataURL('image/png', 0.95);
+        const newTab = window.open(dataUrl, '_blank');
+        if (!newTab) alert('팝업 차단을 해제해주세요.');
+      } else {
+        // PC면 자동 다운로드
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
       // 로딩 메시지 제거
       document.body.removeChild(statusDiv);
-      
+
       // 성공 메시지
       const successDiv = document.createElement('div');
       successDiv.style.cssText = `
@@ -222,13 +235,12 @@ window.saveAsImage = async function() {
         z-index: 10000;
         font-family: 'Noto Serif KR', serif;
       `;
-      successDiv.textContent = '✅ 이미지가 저장되었습니다!';
+      successDiv.textContent = isMobile ? '📱 새 창에서 "사진에 저장"을 눌러주세요!' : '✅ 이미지가 저장되었습니다!';
       document.body.appendChild(successDiv);
-      
+
       setTimeout(() => {
         document.body.removeChild(successDiv);
-      }, 2000);
-      
+      }, 2500);
     }, 'image/png', 0.95);
 
   } catch (error) {
