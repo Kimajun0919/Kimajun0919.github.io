@@ -151,7 +151,7 @@ window.searchEmployee = async function() {
 // 오프스크린 고정 레이아웃 생성 (저장용)
 function buildExportContainer(name, team, photoSrc, verseHTML) {
   const root = document.createElement('div');
-  root.style.cssText = 'position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url(\\'assets/back.jpg\\') center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:220px 90px 180px;box-sizing:border-box;';
+  root.style.cssText = 'position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url(assets/back.jpg) center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:220px 90px 180px;box-sizing:border-box;';
   const title = document.createElement('div');
   title.textContent = 'The Steps of Haneul';
   title.style.cssText = "font-family:'flirt-script-regular',sans-serif;font-size:64px;color:rgba(12,68,59,1);text-shadow:0 2px 20px rgba(255,255,255,0.9),0 0 40px rgba(255,255,255,0.6);margin-bottom:65px;letter-spacing:3px;";
