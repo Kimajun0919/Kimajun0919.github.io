@@ -318,17 +318,18 @@ input[type="file"] {
 }
 
 .result-card {
-  background: rgba(255,255,255,0.98);
+  background: #fff;
   backdrop-filter: blur(20px);
-  border-radius: 30px;
-  padding: clamp(40px, 5vw, 60px);
-  max-width: 500px;
+  border-radius: 20px;
+  padding: 0;
+  max-width: 400px;
   width: 90%;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
   position: relative;
   z-index: 10;
   margin-bottom: 30px;
   text-align: center;
+  overflow: hidden;
 }
 
 /* 저장 모드 */
@@ -366,13 +367,14 @@ input[type="file"] {
 }
 
 .employee-photo {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
+  width: 100%;
+  height: 300px;
+  border-radius: 0;
   object-fit: cover;
-  margin: 0 auto 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  border: 5px solid #fff;
+  margin: 0;
+  box-shadow: none;
+  border: none;
+  display: block;
 }
 
 .result-container.saving-mode .employee-photo {
@@ -386,11 +388,13 @@ input[type="file"] {
 }
 
 .employee-name {
-  font-size: clamp(28px, 4vw, 36px);
-  color: #0c443b;
-  font-weight: 400;
-  letter-spacing: 4px;
-  margin-bottom: 15px;
+  font-size: clamp(24px, 4vw, 32px);
+  color: #1a1a1a;
+  font-weight: 500;
+  letter-spacing: 0;
+  margin: 30px 0 10px 0;
+  padding: 0 30px;
+  text-align: left;
 }
 
 .result-container.saving-mode .employee-name {
@@ -402,11 +406,13 @@ input[type="file"] {
 }
 
 .employee-team {
-  font-size: clamp(18px, 3vw, 22px);
+  font-size: clamp(14px, 2.5vw, 16px);
   color: #666;
-  font-weight: 300;
-  letter-spacing: 2px;
-  margin-bottom: 30px;
+  font-weight: 400;
+  letter-spacing: 0;
+  margin-bottom: 15px;
+  padding: 0 30px;
+  text-align: left;
 }
 
 .result-container.saving-mode .employee-team {
@@ -418,11 +424,14 @@ input[type="file"] {
 }
 
 .employee-id {
-  font-size: 12px;
-  color: #666;
+  font-size: clamp(11px, 2vw, 13px);
+  color: #999;
   line-height: 1.4;
-  margin-top: 20px;
-  text-align: center;
+  margin: 0;
+  padding: 0 30px 30px 30px;
+  text-align: left;
+  font-weight: 400;
+  letter-spacing: 0.5px;
 }
 
 .employee-id .verse-reference {

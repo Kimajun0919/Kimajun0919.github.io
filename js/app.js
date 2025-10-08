@@ -125,10 +125,14 @@ window.registerEmployee = async function() {
 
       status.textContent = "💾 데이터 저장 중...";
 
+      // 고유 ID 생성 (6자리 숫자)
+      const employeeId = String(Date.now()).slice(-6);
+
       const newRef = await push(ref(db, "employees"), {
         name,
         team,
         photoURL: imageURL,
+        employeeId: employeeId,
         createdAt: new Date().toISOString()
       });
 
@@ -175,7 +179,7 @@ window.searchEmployee = async function() {
             // 랜덤한 성경 말씀 선택
             const randomVerse = verses[Math.floor(Math.random() * verses.length)];
             document.getElementById('resultId').innerHTML = 
-              `<div style="font-size: 12px; color: #666; line-height: 1.4; margin-top: 20px;">${randomVerse.content}<br><span style="font-size: 10px; color: #999; margin-top: 5px; display: block;">${randomVerse.reference}</span></div>`;
+              `${randomVerse.content}<br><span style="display:block;margin-top:8px;opacity:0.7;">${randomVerse.reference}</span>`;
             
             showPage('resultPage');
             found = true;
@@ -194,34 +198,39 @@ window.searchEmployee = async function() {
 };
 
 
-// 오프스크린 고정 레이아웃 생성 (저장용)
+// 오프스크린 고정 레이아웃 생성 (저장용) - 미니멀 디자인
 function buildExportContainer(name, team, photoSrc, verseHTML) {
   const root = document.createElement('div');
-  root.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url('assets/back.jpg') center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:220px 90px 180px;box-sizing:border-box;`;
-  const title = document.createElement('div');
-  title.textContent = 'The Steps of Haneul';
-  title.style.cssText = `font-family:'flirt-script-regular',sans-serif;font-size:64px;color:rgba(12,68,59,1);text-shadow:0 2px 20px rgba(255,255,255,0.9),0 0 40px rgba(255,255,255,0.6);margin-bottom:65px;letter-spacing:3px;`;
+  root.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:#f5f5f5;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;`;
+  
   const card = document.createElement('div');
-  card.style.cssText = `width:780px;min-height:1200px;padding:90px 70px;border-radius:50px;background:rgba(255,255,255,0.96);backdrop-filter:blur(30px);box-shadow:0 30px 90px rgba(0,0,0,0.25),0 10px 30px rgba(12,68,59,0.1);border:4px solid rgba(12,68,59,0.12);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;box-sizing:border-box;`;
+  card.style.cssText = `width:800px;background:#fff;border-radius:40px;box-shadow:0 20px 80px rgba(0,0,0,0.15);overflow:hidden;box-sizing:border-box;`;
+  
   const img = document.createElement('img');
   img.src = photoSrc;
   img.alt = '사원 사진';
-  img.style.cssText = `width:380px;height:380px;border-radius:50%;object-fit:cover;margin-top:10px;margin-bottom:55px;border:7px solid #fff;box-shadow:0 18px 60px rgba(0,0,0,0.22),0 0 0 1px rgba(12,68,59,0.08);`;
+  img.style.cssText = `width:100%;height:600px;object-fit:cover;display:block;`;
+  
+  const infoContainer = document.createElement('div');
+  infoContainer.style.cssText = `padding:80px 80px 80px 80px;`;
+  
   const nameEl = document.createElement('div');
   nameEl.textContent = name;
-  nameEl.style.cssText = `font-size:68px;color:#0c443b;font-weight:500;letter-spacing:4px;margin-bottom:28px;font-family:'Noto Serif KR',serif;text-align:center;`;
+  nameEl.style.cssText = `font-size:72px;color:#1a1a1a;font-weight:500;letter-spacing:0;margin-bottom:24px;font-family:'Noto Serif KR',serif;text-align:left;`;
+  
   const teamEl = document.createElement('div');
   teamEl.textContent = team;
-  teamEl.style.cssText = `font-size:40px;color:#777;font-weight:300;letter-spacing:4px;margin-bottom:65px;font-family:'Noto Serif KR',serif;text-align:center;`;
+  teamEl.style.cssText = `font-size:36px;color:#666;font-weight:400;letter-spacing:0;margin-bottom:40px;font-family:'Noto Serif KR',serif;text-align:left;`;
+  
   const verseEl = document.createElement('div');
   verseEl.innerHTML = verseHTML;
-  verseEl.style.cssText = `font-size:22px;line-height:2;color:#666;max-width:620px;width:100%;text-align:center;padding-top:60px;border-top:2px solid rgba(12,68,59,0.12);font-family:'Noto Serif KR',serif;`;
+  verseEl.style.cssText = `font-size:28px;line-height:1.6;color:#999;text-align:left;font-family:'Noto Serif KR',serif;font-weight:400;letter-spacing:0.5px;`;
 
+  infoContainer.appendChild(nameEl);
+  infoContainer.appendChild(teamEl);
+  infoContainer.appendChild(verseEl);
   card.appendChild(img);
-  card.appendChild(nameEl);
-  card.appendChild(teamEl);
-  card.appendChild(verseEl);
-  root.appendChild(title);
+  card.appendChild(infoContainer);
   root.appendChild(card);
   return root;
 }
