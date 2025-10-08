@@ -121,15 +121,20 @@ window.searchEmployee = async function() {
 
     for (const key in employees) {
       const emp = employees[key];
-      if (emp.name === name && emp.team === team) {
-        document.getElementById('resultPhoto').src = emp.photoURL;
-        document.getElementById('resultName').textContent = emp.name;
-        document.getElementById('resultTeam').textContent = emp.team;
-        document.getElementById('resultId').textContent = 'ID: ' + key.substring(0, 8).toUpperCase();
-        showPage('resultPage');
-        found = true;
-        break;
-      }
+          if (emp.name === name && emp.team === team) {
+            document.getElementById('resultPhoto').src = emp.photoURL;
+            document.getElementById('resultName').textContent = emp.name;
+            document.getElementById('resultTeam').textContent = emp.team;
+            
+            // 랜덤한 성경 말씀 선택
+            const randomVerse = verses[Math.floor(Math.random() * verses.length)];
+            document.getElementById('resultId').innerHTML = 
+              `<div style="font-size: 12px; color: #666; line-height: 1.4; margin-top: 20px;">${randomVerse.content}<br><span style="font-size: 10px; color: #999; margin-top: 5px; display: block;">${randomVerse.reference}</span></div>`;
+            
+            showPage('resultPage');
+            found = true;
+            break;
+          }
     }
 
     if (!found) {
@@ -142,51 +147,152 @@ window.searchEmployee = async function() {
   }
 };
 
+// 간단한 이미지 저장 함수 (대체 방법)
+window.saveAsImageSimple = function() {
+  const employeeName = document.getElementById('resultName').textContent;
+  const employeeTeam = document.getElementById('resultTeam').textContent;
+  const employeeVerse = document.getElementById('resultId').innerHTML;
+  const photoSrc = document.getElementById('resultPhoto').src;
+  
+  // 새 창 열기
+  const newWindow = window.open('', '_blank', 'width=720,height=1100');
+  
+  newWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>하늘의 걸음 - ${employeeName}</title>
+      <style>
+        body {
+          margin: 0;
+          padding: 50px;
+          background: #f8f9fa;
+          font-family: 'Noto Serif KR', serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+        }
+        .card {
+          width: 600px;
+          height: 900px;
+          background: white;
+          border-radius: 40px;
+          padding: 60px;
+          box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+          border: 3px solid #0c443b;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          text-align: center;
+        }
+        .photo {
+          width: 250px;
+          height: 250px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 5px solid #fff;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .name {
+          font-size: 42px;
+          color: #0c443b;
+          font-weight: 400;
+          letter-spacing: 4px;
+          margin: 20px 0;
+        }
+        .team {
+          font-size: 28px;
+          color: #666;
+          font-weight: 300;
+          letter-spacing: 2px;
+          margin: 20px 0;
+        }
+        .verse {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.4;
+          margin-top: 20px;
+          text-align: center;
+        }
+        .verse-reference {
+          font-size: 11px;
+          color: #999;
+          margin-top: 8px;
+          display: block;
+        }
+        .title {
+          font-size: 24px;
+          color: #0c443b;
+          margin-bottom: 20px;
+          font-weight: 300;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="title">The Steps of Haneul</div>
+        <img src="${photoSrc}" alt="프로필" class="photo">
+        <div class="name">${employeeName}</div>
+        <div class="team">${employeeTeam}</div>
+        <div class="verse">${employeeVerse}</div>
+      </div>
+    </body>
+    </html>
+  `);
+  
+  newWindow.document.close();
+  
+  // 인쇄 대화상자 열기 (사용자가 이미지로 저장할 수 있음)
+  setTimeout(() => {
+    newWindow.print();
+  }, 1000);
+};
+
 window.saveAsImage = async function() {
+  // 먼저 간단한 방법 시도
+  try {
+    window.saveAsImageSimple();
+    alert('새 창이 열렸습니다. 브라우저의 인쇄 기능을 사용하여 이미지로 저장하세요.');
+    return;
+  } catch (error) {
+    console.log('간단한 방법 실패, html2canvas 시도...');
+  }
+  
+  // html2canvas 방법 시도
   const container = document.getElementById('resultContainer');
   const resultCard = document.getElementById('resultCard');
   
-  // 저장 모드로 전환
-  container.classList.add('saving-mode');
-
+  alert('이미지 저장을 시작합니다...');
+  
   try {
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
-    // 고품질 이미지로 캡처
+    // 저장 모드로 전환
+    container.classList.add('saving-mode');
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
     const canvas = await html2canvas.default(resultCard, {
-      width: 720,
-      height: 1100,
-      scale: 3, // 더 높은 해상도
+      scale: 2,
       backgroundColor: '#ffffff',
-      logging: false,
       useCORS: true,
-      allowTaint: true,
-      imageTimeout: 15000
+      allowTaint: true
     });
 
-    // 저장 모드 해제
     container.classList.remove('saving-mode');
 
-    // 고품질로 이미지 저장
-    canvas.toBlob(function(blob) {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      const employeeName = document.getElementById('resultName').textContent;
-      const employeeTeam = document.getElementById('resultTeam').textContent;
-      a.download = `하늘의걸음_${employeeName}_${employeeTeam}_${Date.now()}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      // 성공 메시지 표시
-      alert('이미지가 성공적으로 저장되었습니다!');
-    }, 'image/png', 0.95); // 95% 품질
+    // 다운로드
+    const link = document.createElement('a');
+    link.download = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
+    link.href = canvas.toDataURL();
+    link.click();
+    
+    alert('이미지가 저장되었습니다!');
 
   } catch (error) {
-    console.error('이미지 저장 중 오류 발생:', error);
-    container.classList.remove('saving-mode');
-    alert('이미지 저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+    console.error('이미지 저장 오류:', error);
+    alert('이미지 저장에 실패했습니다. 브라우저를 새로고침 후 다시 시도해주세요.');
   }
 };
