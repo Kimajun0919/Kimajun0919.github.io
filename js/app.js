@@ -160,7 +160,7 @@ window.saveAsImage = async function() {
     buttonContainer.style.display = 'none';
     
     // 스타일 적용 대기 (배경 이미지 로딩 포함)
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
     // 전체 컨테이너를 캔버스로 생성 (배경 이미지 포함)
     const canvas = await html2canvas.default(container, {
@@ -170,10 +170,63 @@ window.saveAsImage = async function() {
       backgroundColor: null,
       useCORS: true,
       allowTaint: true,
-      logging: false,
+      logging: true,
       imageTimeout: 30000,
       removeContainer: false,
-      foreignObjectRendering: false
+      foreignObjectRendering: false,
+      onclone: function(clonedDoc) {
+        // 복제된 문서에서 스타일 강제 적용
+        const clonedContainer = clonedDoc.getElementById('resultContainer');
+        const clonedCard = clonedDoc.getElementById('resultCard');
+        const clonedTitle = clonedDoc.querySelector('.card-title');
+        const clonedPhoto = clonedDoc.getElementById('resultPhoto');
+        const clonedName = clonedDoc.getElementById('resultName');
+        const clonedTeam = clonedDoc.getElementById('resultTeam');
+        const clonedVerse = clonedDoc.getElementById('resultId');
+        
+        if (clonedContainer) {
+          clonedContainer.style.width = '1080px';
+          clonedContainer.style.height = '1920px';
+          clonedContainer.style.padding = '220px 90px 180px';
+        }
+        
+        if (clonedCard) {
+          clonedCard.style.width = '780px';
+          clonedCard.style.padding = '90px 70px';
+          clonedCard.style.borderRadius = '50px';
+        }
+        
+        if (clonedTitle) {
+          clonedTitle.style.fontSize = '64px';
+          clonedTitle.style.marginBottom = '65px';
+        }
+        
+        if (clonedPhoto) {
+          clonedPhoto.style.width = '380px';
+          clonedPhoto.style.height = '380px';
+          clonedPhoto.style.marginTop = '10px';
+          clonedPhoto.style.marginBottom = '55px';
+        }
+        
+        if (clonedName) {
+          clonedName.style.fontSize = '68px';
+          clonedName.style.marginBottom = '28px';
+          clonedName.style.letterSpacing = '4px';
+        }
+        
+        if (clonedTeam) {
+          clonedTeam.style.fontSize = '40px';
+          clonedTeam.style.marginBottom = '65px';
+          clonedTeam.style.letterSpacing = '4px';
+        }
+        
+        if (clonedVerse) {
+          clonedVerse.style.fontSize = '22px';
+          clonedVerse.style.paddingTop = '60px';
+          clonedVerse.style.lineHeight = '2';
+          clonedVerse.style.maxWidth = '620px';
+        }
+      }
     });
 
     // 캔버스가 비어있는지 확인
