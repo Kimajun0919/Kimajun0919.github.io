@@ -151,6 +151,7 @@ window.searchEmployee = async function() {
 window.saveAsImage = async function() {
   const container = document.getElementById('resultContainer');
   const resultCard = document.getElementById('resultCard');
+  const buttonContainer = document.querySelector('.button-container');
   
   // 로딩 메시지 표시
   const statusDiv = document.createElement('div');
@@ -174,79 +175,105 @@ window.saveAsImage = async function() {
     
     // 저장 모드로 전환
     container.classList.add('saving-mode');
-    await new Promise(resolve => setTimeout(resolve, 800));
+    buttonContainer.style.display = 'none';
+    
+    // 스타일 적용 대기
+    await new Promise(resolve => setTimeout(resolve, 1000));
     
     statusDiv.textContent = '이미지 생성 중...';
     
-    // 고품질 캔버스 생성
+    // 간단하고 안정적인 방법으로 캔버스 생성
     const canvas = await html2canvas.default(resultCard, {
-      width: 720,
-      height: 1100,
       scale: 2,
       backgroundColor: '#ffffff',
       useCORS: true,
       allowTaint: true,
-      foreignObjectRendering: true,
-      imageTimeout: 15000,
-      logging: false
+      logging: true, // 디버깅을 위해 로깅 활성화
+      imageTimeout: 30000,
+      removeContainer: false,
+      foreignObjectRendering: false,
+      onclone: function(clonedDoc) {
+        // 클론된 문서에서 스타일 확인
+        console.log('Cloned document ready');
+      }
     });
 
-    container.classList.remove('saving-mode');
+    console.log('Canvas created:', canvas.width, 'x', canvas.height);
+    
+    // 캔버스가 비어있는지 확인
+    if (canvas.width === 0 || canvas.height === 0) {
+      throw new Error('Canvas is empty');
+    }
+
     statusDiv.textContent = '파일 다운로드 중...';
 
-    // 고품질로 이미지 저장
-    canvas.toBlob(function(blob) {
-      const url = URL.createObjectURL(blob);
-      const filename = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
+    // 저장 모드 해제
+    container.classList.remove('saving-mode');
+    buttonContainer.style.display = '';
 
-      // 모바일 여부 감지
-      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    // 이미지 저장
+    const filename = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
+    
+    // 모바일 여부 감지
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-      if (isMobile) {
-        // 모바일이면 새 탭으로 이미지 열기 (사용자가 갤러리에 직접 저장 가능)
-        const dataUrl = canvas.toDataURL('image/png', 0.95);
-        const newTab = window.open(dataUrl, '_blank');
-        if (!newTab) alert('팝업 차단을 해제해주세요.');
-      } else {
-        // PC면 자동 다운로드
+    if (isMobile) {
+      // 모바일이면 새 탭으로 이미지 열기
+      const dataUrl = canvas.toDataURL('image/png', 0.95);
+      const newTab = window.open(dataUrl, '_blank');
+      if (!newTab) {
+        alert('팝업 차단을 해제해주세요.');
+        // 팝업이 차단된 경우 직접 다운로드 시도
         const link = document.createElement('a');
-        link.href = url;
+        link.href = dataUrl;
         link.download = filename;
-        document.body.appendChild(link);
         link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
       }
+    } else {
+      // PC면 자동 다운로드
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png', 0.95);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
 
-      // 로딩 메시지 제거
-      document.body.removeChild(statusDiv);
+    // 로딩 메시지 제거
+    document.body.removeChild(statusDiv);
 
-      // 성공 메시지
-      const successDiv = document.createElement('div');
-      successDiv.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #27ae60;
-        color: white;
-        padding: 20px 40px;
-        border-radius: 10px;
-        z-index: 10000;
-        font-family: 'Noto Serif KR', serif;
-      `;
-      successDiv.textContent = isMobile ? '📱 새 창에서 "사진에 저장"을 눌러주세요!' : '✅ 이미지가 저장되었습니다!';
-      document.body.appendChild(successDiv);
+    // 성공 메시지
+    const successDiv = document.createElement('div');
+    successDiv.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #27ae60;
+      color: white;
+      padding: 20px 40px;
+      border-radius: 10px;
+      z-index: 10000;
+      font-family: 'Noto Serif KR', serif;
+    `;
+    successDiv.textContent = isMobile ? '📱 새 창에서 "사진에 저장"을 눌러주세요!' : '✅ 이미지가 저장되었습니다!';
+    document.body.appendChild(successDiv);
 
-      setTimeout(() => {
-        document.body.removeChild(successDiv);
-      }, 2500);
-    }, 'image/png', 0.95);
+    setTimeout(() => {
+      document.body.removeChild(successDiv);
+    }, 2500);
 
   } catch (error) {
     console.error('이미지 저장 오류:', error);
+    
+    // 저장 모드 해제
     container.classList.remove('saving-mode');
-    document.body.removeChild(statusDiv);
+    buttonContainer.style.display = '';
+    
+    // 로딩 메시지 제거
+    if (document.body.contains(statusDiv)) {
+      document.body.removeChild(statusDiv);
+    }
     
     // 오류 메시지
     const errorDiv = document.createElement('div');
@@ -262,7 +289,7 @@ window.saveAsImage = async function() {
       z-index: 10000;
       font-family: 'Noto Serif KR', serif;
     `;
-    errorDiv.textContent = '❌ 이미지 저장에 실패했습니다. 다시 시도해주세요.';
+    errorDiv.textContent = '❌ 이미지 저장에 실패했습니다. 브라우저를 새로고침 후 다시 시도해주세요.';
     document.body.appendChild(errorDiv);
     
     setTimeout(() => {
