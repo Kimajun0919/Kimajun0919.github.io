@@ -317,23 +317,25 @@ input[type="file"] {
 
 /* 저장 모드 */
 .result-container.saving-mode {
-  width: 1080px;
-  height: 1920px;
-  background: url('../assets/back.jpg') no-repeat center/cover;
-  padding-top: 220px;
+  width: 720px;
+  height: 1100px;
+  background: #f8f9fa;
+  padding: 50px;
+  margin: 0 auto;
 }
 
 .result-container.saving-mode .result-card {
-  width: 720px;
-  min-height: 1100px;
+  width: 100%;
+  height: 100%;
   padding: 80px 60px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background: #fff;
   border-radius: 40px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
-  margin: 0 auto 200px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.15);
+  margin: 0;
+  border: 3px solid #0c443b;
 }
 
 .employee-photo {

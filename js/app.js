@@ -144,26 +144,49 @@ window.searchEmployee = async function() {
 
 window.saveAsImage = async function() {
   const container = document.getElementById('resultContainer');
+  const resultCard = document.getElementById('resultCard');
+  
+  // 저장 모드로 전환
   container.classList.add('saving-mode');
 
-  const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
-  
-  const canvas = await html2canvas.default(container, {
-    width: 1080,
-    height: 1920,
-    scale: 2,
-    backgroundColor: null,
-    logging: false
-  });
+  try {
+    const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
+    
+    // 고품질 이미지로 캡처
+    const canvas = await html2canvas.default(resultCard, {
+      width: 720,
+      height: 1100,
+      scale: 3, // 더 높은 해상도
+      backgroundColor: '#ffffff',
+      logging: false,
+      useCORS: true,
+      allowTaint: true,
+      imageTimeout: 15000
+    });
 
-  container.classList.remove('saving-mode');
+    // 저장 모드 해제
+    container.classList.remove('saving-mode');
 
-  canvas.toBlob(function(blob) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `사원증_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
-    a.click();
-    URL.revokeObjectURL(url);
-  });
+    // 고품질로 이미지 저장
+    canvas.toBlob(function(blob) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      const employeeName = document.getElementById('resultName').textContent;
+      const employeeTeam = document.getElementById('resultTeam').textContent;
+      a.download = `하늘의걸음_${employeeName}_${employeeTeam}_${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      // 성공 메시지 표시
+      alert('이미지가 성공적으로 저장되었습니다!');
+    }, 'image/png', 0.95); // 95% 품질
+
+  } catch (error) {
+    console.error('이미지 저장 중 오류 발생:', error);
+    container.classList.remove('saving-mode');
+    alert('이미지 저장 중 오류가 발생했습니다. 다시 시도해주세요.');
+  }
 };
