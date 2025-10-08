@@ -148,127 +148,85 @@ window.searchEmployee = async function() {
 };
 
 
+// 오프스크린 고정 레이아웃 생성 (저장용)
+function buildExportContainer(name, team, photoSrc, verseHTML) {
+  const root = document.createElement('div');
+  root.style.cssText = 'position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url(\\'assets/back.jpg\\') center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:220px 90px 180px;box-sizing:border-box;';
+  const title = document.createElement('div');
+  title.textContent = 'The Steps of Haneul';
+  title.style.cssText = "font-family:'flirt-script-regular',sans-serif;font-size:64px;color:rgba(12,68,59,1);text-shadow:0 2px 20px rgba(255,255,255,0.9),0 0 40px rgba(255,255,255,0.6);margin-bottom:65px;letter-spacing:3px;";
+  const card = document.createElement('div');
+  card.style.cssText = 'width:780px;min-height:1200px;padding:90px 70px;border-radius:50px;background:rgba(255,255,255,0.96);backdrop-filter:blur(30px);box-shadow:0 30px 90px rgba(0,0,0,0.25),0 10px 30px rgba(12,68,59,0.1);border:4px solid rgba(12,68,59,0.12);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;box-sizing:border-box;';
+  const img = document.createElement('img');
+  img.src = photoSrc;
+  img.alt = '사원 사진';
+  img.style.cssText = 'width:380px;height:380px;border-radius:50%;object-fit:cover;margin-top:10px;margin-bottom:55px;border:7px solid #fff;box-shadow:0 18px 60px rgba(0,0,0,0.22),0 0 0 1px rgba(12,68,59,0.08);';
+  const nameEl = document.createElement('div');
+  nameEl.textContent = name;
+  nameEl.style.cssText = "font-size:68px;color:#0c443b;font-weight:500;letter-spacing:4px;margin-bottom:28px;font-family:'Noto Serif KR',serif;text-align:center;";
+  const teamEl = document.createElement('div');
+  teamEl.textContent = team;
+  teamEl.style.cssText = "font-size:40px;color:#777;font-weight:300;letter-spacing:4px;margin-bottom:65px;font-family:'Noto Serif KR',serif;text-align:center;";
+  const verseEl = document.createElement('div');
+  verseEl.innerHTML = verseHTML;
+  verseEl.style.cssText = 'font-size:22px;line-height:2;color:#666;max-width:620px;width:100%;text-align:center;padding-top:60px;border-top:2px solid rgba(12,68,59,0.12);';
+
+  card.appendChild(img);
+  card.appendChild(nameEl);
+  card.appendChild(teamEl);
+  card.appendChild(verseEl);
+  root.appendChild(title);
+  root.appendChild(card);
+  return root;
+}
+
 window.saveAsImage = async function() {
-  const container = document.getElementById('resultContainer');
-  const buttonContainer = document.querySelector('.button-container');
-  const resultPhotoEl = document.getElementById('resultPhoto');
-  
+  const name = document.getElementById('resultName').textContent;
+  const team = document.getElementById('resultTeam').textContent;
+  const photoSrc = document.getElementById('resultPhoto').src;
+  const verseHTML = document.getElementById('resultId').innerHTML;
+
+  const exportEl = buildExportContainer(name, team, photoSrc, verseHTML);
+  document.body.appendChild(exportEl);
+
   try {
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
-    
-    // 저장 모드로 전환
-    container.classList.add('saving-mode');
-    buttonContainer.style.display = 'none';
-    
-    // 폰트/이미지 로딩 보장 및 스타일 적용 대기
+
     const wait = (ms) => new Promise(r => setTimeout(r, ms));
-    const waitForImage = (img) => {
-      if (!img) return Promise.resolve();
-      if (img.complete && img.naturalWidth > 0) return Promise.resolve();
-      return new Promise(resolve => {
-        img.addEventListener('load', resolve, { once: true });
-        img.addEventListener('error', resolve, { once: true });
-      });
-    };
-    await Promise.all([
-      (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve(),
-      waitForImage(resultPhotoEl),
-      wait(500) // 레이아웃 안정화 소요 시간 최소화
-    ]);
-    
-    // 전체 컨테이너를 캔버스로 생성 (배경 이미지 포함)
-    const canvas = await html2canvas.default(container, {
+    const img = exportEl.querySelector('img');
+    if (img && !(img.complete && img.naturalWidth > 0)) {
+      await new Promise(resolve => { img.addEventListener('load', resolve, { once:true }); img.addEventListener('error', resolve, { once:true }); });
+    }
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    await wait(200);
+
+    const canvas = await html2canvas.default(exportEl, {
       width: 1080,
       height: 1920,
       scale: 1,
-      windowWidth: 1080,   // vw / clamp 계산을 1080 기준으로 고정
+      windowWidth: 1080,
       windowHeight: 1920,
       scrollX: 0,
       scrollY: 0,
       backgroundColor: null,
       useCORS: true,
       allowTaint: true,
-      logging: true,
+      logging: false,
       imageTimeout: 30000,
       removeContainer: false,
-      foreignObjectRendering: false,
-      onclone: function(clonedDoc) {
-        // 복제된 문서에서 스타일 강제 적용
-        const clonedContainer = clonedDoc.getElementById('resultContainer');
-        const clonedCard = clonedDoc.getElementById('resultCard');
-        const clonedTitle = clonedDoc.querySelector('.card-title');
-        const clonedPhoto = clonedDoc.getElementById('resultPhoto');
-        const clonedName = clonedDoc.getElementById('resultName');
-        const clonedTeam = clonedDoc.getElementById('resultTeam');
-        const clonedVerse = clonedDoc.getElementById('resultId');
-        
-        if (clonedContainer) {
-          clonedContainer.style.width = '1080px';
-          clonedContainer.style.height = '1920px';
-          clonedContainer.style.padding = '220px 90px 180px';
-        }
-        
-        if (clonedCard) {
-          clonedCard.style.width = '780px';
-          clonedCard.style.padding = '90px 70px';
-          clonedCard.style.borderRadius = '50px';
-        }
-        
-        if (clonedTitle) {
-          clonedTitle.style.fontSize = '64px';
-          clonedTitle.style.marginBottom = '65px';
-        }
-        
-        if (clonedPhoto) {
-          clonedPhoto.style.width = '380px';
-          clonedPhoto.style.height = '380px';
-          clonedPhoto.style.marginTop = '10px';
-          clonedPhoto.style.marginBottom = '55px';
-        }
-        
-        if (clonedName) {
-          clonedName.style.fontSize = '68px';
-          clonedName.style.marginBottom = '28px';
-          clonedName.style.letterSpacing = '4px';
-        }
-        
-        if (clonedTeam) {
-          clonedTeam.style.fontSize = '40px';
-          clonedTeam.style.marginBottom = '65px';
-          clonedTeam.style.letterSpacing = '4px';
-        }
-        
-        if (clonedVerse) {
-          clonedVerse.style.fontSize = '22px';
-          clonedVerse.style.paddingTop = '60px';
-          clonedVerse.style.lineHeight = '2';
-          clonedVerse.style.maxWidth = '620px';
-        }
-      }
+      foreignObjectRendering: false
     });
 
-    // 캔버스가 비어있는지 확인
-    if (canvas.width === 0 || canvas.height === 0) {
-      throw new Error('Canvas is empty');
-    }
+    if (canvas.width === 0 || canvas.height === 0) throw new Error('Canvas is empty');
 
-    // 저장 모드 해제
-    container.classList.remove('saving-mode');
-    buttonContainer.style.display = '';
-
-    // 이미지 저장 - 모든 기기에서 다운로드
-    const filename = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
-    
+    const filename = `하늘의걸음_${name}_${Date.now()}.png`;
     const link = document.createElement('a');
     link.href = canvas.toDataURL('image/png', 0.95);
     link.download = filename;
     link.click();
-
   } catch (error) {
     console.error('이미지 저장 오류:', error);
-    
-    // 저장 모드 해제
-    container.classList.remove('saving-mode');
-    buttonContainer.style.display = '';
+  } finally {
+    exportEl.remove();
   }
 };
