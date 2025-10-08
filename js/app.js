@@ -211,33 +211,15 @@ window.saveAsImage = async function() {
     container.classList.remove('saving-mode');
     buttonContainer.style.display = '';
 
-    // 이미지 저장
+    // 이미지 저장 - 모든 기기에서 다운로드
     const filename = `하늘의걸음_${document.getElementById('resultName').textContent}_${Date.now()}.png`;
     
-    // 모바일 여부 감지
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-    if (isMobile) {
-      // 모바일이면 새 탭으로 이미지 열기
-      const dataUrl = canvas.toDataURL('image/png', 0.95);
-      const newTab = window.open(dataUrl, '_blank');
-      if (!newTab) {
-        alert('팝업 차단을 해제해주세요.');
-        // 팝업이 차단된 경우 직접 다운로드 시도
-        const link = document.createElement('a');
-        link.href = dataUrl;
-        link.download = filename;
-        link.click();
-      }
-    } else {
-      // PC면 자동 다운로드
-      const link = document.createElement('a');
-      link.href = canvas.toDataURL('image/png', 0.95);
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png', 0.95);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
     // 로딩 메시지 제거
     document.body.removeChild(statusDiv);
@@ -256,7 +238,7 @@ window.saveAsImage = async function() {
       z-index: 10000;
       font-family: 'Noto Serif KR', serif;
     `;
-    successDiv.textContent = isMobile ? '📱 새 창에서 "사진에 저장"을 눌러주세요!' : '✅ 이미지가 저장되었습니다!';
+    successDiv.textContent = '✅ 이미지가 저장되었습니다!';
     document.body.appendChild(successDiv);
 
     setTimeout(() => {
