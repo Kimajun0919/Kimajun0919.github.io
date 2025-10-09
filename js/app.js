@@ -198,64 +198,40 @@ window.searchEmployee = async function() {
 };
 
 
-// 오프스크린 고정 레이아웃 생성 (저장용) - 애플 감성 미니멀 디자인
-function buildExportContainer(name, team, photoSrc, verseHTML) {
-  const root = document.createElement('div');
-  root.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url('assets/back.jpg') center/cover no-repeat;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;`;
-  
-  const card = document.createElement('div');
-  card.style.cssText = `width:760px;background:transparent;overflow:visible;box-sizing:border-box;`;
-  
-  const img = document.createElement('img');
-  img.src = photoSrc;
-  img.alt = '사원 사진';
-  img.style.cssText = `width:calc(100% - 64px);height:640px;object-fit:cover;display:block;border-radius:32px 32px 0 0;margin:32px 32px 0 32px;box-shadow:0 8px 32px rgba(0,0,0,0.1);clip-path:polygon(0 0,100% 0,100% 85%,90% 88%,80% 90%,70% 91%,60% 90%,50% 88%,40% 90%,30% 91%,20% 90%,10% 88%,0 85%);`;
-  
-  const infoContainer = document.createElement('div');
-  infoContainer.style.cssText = `margin-top:-100px;padding:120px 70px 70px 70px;background:#fff;border-radius:56px 56px 24px 24px;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.08);`;
-  
-  const nameEl = document.createElement('div');
-  nameEl.textContent = name;
-  nameEl.style.cssText = `font-size:64px;color:#1d1d1f;font-weight:600;letter-spacing:-1px;margin:0 0 20px 0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;text-align:left;`;
-  
-  const teamEl = document.createElement('div');
-  teamEl.textContent = team;
-  teamEl.style.cssText = `font-size:32px;color:#86868b;font-weight:500;letter-spacing:0;margin:0 0 30px 0;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;text-align:left;`;
-  
-  const verseEl = document.createElement('div');
-  verseEl.innerHTML = verseHTML;
-  verseEl.style.cssText = `font-size:24px;line-height:1.6;color:#a1a1a6;text-align:left;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;font-weight:400;letter-spacing:0.2px;`;
-
-  infoContainer.appendChild(nameEl);
-  infoContainer.appendChild(teamEl);
-  infoContainer.appendChild(verseEl);
-  card.appendChild(img);
-  card.appendChild(infoContainer);
-  root.appendChild(card);
-  return root;
-}
-
 window.saveAsImage = async function() {
   const name = document.getElementById('resultName').textContent;
-  const team = document.getElementById('resultTeam').textContent;
-  const photoSrc = document.getElementById('resultPhoto').src;
-  const verseHTML = document.getElementById('resultId').innerHTML;
-
-  const exportEl = buildExportContainer(name, team, photoSrc, verseHTML);
-  document.body.appendChild(exportEl);
+  
+  // 실제 화면의 result-container를 복제
+  const container = document.getElementById('resultContainer');
+  const clone = container.cloneNode(true);
+  
+  // 저장 모드 클래스 추가
+  clone.classList.add('saving-mode');
+  clone.style.position = 'fixed';
+  clone.style.left = '-99999px';
+  clone.style.top = '0';
+  
+  // 버튼 컨테이너 숨기기
+  const buttons = clone.querySelector('.button-container');
+  if (buttons) buttons.style.display = 'none';
+  
+  document.body.appendChild(clone);
 
   try {
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
 
     const wait = (ms) => new Promise(r => setTimeout(r, ms));
-    const img = exportEl.querySelector('img');
+    const img = clone.querySelector('img');
     if (img && !(img.complete && img.naturalWidth > 0)) {
-      await new Promise(resolve => { img.addEventListener('load', resolve, { once:true }); img.addEventListener('error', resolve, { once:true }); });
+      await new Promise(resolve => { 
+        img.addEventListener('load', resolve, { once:true }); 
+        img.addEventListener('error', resolve, { once:true }); 
+      });
     }
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    await wait(200);
+    await wait(300);
 
-    const canvas = await html2canvas.default(exportEl, {
+    const canvas = await html2canvas.default(clone, {
       width: 1080,
       height: 1920,
       scale: 1,
@@ -282,6 +258,6 @@ window.saveAsImage = async function() {
   } catch (error) {
     console.error('이미지 저장 오류:', error);
   } finally {
-    exportEl.remove();
+    clone.remove();
   }
 };
