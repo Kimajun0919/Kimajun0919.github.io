@@ -205,11 +205,11 @@ window.saveAsImage = async function() {
   const card = document.getElementById('resultCard');
   const clone = card.cloneNode(true);
   
-  // 저장용 컨테이너 생성
+  // 저장용 컨테이너 생성 (사원증 비율 3:4)
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url('assets/back.jpg') center/cover;display:flex;align-items:center;justify-content:center;`;
+  wrapper.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1440px;background:url('assets/back.jpg') center/cover;display:flex;align-items:center;justify-content:center;`;
   
-  // 복제된 카드 스타일 조정 (2배 크기)
+  // 복제된 카드 스타일 조정 (사원증 비율에 맞춤)
   clone.style.cssText = `
     background: #f8f8f8;
     border-radius: 48px;
@@ -219,11 +219,11 @@ window.saveAsImage = async function() {
     overflow: visible;
   `;
   
-  // 사진 크기 조정
+  // 사진 크기 조정 (사원증 비율에 맞춤)
   const photo = clone.querySelector('.employee-photo');
   if (photo) {
     photo.style.width = 'calc(100% - 64px)';
-    photo.style.height = '640px';
+    photo.style.height = '480px';
     photo.style.margin = '32px 32px 0 32px';
     photo.style.borderRadius = '32px 32px 0 0';
     photo.style.objectFit = 'cover';
@@ -235,8 +235,8 @@ window.saveAsImage = async function() {
   const nameEl = clone.querySelector('.employee-name');
   if (nameEl) {
     nameEl.style.fontSize = '56px';
-    nameEl.style.margin = '-100px 0 0 0';
-    nameEl.style.padding = '120px 56px 16px 56px';
+    nameEl.style.margin = '-75px 0 0 0';
+    nameEl.style.padding = '90px 56px 16px 56px';
     nameEl.style.borderRadius = '56px 56px 0 0';
     nameEl.style.background = '#fff';
     nameEl.style.position = 'relative';
@@ -295,10 +295,10 @@ window.saveAsImage = async function() {
 
     const canvas = await html2canvas.default(wrapper, {
       width: 1080,
-      height: 1920,
+      height: 1440,
       scale: 1,
       windowWidth: 1080,
-      windowHeight: 1920,
+      windowHeight: 1440,
       scrollX: 0,
       scrollY: 0,
       backgroundColor: null,
