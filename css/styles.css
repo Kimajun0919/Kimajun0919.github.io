@@ -384,7 +384,7 @@ input[type="file"] {
 
 .result-container.saving-mode .employee-photo {
   width: calc(100% - 64px);
-  height: 920px;
+  height: 700px;
   margin: 32px 32px 0 32px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   border-radius: 32px 32px 0 0;
@@ -420,12 +420,12 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-name {
-  font-size: 56px;
+  font-size: 64px;
   color: #1d1d1f;
   font-weight: 600;
   letter-spacing: -1px;
-  margin: -140px 0 0 0;
-  padding: 155px 56px 16px 56px;
+  margin: -105px 0 0 0;
+  padding: 120px 56px 12px 56px;
   text-align: left;
   background: #fff;
   border-radius: 56px 56px 0 0;
@@ -446,12 +446,12 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-team {
-  font-size: 28px;
+  font-size: 32px;
   color: #86868b;
   font-weight: 500;
   letter-spacing: 0;
   margin: 0;
-  padding: 0 56px 24px 56px;
+  padding: 0 56px 20px 56px;
   text-align: left;
   background: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
@@ -480,11 +480,11 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-id {
-  font-size: 22px;
+  font-size: 24px;
   color: #a1a1a6;
-  line-height: 1.6;
+  line-height: 1.7;
   margin: 0;
-  padding: 0 56px 56px 56px;
+  padding: 0 56px 48px 56px;
   text-align: left;
   font-weight: 400;
   letter-spacing: 0.2px;

@@ -219,11 +219,11 @@ window.saveAsImage = async function() {
     overflow: visible;
   `;
   
-  // 사진 크기 조정 (사원증 비율에 맞춤)
+  // 사진 크기 조정 (고정 크기)
   const photo = clone.querySelector('.employee-photo');
   if (photo) {
     photo.style.width = 'calc(100% - 64px)';
-    photo.style.height = '920px';
+    photo.style.height = '700px';
     photo.style.margin = '32px 32px 0 32px';
     photo.style.borderRadius = '32px 32px 0 0';
     photo.style.objectFit = 'cover';
@@ -231,12 +231,12 @@ window.saveAsImage = async function() {
     photo.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
   }
   
-  // 이름 스타일 조정
+  // 이름 스타일 조정 (고정 크기)
   const nameEl = clone.querySelector('.employee-name');
   if (nameEl) {
-    nameEl.style.fontSize = '56px';
-    nameEl.style.margin = '-140px 0 0 0';
-    nameEl.style.padding = '155px 56px 16px 56px';
+    nameEl.style.fontSize = '64px';
+    nameEl.style.margin = '-105px 0 0 0';
+    nameEl.style.padding = '120px 56px 12px 56px';
     nameEl.style.borderRadius = '56px 56px 0 0';
     nameEl.style.background = '#fff';
     nameEl.style.position = 'relative';
@@ -246,11 +246,11 @@ window.saveAsImage = async function() {
     nameEl.style.textAlign = 'left';
   }
   
-  // 팀명 스타일 조정
+  // 팀명 스타일 조정 (고정 크기)
   const teamEl = clone.querySelector('.employee-team');
   if (teamEl) {
-    teamEl.style.fontSize = '28px';
-    teamEl.style.padding = '0 56px 24px 56px';
+    teamEl.style.fontSize = '32px';
+    teamEl.style.padding = '0 56px 20px 56px';
     teamEl.style.background = '#fff';
     teamEl.style.position = 'relative';
     teamEl.style.color = '#86868b';
@@ -260,16 +260,16 @@ window.saveAsImage = async function() {
     teamEl.style.margin = '0';
   }
   
-  // 말씀 스타일 조정
+  // 말씀 스타일 조정 (고정 크기)
   const idEl = clone.querySelector('.employee-id');
   if (idEl) {
-    idEl.style.fontSize = '22px';
-    idEl.style.padding = '0 56px 56px 56px';
+    idEl.style.fontSize = '24px';
+    idEl.style.padding = '0 56px 48px 56px';
     idEl.style.borderRadius = '0 0 24px 24px';
     idEl.style.background = '#fff';
     idEl.style.position = 'relative';
     idEl.style.color = '#a1a1a6';
-    idEl.style.lineHeight = '1.6';
+    idEl.style.lineHeight = '1.7';
     idEl.style.margin = '0';
     idEl.style.fontWeight = '400';
     idEl.style.letterSpacing = '0.2px';
