@@ -201,21 +201,59 @@ window.searchEmployee = async function() {
 window.saveAsImage = async function() {
   const name = document.getElementById('resultName').textContent;
   
-  // 실제 화면의 result-container를 복제
-  const container = document.getElementById('resultContainer');
-  const clone = container.cloneNode(true);
+  // result-card만 복제 (타이틀과 버튼 제외)
+  const card = document.getElementById('resultCard');
+  const clone = card.cloneNode(true);
   
-  // 저장 모드 클래스 추가
-  clone.classList.add('saving-mode');
-  clone.style.position = 'fixed';
-  clone.style.left = '-99999px';
-  clone.style.top = '0';
+  // 저장용 컨테이너 생성
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `position:fixed;left:-99999px;top:0;width:1080px;height:1920px;background:url('assets/back.jpg') center/cover;display:flex;align-items:center;justify-content:center;`;
   
-  // 버튼 컨테이너 숨기기
-  const buttons = clone.querySelector('.button-container');
-  if (buttons) buttons.style.display = 'none';
+  // 복제된 카드 스타일 조정 (2배 크기)
+  clone.style.cssText = `
+    background: #f8f8f8;
+    border-radius: 48px;
+    padding: 0;
+    width: 760px;
+    box-shadow: 0 16px 64px rgba(0,0,0,0.12);
+    overflow: visible;
+  `;
   
-  document.body.appendChild(clone);
+  // 사진 크기 조정
+  const photo = clone.querySelector('.employee-photo');
+  if (photo) {
+    photo.style.width = 'calc(100% - 64px)';
+    photo.style.height = '640px';
+    photo.style.margin = '32px 32px 0 32px';
+    photo.style.borderRadius = '32px 32px 0 0';
+  }
+  
+  // 이름 스타일 조정
+  const nameEl = clone.querySelector('.employee-name');
+  if (nameEl) {
+    nameEl.style.fontSize = '56px';
+    nameEl.style.margin = '-100px 0 0 0';
+    nameEl.style.padding = '120px 56px 16px 56px';
+    nameEl.style.borderRadius = '56px 56px 0 0';
+  }
+  
+  // 팀명 스타일 조정
+  const teamEl = clone.querySelector('.employee-team');
+  if (teamEl) {
+    teamEl.style.fontSize = '28px';
+    teamEl.style.padding = '0 56px 24px 56px';
+  }
+  
+  // 말씀 스타일 조정
+  const idEl = clone.querySelector('.employee-id');
+  if (idEl) {
+    idEl.style.fontSize = '22px';
+    idEl.style.padding = '0 56px 56px 56px';
+    idEl.style.borderRadius = '0 0 24px 24px';
+  }
+  
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
 
   try {
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
@@ -231,7 +269,7 @@ window.saveAsImage = async function() {
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
     await wait(300);
 
-    const canvas = await html2canvas.default(clone, {
+    const canvas = await html2canvas.default(wrapper, {
       width: 1080,
       height: 1920,
       scale: 1,
@@ -258,6 +296,6 @@ window.saveAsImage = async function() {
   } catch (error) {
     console.error('이미지 저장 오류:', error);
   } finally {
-    clone.remove();
+    wrapper.remove();
   }
 };
