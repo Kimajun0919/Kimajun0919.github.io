@@ -226,6 +226,9 @@ window.saveAsImage = async function() {
     photo.style.height = '640px';
     photo.style.margin = '32px 32px 0 32px';
     photo.style.borderRadius = '32px 32px 0 0';
+    photo.style.objectFit = 'cover';
+    photo.style.clipPath = 'polygon(0 0,100% 0,100% 85%,90% 88%,80% 90%,70% 91%,60% 90%,50% 88%,40% 90%,30% 91%,20% 90%,10% 88%,0 85%)';
+    photo.style.boxShadow = '0 8px 32px rgba(0,0,0,0.1)';
   }
   
   // 이름 스타일 조정
@@ -235,6 +238,12 @@ window.saveAsImage = async function() {
     nameEl.style.margin = '-100px 0 0 0';
     nameEl.style.padding = '120px 56px 16px 56px';
     nameEl.style.borderRadius = '56px 56px 0 0';
+    nameEl.style.background = '#fff';
+    nameEl.style.position = 'relative';
+    nameEl.style.color = '#1d1d1f';
+    nameEl.style.fontWeight = '600';
+    nameEl.style.letterSpacing = '-1px';
+    nameEl.style.textAlign = 'left';
   }
   
   // 팀명 스타일 조정
@@ -242,6 +251,13 @@ window.saveAsImage = async function() {
   if (teamEl) {
     teamEl.style.fontSize = '28px';
     teamEl.style.padding = '0 56px 24px 56px';
+    teamEl.style.background = '#fff';
+    teamEl.style.position = 'relative';
+    teamEl.style.color = '#86868b';
+    teamEl.style.fontWeight = '500';
+    teamEl.style.letterSpacing = '0';
+    teamEl.style.textAlign = 'left';
+    teamEl.style.margin = '0';
   }
   
   // 말씀 스타일 조정
@@ -250,6 +266,14 @@ window.saveAsImage = async function() {
     idEl.style.fontSize = '22px';
     idEl.style.padding = '0 56px 56px 56px';
     idEl.style.borderRadius = '0 0 24px 24px';
+    idEl.style.background = '#fff';
+    idEl.style.position = 'relative';
+    idEl.style.color = '#a1a1a6';
+    idEl.style.lineHeight = '1.6';
+    idEl.style.margin = '0';
+    idEl.style.fontWeight = '400';
+    idEl.style.letterSpacing = '0.2px';
+    idEl.style.textAlign = 'left';
   }
   
   wrapper.appendChild(clone);
