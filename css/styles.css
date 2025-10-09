@@ -331,10 +331,10 @@ input[type="file"] {
   overflow: visible;
 }
 
-/* 저장 모드 */
+/* 저장 모드 (사원증 비율 3:4) */
 .result-container.saving-mode {
   width: 1080px;
-  height: 1920px;
+  height: 1440px;
   background-image: url('../assets/back.jpg');
   background-position: center center;
   background-size: cover;
@@ -384,7 +384,7 @@ input[type="file"] {
 
 .result-container.saving-mode .employee-photo {
   width: calc(100% - 64px);
-  height: 640px;
+  height: 480px;
   margin: 32px 32px 0 32px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   border-radius: 32px 32px 0 0;
@@ -424,8 +424,8 @@ input[type="file"] {
   color: #1d1d1f;
   font-weight: 600;
   letter-spacing: -1px;
-  margin: -100px 0 0 0;
-  padding: 120px 56px 16px 56px;
+  margin: -75px 0 0 0;
+  padding: 90px 56px 16px 56px;
   text-align: left;
   background: #fff;
   border-radius: 56px 56px 0 0;
