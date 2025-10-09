@@ -214,17 +214,17 @@ window.saveAsImage = async function() {
     background: #f8f8f8;
     border-radius: 48px;
     padding: 0;
-    width: 760px;
+    width: 920px;
     box-shadow: 0 16px 64px rgba(0,0,0,0.12);
     overflow: visible;
   `;
   
-  // 사진 크기 조정 (고정 크기)
+  // 사진 크기 조정 (완전 고정 크기)
   const photo = clone.querySelector('.employee-photo');
   if (photo) {
-    photo.style.width = 'calc(100% - 64px)';
+    photo.style.width = '872px';
     photo.style.height = '700px';
-    photo.style.margin = '32px 32px 0 32px';
+    photo.style.margin = '24px';
     photo.style.borderRadius = '32px 32px 0 0';
     photo.style.objectFit = 'cover';
     photo.style.clipPath = 'polygon(0 0,100% 0,100% 85%,90% 88%,80% 90%,70% 91%,60% 90%,50% 88%,40% 90%,30% 91%,20% 90%,10% 88%,0 85%)';
@@ -236,7 +236,7 @@ window.saveAsImage = async function() {
   if (nameEl) {
     nameEl.style.fontSize = '64px';
     nameEl.style.margin = '-105px 0 0 0';
-    nameEl.style.padding = '120px 56px 12px 56px';
+    nameEl.style.padding = '120px 68px 12px 68px';
     nameEl.style.borderRadius = '56px 56px 0 0';
     nameEl.style.background = '#fff';
     nameEl.style.position = 'relative';
@@ -250,7 +250,7 @@ window.saveAsImage = async function() {
   const teamEl = clone.querySelector('.employee-team');
   if (teamEl) {
     teamEl.style.fontSize = '32px';
-    teamEl.style.padding = '0 56px 20px 56px';
+    teamEl.style.padding = '0 68px 20px 68px';
     teamEl.style.background = '#fff';
     teamEl.style.position = 'relative';
     teamEl.style.color = '#86868b';
@@ -264,7 +264,7 @@ window.saveAsImage = async function() {
   const idEl = clone.querySelector('.employee-id');
   if (idEl) {
     idEl.style.fontSize = '24px';
-    idEl.style.padding = '0 56px 48px 56px';
+    idEl.style.padding = '0 68px 48px 68px';
     idEl.style.borderRadius = '0 0 24px 24px';
     idEl.style.background = '#fff';
     idEl.style.position = 'relative';

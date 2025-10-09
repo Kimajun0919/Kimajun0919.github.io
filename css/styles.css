@@ -348,7 +348,7 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .result-card {
-  width: 760px;
+  width: 920px;
   background: #f8f8f8;
   border-radius: 48px;
   box-shadow: 0 16px 64px rgba(0,0,0,0.12);
@@ -383,9 +383,9 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-photo {
-  width: calc(100% - 64px);
+  width: 872px;
   height: 700px;
-  margin: 32px 32px 0 32px;
+  margin: 24px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   border-radius: 32px 32px 0 0;
   clip-path: polygon(
@@ -425,7 +425,7 @@ input[type="file"] {
   font-weight: 600;
   letter-spacing: -1px;
   margin: -105px 0 0 0;
-  padding: 120px 56px 12px 56px;
+  padding: 120px 68px 12px 68px;
   text-align: left;
   background: #fff;
   border-radius: 56px 56px 0 0;
@@ -451,7 +451,7 @@ input[type="file"] {
   font-weight: 500;
   letter-spacing: 0;
   margin: 0;
-  padding: 0 56px 20px 56px;
+  padding: 0 68px 20px 68px;
   text-align: left;
   background: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
@@ -484,7 +484,7 @@ input[type="file"] {
   color: #a1a1a6;
   line-height: 1.7;
   margin: 0;
-  padding: 0 56px 48px 56px;
+  padding: 0 68px 48px 68px;
   text-align: left;
   font-weight: 400;
   letter-spacing: 0.2px;
