@@ -223,7 +223,7 @@ window.saveAsImage = async function() {
   const photo = clone.querySelector('.employee-photo');
   if (photo) {
     photo.style.width = 'calc(100% - 64px)';
-    photo.style.height = '480px';
+    photo.style.height = '920px';
     photo.style.margin = '32px 32px 0 32px';
     photo.style.borderRadius = '32px 32px 0 0';
     photo.style.objectFit = 'cover';
@@ -235,8 +235,8 @@ window.saveAsImage = async function() {
   const nameEl = clone.querySelector('.employee-name');
   if (nameEl) {
     nameEl.style.fontSize = '56px';
-    nameEl.style.margin = '-75px 0 0 0';
-    nameEl.style.padding = '90px 56px 16px 56px';
+    nameEl.style.margin = '-140px 0 0 0';
+    nameEl.style.padding = '155px 56px 16px 56px';
     nameEl.style.borderRadius = '56px 56px 0 0';
     nameEl.style.background = '#fff';
     nameEl.style.position = 'relative';
