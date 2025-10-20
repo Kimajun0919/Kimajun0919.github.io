@@ -475,47 +475,41 @@ window.startBulkUpload = async function() {
   updateProgress(0, 150, '업로드 준비 중...');
   updateResults();
   
-  testStatus.textContent = "📤 150개 파일을 동시에 업로드 중...";
+  testStatus.textContent = "📤 150개 파일을 진짜 동시에 업로드 중...";
   
-  // 동시 업로드 (배치 처리)
-  const batchSize = 10; // 동시에 처리할 수 있는 개수
-  const batches = [];
+  // 진짜 동시 업로드 - 모든 150개를 한 번에 시작
+  const allPromises = testData.map((employee, index) => 
+    uploadSingleEmployee(employee, index)
+  );
   
-  for (let i = 0; i < testData.length; i += batchSize) {
-    batches.push(testData.slice(i, i + batchSize));
-  }
-  
+  // 모든 업로드를 동시에 시작하고 결과를 실시간으로 추적
   let completedCount = 0;
   
-  for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
-    const batch = batches[batchIndex];
-    
-    // 배치 내에서 동시 처리
-    const promises = batch.map((employee, index) => 
-      uploadSingleEmployee(employee, completedCount + index)
-    );
-    
-    const results = await Promise.all(promises);
-    
-    // 결과 처리
-    results.forEach((result) => {
+  // 각 Promise에 완료 콜백 추가
+  const promisesWithCallback = allPromises.map((promise, index) => 
+    promise.then(result => {
+      completedCount++;
       if (result.success) {
         testResults.success++;
       } else {
         testResults.failure++;
-        console.error('업로드 실패:', result.error);
+        console.error(`업로드 실패 ${index + 1}:`, result.error);
       }
-    });
-    
-    completedCount += batch.length;
-    updateProgress(completedCount, 150, `배치 ${batchIndex + 1}/${batches.length} 완료`);
-    updateResults();
-    
-    // 배치 간 짧은 대기 (서버 부하 방지)
-    if (batchIndex < batches.length - 1) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-  }
+      updateProgress(completedCount, 150, `${completedCount}개 완료`);
+      updateResults();
+      return result;
+    }).catch(error => {
+      completedCount++;
+      testResults.failure++;
+      console.error(`업로드 오류 ${index + 1}:`, error);
+      updateProgress(completedCount, 150, `${completedCount}개 완료`);
+      updateResults();
+      return { success: false, error: error.message };
+    })
+  );
+  
+  // 모든 업로드 완료 대기
+  await Promise.allSettled(promisesWithCallback);
   
   // 완료
   updateProgress(150, 150, '완료');
