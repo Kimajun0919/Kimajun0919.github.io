@@ -46,7 +46,6 @@
             <span class="bible-reference">시편 37편 23절</span>
         </p>
         <div class="menu-buttons">
-          <button class="menu-button" onclick="showPage('registerPage')">등록</button>
           <button class="menu-button" onclick="showPage('avatarPage')">아바타 생성</button>
           <button class="menu-button" onclick="showPage('searchPage')">조회</button>
         </div>
@@ -54,48 +53,19 @@
     </div>
   </div>
 
-  <!-- 등록 페이지 -->
-  <div id="registerPage" class="page">
-    <div class="register-container">
-      <div class="register-card">
-        <h2 class="register-title">팀원 등록</h2>
-        <div class="input-group">
-          <label class="input-label">이름</label>
-          <input type="text" id="name" placeholder="이름을 입력하세요">
-        </div>
-        <div class="input-group">
-          <label class="input-label">팀명</label>
-          <input type="text" id="team" placeholder="팀명을 입력하세요">
-        </div>
-        <div class="input-group">
-          <label class="input-label">사진</label>
-          <div class="file-input-wrapper">
-            <label for="photo" class="file-input-label" id="fileLabel">
-              📷 사진을 선택하세요
-            </label>
-            <input type="file" id="photo" accept="image/*" onchange="previewImage(this)">
-          </div>
-          <img id="preview" class="preview-image" alt="미리보기">
-        </div>
-        <button class="action-button" onclick="registerEmployee()">등록하기</button>
-        <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
-        <p id="status" class="status-message"></p>
-      </div>
-    </div>
-  </div>
 
   <!-- 아바타 생성 페이지 (Avataaars 스타일) -->
   <div id="avatarPage" class="page">
     <div class="avatar-container">
       <!-- 상단 헤더 -->
       <div class="avatar-header">
-        <h2 class="avatar-title">Create Your Avatar</h2>
+        <h2 class="avatar-title">팀원 아바타 생성</h2>
         <div class="avatar-actions">
           <button class="btn-secondary" onclick="showPage('mainPage')">
-            <span>←</span> Back
+            <span>←</span> 돌아가기
           </button>
           <button class="btn-primary" onclick="generateAvatar()">
-            Save Avatar
+            아바타 저장
           </button>
         </div>
       </div>
@@ -112,12 +82,12 @@
           <!-- 사용자 정보 입력 -->
           <div class="user-info">
             <div class="input-group">
-              <label for="avatarName">Name</label>
-              <input type="text" id="avatarName" placeholder="Enter your name">
+              <label for="avatarName">이름</label>
+              <input type="text" id="avatarName" placeholder="이름을 입력하세요">
             </div>
             <div class="input-group">
-              <label for="avatarTeam">Team</label>
-              <input type="text" id="avatarTeam" placeholder="Enter your team">
+              <label for="avatarTeam">팀명</label>
+              <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요">
             </div>
           </div>
         </div>
@@ -397,7 +367,7 @@
 
   <!-- Avataaars CDN -->
   <script src="https://unpkg.com/avataaars@latest/dist/avataaars.js"></script>
-  
+
   <!-- JavaScript -->
   <script src="js/data.js"></script>
   <script type="module" src="js/app.js"></script>

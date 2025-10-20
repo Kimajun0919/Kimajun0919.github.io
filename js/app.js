@@ -20,14 +20,6 @@ window.showPage = function(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   
-  if (pageId === 'registerPage') {
-    document.getElementById('status').textContent = '';
-    document.getElementById('name').value = '';
-    document.getElementById('team').value = '';
-    document.getElementById('photo').value = '';
-    document.getElementById('preview').style.display = 'none';
-    document.getElementById('fileLabel').textContent = '📷 사진을 선택하세요';
-  }
   
   if (pageId === 'avatarPage') {
     document.getElementById('avatarStatus').textContent = '';
@@ -146,92 +138,7 @@ function compressImage(file, maxWidth = 800, quality = 0.8) {
   });
 }
 
-window.previewImage = function(input) {
-  if (input.files && input.files[0]) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const preview = document.getElementById('preview');
-      preview.src = e.target.result;
-      preview.style.display = 'block';
-      const fileSize = (input.files[0].size / 1024).toFixed(0);
-      document.getElementById('fileLabel').textContent = `✅ ${input.files[0].name} (${fileSize}KB)`;
-    };
-    reader.readAsDataURL(input.files[0]);
-  }
-};
 
-window.registerEmployee = async function() {
-  const name = document.getElementById("name").value.trim();
-  const team = document.getElementById("team").value.trim();
-  const file = document.getElementById("photo").files[0];
-  const status = document.getElementById("status");
-
-  if (!name || !team || !file) {
-    status.textContent = "❌ 모든 항목을 입력해주세요!";
-    status.style.color = "#e74c3c";
-    return;
-  }
-
-  status.textContent = "🔄 이미지 압축 중...";
-  status.style.color = "#3498db";
-
-  try {
-    // 이미지 압축 (속도 향상)
-    const compressedBlob = await compressImage(file, 800, 0.85);
-    
-    status.textContent = "📤 업로드 중...";
-    
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const base64 = reader.result.split(",")[1];
-      const res = await fetch(scriptURL, {
-        method: "POST",
-        body: new URLSearchParams({
-          file: base64,
-          filename: file.name.replace(/\.[^/.]+$/, ".jpg"),
-          mimeType: "image/jpeg"
-        })
-      });
-
-      const imageURL = await res.text();
-      if (imageURL.startsWith("ERROR")) {
-        status.textContent = "❌ 업로드 실패: " + imageURL;
-        status.style.color = "#e74c3c";
-        return;
-      }
-
-      status.textContent = "💾 데이터 저장 중...";
-
-      // 고유 ID 생성 (6자리 숫자)
-      const employeeId = String(Date.now()).slice(-6);
-
-      const newRef = await push(ref(db, "employees"), {
-        name,
-        team,
-        photoURL: imageURL,
-        employeeId: employeeId,
-        createdAt: new Date().toISOString()
-      });
-
-      status.innerHTML = `✅ 등록 완료!`;
-      status.style.color = "#27ae60";
-      
-      // 결과 페이지로 이동
-      setTimeout(() => {
-        showEmployeeResult({
-          name: name,
-          team: team,
-          photoURL: imageURL,
-          employeeId: employeeId
-        });
-      }, 1500);
-    };
-    reader.readAsDataURL(compressedBlob);
-  } catch (error) {
-    status.textContent = "❌ 오류 발생: " + error.message;
-    status.style.color = "#e74c3c";
-  }
-};
 
 // 캐릭터를 표시하는 함수
 function displayCharacter(photoElement, characterData) {
