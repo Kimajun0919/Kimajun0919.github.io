@@ -37,17 +37,17 @@
                             <div class="avatar-placeholder">
                                 <span>👤</span>
                                 <p>아바타 미리보기</p>
-      </div>
-    </div>
-  </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- 사용자 정보 입력 -->
                     <div class="user-info">
-        <div class="input-group">
+                        <div class="input-group">
                             <label for="avatarName">이름</label>
                             <input type="text" id="avatarName" placeholder="이름을 입력하세요">
-        </div>
-        <div class="input-group">
+                        </div>
+                        <div class="input-group">
                             <label for="avatarTeam">팀명</label>
                             <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요">
                         </div>
@@ -61,6 +61,566 @@
                         <div class="generator-controls">
                             <button class="btn-secondary" onclick="randomizeAvatar()">🎲 랜덤 생성</button>
                             <button class="btn-primary" onclick="downloadAvatarSVG()">📥 SVG 다운로드</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 커스터마이징 옵션들 -->
+                    <div class="customization-options">
+                        <!-- 아바타 스타일 선택 -->
+                        <div class="option-category">
+                            <h3>🎨 아바타 스타일</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('avatarStyle', 'Circle')" data-option="avatarStyle" data-value="Circle">
+                                    <div class="style-preview">⭕</div>
+                                    <span>원형</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('avatarStyle', 'Transparent')" data-option="avatarStyle" data-value="Transparent">
+                                    <div class="style-preview">⬜</div>
+                                    <span>투명</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-category">
+                            <h3>👤 피부색</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('skinColor', 'Pale')" data-option="skinColor" data-value="Pale">
+                                    <div class="color-preview" style="background: #fdbcb4;"></div>
+                                    <span>연한색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('skinColor', 'Light')" data-option="skinColor" data-value="Light">
+                                    <div class="color-preview" style="background: #f4c2a1;"></div>
+                                    <span>밝은색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('skinColor', 'Brown')" data-option="skinColor" data-value="Brown">
+                                    <div class="color-preview" style="background: #d08b5b;"></div>
+                                    <span>갈색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('skinColor', 'DarkBrown')" data-option="skinColor" data-value="DarkBrown">
+                                    <div class="color-preview" style="background: #ae5d29;"></div>
+                                    <span>진한갈색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('skinColor', 'Black')" data-option="skinColor" data-value="Black">
+                                    <div class="color-preview" style="background: #8d4a3c;"></div>
+                                    <span>검은색</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                        <div class="option-category">
+                            <h3>👁️ 눈 모양</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Happy')" data-option="eyeType" data-value="Happy">
+                                    <div class="emoji-preview">😊</div>
+                                    <span>행복한</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Default')" data-option="eyeType" data-value="Default">
+                                    <div class="emoji-preview">😐</div>
+                                    <span>기본</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Wink')" data-option="eyeType" data-value="Wink">
+                                    <div class="emoji-preview">😉</div>
+                                    <span>윙크</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Squint')" data-option="eyeType" data-value="Squint">
+                                    <div class="emoji-preview">😑</div>
+                                    <span>눈감은</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Surprised')" data-option="eyeType" data-value="Surprised">
+                                    <div class="emoji-preview">😮</div>
+                                    <span>놀란</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Hearts')" data-option="eyeType" data-value="Hearts">
+                                    <div class="emoji-preview">😍</div>
+                                    <span>하트</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Side')" data-option="eyeType" data-value="Side">
+                                    <div class="emoji-preview">😏</div>
+                                    <span>옆눈</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Dizzy')" data-option="eyeType" data-value="Dizzy">
+                                    <div class="emoji-preview">😵</div>
+                                    <span>어지러운</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Close')" data-option="eyeType" data-value="Close">
+                                    <div class="emoji-preview">😴</div>
+                                    <span>감은</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Cry')" data-option="eyeType" data-value="Cry">
+                                    <div class="emoji-preview">😢</div>
+                                    <span>우는</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'EyeRoll')" data-option="eyeType" data-value="EyeRoll">
+                                    <div class="emoji-preview">🙄</div>
+                                    <span>눈돌린</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('eyeType', 'Kiss')" data-option="eyeType" data-value="Kiss">
+                                    <div class="emoji-preview">😘</div>
+                                    <span>키스</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-category">
+                        <h3>🤨 눈썹</h3>
+                        <div class="option-grid">
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'Default')" data-option="eyebrowType" data-value="Default">
+                                <div class="emoji-preview">🤨</div>
+                                <span>기본</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'Angry')" data-option="eyebrowType" data-value="Angry">
+                                <div class="emoji-preview">😠</div>
+                                <span>화난</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'AngryNatural')" data-option="eyebrowType" data-value="AngryNatural">
+                                <div class="emoji-preview">😤</div>
+                                <span>자연스럽게화난</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'DefaultNatural')" data-option="eyebrowType" data-value="DefaultNatural">
+                                <div class="emoji-preview">🤔</div>
+                                <span>자연스러운</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'FlatNatural')" data-option="eyebrowType" data-value="FlatNatural">
+                                <div class="emoji-preview">😐</div>
+                                <span>평평한자연</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'RaisedExcited')" data-option="eyebrowType" data-value="RaisedExcited">
+                                <div class="emoji-preview">🤩</div>
+                                <span>들뜬</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'RaisedExcitedNatural')" data-option="eyebrowType" data-value="RaisedExcitedNatural">
+                                <div class="emoji-preview">😄</div>
+                                <span>자연스럽게들뜬</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'SadConcerned')" data-option="eyebrowType" data-value="SadConcerned">
+                                <div class="emoji-preview">😟</div>
+                                <span>슬픈걱정</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'SadConcernedNatural')" data-option="eyebrowType" data-value="SadConcernedNatural">
+                                <div class="emoji-preview">😔</div>
+                                <span>자연스럽게슬픈</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'UnibrowNatural')" data-option="eyebrowType" data-value="UnibrowNatural">
+                                <div class="emoji-preview">🤨</div>
+                                <span>연속눈썹</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'UpDown')" data-option="eyebrowType" data-value="UpDown">
+                                <div class="emoji-preview">😏</div>
+                                <span>위아래</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('eyebrowType', 'UpDownNatural')" data-option="eyebrowType" data-value="UpDownNatural">
+                                <div class="emoji-preview">😒</div>
+                                <span>자연스럽게위아래</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                        <div class="option-category">
+                            <h3>👄 입 모양</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Smile')" data-option="mouthType" data-value="Smile">
+                                    <div class="emoji-preview">😊</div>
+                                    <span>미소</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Default')" data-option="mouthType" data-value="Default">
+                                    <div class="emoji-preview">😐</div>
+                                    <span>기본</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Sad')" data-option="mouthType" data-value="Sad">
+                                    <div class="emoji-preview">😢</div>
+                                    <span>슬픈</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Tongue')" data-option="mouthType" data-value="Tongue">
+                                    <div class="emoji-preview">😛</div>
+                                    <span>혀내민</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Twinkle')" data-option="mouthType" data-value="Twinkle">
+                                    <div class="emoji-preview">😉</div>
+                                    <span>윙크</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Eating')" data-option="mouthType" data-value="Eating">
+                                    <div class="emoji-preview">😋</div>
+                                    <span>먹는</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Grimace')" data-option="mouthType" data-value="Grimace">
+                                    <div class="emoji-preview">😬</div>
+                                    <span>찡그린</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'ScreamOpen')" data-option="mouthType" data-value="ScreamOpen">
+                                    <div class="emoji-preview">😱</div>
+                                    <span>소리지르는</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Serious')" data-option="mouthType" data-value="Serious">
+                                    <div class="emoji-preview">😠</div>
+                                    <span>진지한</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('mouthType', 'Vomit')" data-option="mouthType" data-value="Vomit">
+                                    <div class="emoji-preview">🤮</div>
+                                    <span>토하는</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                        <div class="option-category">
+                            <h3>💇 머리 스타일</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairShortFlat')" data-option="topType" data-value="ShortHairShortFlat">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>짧은머리</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairShortWaved')" data-option="topType" data-value="ShortHairShortWaved">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>짧은웨이브</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairDreads01')" data-option="topType" data-value="ShortHairDreads01">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>드레드1</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairDreads02')" data-option="topType" data-value="ShortHairDreads02">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>드레드2</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairFrizzle')" data-option="topType" data-value="ShortHairFrizzle">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>곱슬곱슬</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairShaggyMullet')" data-option="topType" data-value="ShortHairShaggyMullet">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>멀렛</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairShortCurly')" data-option="topType" data-value="ShortHairShortCurly">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>짧은곱슬</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'ShortHairShortRound')" data-option="topType" data-value="ShortHairShortRound">
+                                    <div class="emoji-preview">💇‍♂️</div>
+                                    <span>짧은둥근</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairBigHair')" data-option="topType" data-value="LongHairBigHair">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>큰머리</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairBob')" data-option="topType" data-value="LongHairBob">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>밥컷</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairBun')" data-option="topType" data-value="LongHairBun">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>똥머리</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairCurly')" data-option="topType" data-value="LongHairCurly">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>곱슬머리</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairCurvy')" data-option="topType" data-value="LongHairCurvy">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>커브머리</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairDreads')" data-option="topType" data-value="LongHairDreads">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>긴드레드</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairFrida')" data-option="topType" data-value="LongHairFrida">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>프리다</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairFro')" data-option="topType" data-value="LongHairFro">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>아프로</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairFroBand')" data-option="topType" data-value="LongHairFroBand">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>아프로밴드</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairNotTooLong')" data-option="topType" data-value="LongHairNotTooLong">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>적당히긴</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairShavedSides')" data-option="topType" data-value="LongHairShavedSides">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>옆면삭발</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairMiaWallace')" data-option="topType" data-value="LongHairMiaWallace">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>미아월리스</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairStraight')" data-option="topType" data-value="LongHairStraight">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>긴직모</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairStraight2')" data-option="topType" data-value="LongHairStraight2">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>긴직모2</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'LongHairStraightStrand')" data-option="topType" data-value="LongHairStraightStrand">
+                                    <div class="emoji-preview">💇‍♀️</div>
+                                    <span>긴직모가닥</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('topType', 'NoHair')" data-option="topType" data-value="NoHair">
+                                    <div class="emoji-preview">👨‍🦲</div>
+                                    <span>대머리</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                        <div class="option-category">
+                            <h3>🎨 머리색상</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'Auburn')" data-option="hairColor" data-value="Auburn">
+                                    <div class="color-preview" style="background: #a55728;"></div>
+                                    <span>적갈색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'Black')" data-option="hairColor" data-value="Black">
+                                    <div class="color-preview" style="background: #2c1b18;"></div>
+                                    <span>검은색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'Blonde')" data-option="hairColor" data-value="Blonde">
+                                    <div class="color-preview" style="background: #f4e4c1;"></div>
+                                    <span>금발</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'BlondeGolden')" data-option="hairColor" data-value="BlondeGolden">
+                                    <div class="color-preview" style="background: #d6b370;"></div>
+                                    <span>황금금발</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'Brown')" data-option="hairColor" data-value="Brown">
+                                    <div class="color-preview" style="background: #724133;"></div>
+                                    <span>갈색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'BrownDark')" data-option="hairColor" data-value="BrownDark">
+                                    <div class="color-preview" style="background: #4a312c;"></div>
+                                    <span>진한갈색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'PastelPink')" data-option="hairColor" data-value="PastelPink">
+                                    <div class="color-preview" style="background: #f8bdd9;"></div>
+                                    <span>파스텔핑크</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'Platinum')" data-option="hairColor" data-value="Platinum">
+                                    <div class="color-preview" style="background: #ecdcbf;"></div>
+                                    <span>백금</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'Red')" data-option="hairColor" data-value="Red">
+                                    <div class="color-preview" style="background: #c93305;"></div>
+                                    <span>빨간색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('hairColor', 'SilverGray')" data-option="hairColor" data-value="SilverGray">
+                                    <div class="color-preview" style="background: #e8e1e1;"></div>
+                                    <span>회색</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-category">
+                        <h3>🧔 수염</h3>
+                        <div class="option-grid">
+                            <div class="option-item" onclick="selectAvatarOption('facialHairType', 'Blank')" data-option="facialHairType" data-value="Blank">
+                                <div class="emoji-preview">👤</div>
+                                <span>없음</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairType', 'BeardMedium')" data-option="facialHairType" data-value="BeardMedium">
+                                <div class="emoji-preview">🧔</div>
+                                <span>중간수염</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairType', 'BeardLight')" data-option="facialHairType" data-value="BeardLight">
+                                <div class="emoji-preview">🧔</div>
+                                <span>가벼운수염</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairType', 'BeardMagestic')" data-option="facialHairType" data-value="BeardMagestic">
+                                <div class="emoji-preview">🧔</div>
+                                <span>위엄있는수염</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairType', 'MoustacheFancy')" data-option="facialHairType" data-value="MoustacheFancy">
+                                <div class="emoji-preview">👨</div>
+                                <span>화려한콧수염</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairType', 'MoustacheMagnum')" data-option="facialHairType" data-value="MoustacheMagnum">
+                                <div class="emoji-preview">👨</div>
+                                <span>큰콧수염</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="option-category">
+                        <h3>🎨 수염색상</h3>
+                        <div class="option-grid">
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'Auburn')" data-option="facialHairColor" data-value="Auburn">
+                                <div class="color-preview" style="background: #a55728;"></div>
+                                <span>적갈색</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'Black')" data-option="facialHairColor" data-value="Black">
+                                <div class="color-preview" style="background: #2c1b18;"></div>
+                                <span>검은색</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'Blonde')" data-option="facialHairColor" data-value="Blonde">
+                                <div class="color-preview" style="background: #f4e4c1;"></div>
+                                <span>금발</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'BlondeGolden')" data-option="facialHairColor" data-value="BlondeGolden">
+                                <div class="color-preview" style="background: #d6b370;"></div>
+                                <span>황금금발</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'Brown')" data-option="facialHairColor" data-value="Brown">
+                                <div class="color-preview" style="background: #724133;"></div>
+                                <span>갈색</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'BrownDark')" data-option="facialHairColor" data-value="BrownDark">
+                                <div class="color-preview" style="background: #4a312c;"></div>
+                                <span>진한갈색</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'Platinum')" data-option="facialHairColor" data-value="Platinum">
+                                <div class="color-preview" style="background: #ecdcbf;"></div>
+                                <span>백금</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'Red')" data-option="facialHairColor" data-value="Red">
+                                <div class="color-preview" style="background: #c93305;"></div>
+                                <span>빨간색</span>
+                            </div>
+                            <div class="option-item" onclick="selectAvatarOption('facialHairColor', 'SilverGray')" data-option="facialHairColor" data-value="SilverGray">
+                                <div class="color-preview" style="background: #e8e1e1;"></div>
+                                <span>회색</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                        <div class="option-category">
+                            <h3>👕 의상</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'BlazerShirt')" data-option="clotheType" data-value="BlazerShirt">
+                                    <div class="emoji-preview">👔</div>
+                                    <span>정장</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'BlazerSweater')" data-option="clotheType" data-value="BlazerSweater">
+                                    <div class="emoji-preview">👔</div>
+                                    <span>정장스웨터</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'CollarSweater')" data-option="clotheType" data-value="CollarSweater">
+                                    <div class="emoji-preview">👔</div>
+                                    <span>칼라스웨터</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'Hoodie')" data-option="clotheType" data-value="Hoodie">
+                                    <div class="emoji-preview">🧥</div>
+                                    <span>후드티</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'Overall')" data-option="clotheType" data-value="Overall">
+                                    <div class="emoji-preview">👔</div>
+                                    <span>멜빵바지</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'GraphicShirt')" data-option="clotheType" data-value="GraphicShirt">
+                                    <div class="emoji-preview">👕</div>
+                                    <span>그래픽티</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'ShirtCrewNeck')" data-option="clotheType" data-value="ShirtCrewNeck">
+                                    <div class="emoji-preview">👕</div>
+                                    <span>크루넥</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'ShirtScoopNeck')" data-option="clotheType" data-value="ShirtScoopNeck">
+                                    <div class="emoji-preview">👕</div>
+                                    <span>스쿱넥</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheType', 'ShirtVNeck')" data-option="clotheType" data-value="ShirtVNeck">
+                                    <div class="emoji-preview">👕</div>
+                                    <span>브이넥</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-category">
+                            <h3>🎨 의상색상</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Black')" data-option="clotheColor" data-value="Black">
+                                    <div class="color-preview" style="background: #262e33;"></div>
+                                    <span>검은색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Blue01')" data-option="clotheColor" data-value="Blue01">
+                                    <div class="color-preview" style="background: #65c9ff;"></div>
+                                    <span>파란색1</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Blue02')" data-option="clotheColor" data-value="Blue02">
+                                    <div class="color-preview" style="background: #5199e4;"></div>
+                                    <span>파란색2</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Blue03')" data-option="clotheColor" data-value="Blue03">
+                                    <div class="color-preview" style="background: #25557c;"></div>
+                                    <span>파란색3</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Gray01')" data-option="clotheColor" data-value="Gray01">
+                                    <div class="color-preview" style="background: #e6e6e6;"></div>
+                                    <span>회색1</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Gray02')" data-option="clotheColor" data-value="Gray02">
+                                    <div class="color-preview" style="background: #929598;"></div>
+                                    <span>회색2</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Heather')" data-option="clotheColor" data-value="Heather">
+                                    <div class="color-preview" style="background: #3c4f5c;"></div>
+                                    <span>헤더</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'PastelBlue')" data-option="clotheColor" data-value="PastelBlue">
+                                    <div class="color-preview" style="background: #b1e2ff;"></div>
+                                    <span>파스텔블루</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'PastelGreen')" data-option="clotheColor" data-value="PastelGreen">
+                                    <div class="color-preview" style="background: #a7ffc4;"></div>
+                                    <span>파스텔그린</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'PastelOrange')" data-option="clotheColor" data-value="PastelOrange">
+                                    <div class="color-preview" style="background: #ffdeb3;"></div>
+                                    <span>파스텔오렌지</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'PastelRed')" data-option="clotheColor" data-value="PastelRed">
+                                    <div class="color-preview" style="background: #ffafb9;"></div>
+                                    <span>파스텔레드</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'PastelYellow')" data-option="clotheColor" data-value="PastelYellow">
+                                    <div class="color-preview" style="background: #ffffb1;"></div>
+                                    <span>파스텔옐로우</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Pink')" data-option="clotheColor" data-value="Pink">
+                                    <div class="color-preview" style="background: #ff488e;"></div>
+                                    <span>핑크</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'Red')" data-option="clotheColor" data-value="Red">
+                                    <div class="color-preview" style="background: #ff5c5c;"></div>
+                                    <span>빨간색</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('clotheColor', 'White')" data-option="clotheColor" data-value="White">
+                                    <div class="color-preview" style="background: #ffffff; border: 1px solid #ddd;"></div>
+                                    <span>흰색</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                        <div class="option-category">
+                            <h3>👓 액세서리</h3>
+                            <div class="option-grid">
+                                <div class="option-item" onclick="selectAvatarOption('accessoriesType', 'Blank')" data-option="accessoriesType" data-value="Blank">
+                                    <div class="emoji-preview">👤</div>
+                                    <span>없음</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('accessoriesType', 'Kurt')" data-option="accessoriesType" data-value="Kurt">
+                                    <div class="emoji-preview">👓</div>
+                                    <span>안경</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('accessoriesType', 'Prescription01')" data-option="accessoriesType" data-value="Prescription01">
+                                    <div class="emoji-preview">👓</div>
+                                    <span>처방안경1</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('accessoriesType', 'Prescription02')" data-option="accessoriesType" data-value="Prescription02">
+                                    <div class="emoji-preview">👓</div>
+                                    <span>처방안경2</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('accessoriesType', 'Round')" data-option="accessoriesType" data-value="Round">
+                                    <div class="emoji-preview">👓</div>
+                                    <span>둥근안경</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('accessoriesType', 'Sunglasses')" data-option="accessoriesType" data-value="Sunglasses">
+                                    <div class="emoji-preview">🕶️</div>
+                                    <span>선글라스</span>
+                                </div>
+                                <div class="option-item" onclick="selectAvatarOption('accessoriesType', 'Wayfarers')" data-option="accessoriesType" data-value="Wayfarers">
+                                    <div class="emoji-preview">🕶️</div>
+                                    <span>웨이파러</span>
+        </div>
+          </div>
         </div>
       </div>
                 </div>
@@ -73,7 +633,7 @@
   <!-- 조회 페이지 -->
   <div id="searchPage" class="page">
         <div class="container">
-            <h2>직원 조회</h2>
+            <h2>조회</h2>
             <div class="search-form">
         <div class="input-group">
                     <label for="searchName">이름</label>
@@ -97,11 +657,11 @@
     </div>
   </div>
 
-    <!-- Avataaars 라이브러리 -->
-    <script src="https://unpkg.com/avataaars@2.0.0/dist/avataaars.js"></script>
     <!-- React 라이브러리 (avataaars v2는 React 필요) -->
     <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <!-- Avataaars 라이브러리 -->
+    <script src="https://unpkg.com/avataaars@2.0.0/dist/avataaars.js"></script>
 
   <!-- JavaScript -->
   <script src="js/data.js"></script>

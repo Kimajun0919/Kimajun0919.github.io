@@ -32,7 +32,7 @@ let avataaarsData = {
 // Avataaars React 컴포넌트
 let avataaarsComponent = null;
 
-// 페이지 전환 함수
+// 페이지 전환 함수 (HTML에서 호출)
 window.showPage = function(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
@@ -62,28 +62,42 @@ function renderAvataaars() {
 // Avataaars React 컴포넌트 렌더링
 function renderAvataaarsReact() {
   const container = document.getElementById('avataaarsContainer');
-  if (!container || !window.React || !window.ReactDOM || !window.Avataaars) return;
+  if (!container || !window.React || !window.ReactDOM) {
+    console.log('React 또는 ReactDOM이 로드되지 않았습니다.');
+    return;
+  }
+  
+  if (!window.Avataaars) {
+    console.log('Avataaars 라이브러리가 로드되지 않았습니다.');
+    return;
+  }
   
   // 기존 컴포넌트 제거
   if (avataaarsComponent) {
     ReactDOM.unmountComponentAtNode(container);
   }
   
-  // 새로운 Avataaars 컴포넌트 생성
-  const Avatar = window.Avataaars.Avatar;
-  const AvatarStyle = window.Avataaars.AvatarStyle;
-  
-  avataaarsComponent = ReactDOM.render(
-    React.createElement(Avatar, {
-      style: {
-        width: '100%',
-        height: '100%'
-      },
-      avatarStyle: AvatarStyle.Circle,
-      ...avataaarsData
-    }),
-    container
-  );
+  try {
+    // 새로운 Avataaars 컴포넌트 생성
+    const Avatar = window.Avataaars.Avatar;
+    const AvatarStyle = window.Avataaars.AvatarStyle;
+    
+    avataaarsComponent = ReactDOM.render(
+      React.createElement(Avatar, {
+        style: {
+          width: '100%',
+          height: '100%'
+        },
+        avatarStyle: AvatarStyle.Circle,
+        ...avataaarsData
+      }),
+      container
+    );
+  } catch (error) {
+    console.error('Avataaars 렌더링 오류:', error);
+    // SVG 폴백 사용
+    renderAvataaars();
+  }
 }
 
 // Avataaars SVG 생성 함수 (실제 Avataaars 스타일)
@@ -362,7 +376,65 @@ window.selectOption = function(property, value) {
   renderAvataaars();
 };
 
-// 탭 전환 함수
+
+// 랜덤 아바타 생성 함수 (HTML에서 호출)
+window.randomizeAvatar = function() {
+  // 랜덤 값 생성
+  const skinColors = ['Pale', 'Light', 'Brown', 'DarkBrown', 'Black'];
+  const eyeTypes = ['Happy', 'Default', 'Wink', 'Squint', 'Side', 'Dizzy', 'Surprised', 'Close', 'Cry', 'EyeRoll', 'Hearts', 'Kiss'];
+  const eyebrowTypes = ['Default', 'Angry', 'AngryNatural', 'DefaultNatural', 'FlatNatural', 'RaisedExcited', 'RaisedExcitedNatural', 'SadConcerned', 'SadConcernedNatural', 'UnibrowNatural', 'UpDown', 'UpDownNatural'];
+  const mouthTypes = ['Smile', 'Default', 'Eating', 'Grimace', 'Sad', 'ScreamOpen', 'Serious', 'Tongue', 'Twinkle', 'Vomit'];
+  const topTypes = ['ShortHairShortFlat', 'ShortHairShortWaved', 'ShortHairDreads01', 'ShortHairDreads02', 'ShortHairFrizzle', 'ShortHairShaggyMullet', 'ShortHairShortCurly', 'ShortHairShortRound', 'LongHairBigHair', 'LongHairBob', 'LongHairBun', 'LongHairCurly', 'LongHairCurvy', 'LongHairDreads', 'LongHairFrida', 'LongHairFro', 'LongHairFroBand', 'LongHairNotTooLong', 'LongHairShavedSides', 'LongHairMiaWallace', 'LongHairStraight', 'LongHairStraight2', 'LongHairStraightStrand', 'NoHair'];
+  const hairColors = ['Auburn', 'Black', 'Blonde', 'BlondeGolden', 'Brown', 'BrownDark', 'PastelPink', 'Platinum', 'Red', 'SilverGray'];
+  const facialHairTypes = ['Blank', 'BeardMedium', 'BeardLight', 'BeardMagestic', 'MoustacheFancy', 'MoustacheMagnum'];
+  const clotheTypes = ['BlazerShirt', 'BlazerSweater', 'CollarSweater', 'GraphicShirt', 'Hoodie', 'Overall', 'ShirtCrewNeck', 'ShirtScoopNeck', 'ShirtVNeck'];
+  const clotheColors = ['Black', 'Blue01', 'Blue02', 'Blue03', 'Gray01', 'Gray02', 'Heather', 'PastelBlue', 'PastelGreen', 'PastelOrange', 'PastelRed', 'PastelYellow', 'Pink', 'Red', 'White'];
+  const accessoriesTypes = ['Blank', 'Kurt', 'Prescription01', 'Prescription02', 'Round', 'Sunglasses', 'Wayfarers'];
+
+  // 랜덤 값으로 업데이트
+  avataaarsData = {
+    skinColor: skinColors[Math.floor(Math.random() * skinColors.length)],
+    eyeType: eyeTypes[Math.floor(Math.random() * eyeTypes.length)],
+    eyebrowType: eyebrowTypes[Math.floor(Math.random() * eyebrowTypes.length)],
+    mouthType: mouthTypes[Math.floor(Math.random() * mouthTypes.length)],
+    topType: topTypes[Math.floor(Math.random() * topTypes.length)],
+    hairColor: hairColors[Math.floor(Math.random() * hairColors.length)],
+    facialHairType: facialHairTypes[Math.floor(Math.random() * facialHairTypes.length)],
+    facialHairColor: hairColors[Math.floor(Math.random() * hairColors.length)],
+    clotheType: clotheTypes[Math.floor(Math.random() * clotheTypes.length)],
+    clotheColor: clotheColors[Math.floor(Math.random() * clotheColors.length)],
+    accessoriesType: accessoriesTypes[Math.floor(Math.random() * accessoriesTypes.length)]
+  };
+
+  // React 컴포넌트 다시 렌더링
+  renderAvataaarsReact();
+  
+  // 선택 상태 업데이트
+  setDefaultSelections();
+};
+
+// SVG 다운로드 함수 (HTML에서 호출)
+window.downloadAvatarSVG = function() {
+  const container = document.getElementById('avataaarsContainer');
+  if (!container) return;
+  
+  const svgElement = container.querySelector('svg');
+  if (!svgElement) return;
+  
+  const svgData = new XMLSerializer().serializeToString(svgElement);
+  const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const svgUrl = URL.createObjectURL(svgBlob);
+  
+  const downloadLink = document.createElement('a');
+  downloadLink.href = svgUrl;
+  downloadLink.download = 'avatar.svg';
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(svgUrl);
+};
+
+// 탭 전환 함수 (HTML에서 호출)
 window.showTab = function(tabName) {
   // 모든 탭 버튼에서 active 클래스 제거
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -387,7 +459,7 @@ window.showTab = function(tabName) {
   }
 };
 
-// 아바타 저장 함수
+// 아바타 저장 함수 (HTML에서 호출)
 window.saveAvatar = async function() {
   const name = document.getElementById('avatarName').value.trim();
   const team = document.getElementById('avatarTeam').value.trim();
@@ -445,7 +517,7 @@ window.saveAvatar = async function() {
   }
 };
 
-// 직원 검색 함수
+// 직원 검색 함수 (HTML에서 호출)
 window.searchEmployee = async function() {
   const name = document.getElementById('searchName').value.trim();
   const team = document.getElementById('searchTeam').value.trim();
@@ -526,7 +598,7 @@ function displaySearchResults(employees) {
   showPage('resultPage');
 }
 
-// 직원 상세 결과 표시
+// 직원 상세 결과 표시 (HTML에서 호출)
 window.showEmployeeResult = function(employee) {
   const resultContainer = document.getElementById('resultContainer');
   
@@ -576,7 +648,7 @@ window.showEmployeeResult = function(employee) {
   showPage('resultPage');
 };
 
-// 직원 삭제 함수
+// 직원 삭제 함수 (HTML에서 호출)
 window.deleteEmployee = async function(employeeId) {
   if (!confirm('정말로 이 직원을 삭제하시겠습니까?')) {
     return;
@@ -591,7 +663,7 @@ window.deleteEmployee = async function(employeeId) {
   }
 };
 
-// 아바타 다운로드 함수
+// 아바타 다운로드 함수 (HTML에서 호출)
 window.downloadAvatar = function(name) {
   // React 컴포넌트에서 SVG 가져오기
   const container = document.getElementById('avataaarsContainer');
@@ -630,67 +702,63 @@ window.downloadAvatar = function(name) {
   img.src = 'data:image/svg+xml;base64,' + btoa(svg);
 };
 
-// 랜덤 아바타 생성
-window.randomizeAvatar = function() {
-  // 랜덤 값 생성
-  const skinColors = ['Pale', 'Light', 'Brown', 'DarkBrown', 'Black'];
-  const eyeTypes = ['Happy', 'Default', 'Wink', 'Squint', 'Side', 'Dizzy', 'Surprised', 'Close', 'Cry', 'EyeRoll', 'Hearts', 'Kiss'];
-  const eyebrowTypes = ['Default', 'Angry', 'AngryNatural', 'DefaultNatural', 'FlatNatural', 'RaisedExcited', 'RaisedExcitedNatural', 'SadConcerned', 'SadConcernedNatural', 'UnibrowNatural', 'UpDown', 'UpDownNatural'];
-  const mouthTypes = ['Smile', 'Default', 'Eating', 'Grimace', 'Sad', 'ScreamOpen', 'Serious', 'Tongue', 'Twinkle', 'Vomit'];
-  const topTypes = ['ShortHairShortFlat', 'ShortHairShortWaved', 'ShortHairDreads01', 'ShortHairDreads02', 'ShortHairFrizzle', 'ShortHairShaggyMullet', 'ShortHairShortCurly', 'ShortHairShortRound', 'LongHairBigHair', 'LongHairBob', 'LongHairBun', 'LongHairCurly', 'LongHairCurvy', 'LongHairDreads', 'LongHairFrida', 'LongHairFro', 'LongHairFroBand', 'LongHairNotTooLong', 'LongHairShavedSides', 'LongHairMiaWallace', 'LongHairStraight', 'LongHairStraight2', 'LongHairStraightStrand', 'NoHair'];
-  const hairColors = ['Auburn', 'Black', 'Blonde', 'BlondeGolden', 'Brown', 'BrownDark', 'PastelPink', 'Platinum', 'Red', 'SilverGray'];
-  const facialHairTypes = ['Blank', 'BeardMedium', 'BeardLight', 'BeardMagestic', 'MoustacheFancy', 'MoustacheMagnum'];
-  const clotheTypes = ['BlazerShirt', 'BlazerSweater', 'CollarSweater', 'GraphicShirt', 'Hoodie', 'Overall', 'ShirtCrewNeck', 'ShirtScoopNeck', 'ShirtVNeck'];
-  const clotheColors = ['Black', 'Blue01', 'Blue02', 'Blue03', 'Gray01', 'Gray02', 'Heather', 'PastelBlue', 'PastelGreen', 'PastelOrange', 'PastelRed', 'PastelYellow', 'Pink', 'Red', 'White'];
-  const accessoriesTypes = ['Blank', 'Kurt', 'Prescription01', 'Prescription02', 'Round', 'Sunglasses', 'Wayfarers'];
-
-  // 랜덤 값으로 업데이트
-  avataaarsData = {
-    skinColor: skinColors[Math.floor(Math.random() * skinColors.length)],
-    eyeType: eyeTypes[Math.floor(Math.random() * eyeTypes.length)],
-    eyebrowType: eyebrowTypes[Math.floor(Math.random() * eyebrowTypes.length)],
-    mouthType: mouthTypes[Math.floor(Math.random() * mouthTypes.length)],
-    topType: topTypes[Math.floor(Math.random() * topTypes.length)],
-    hairColor: hairColors[Math.floor(Math.random() * hairColors.length)],
-    facialHairType: facialHairTypes[Math.floor(Math.random() * facialHairTypes.length)],
-    facialHairColor: hairColors[Math.floor(Math.random() * hairColors.length)],
-    clotheType: clotheTypes[Math.floor(Math.random() * clotheTypes.length)],
-    clotheColor: clotheColors[Math.floor(Math.random() * clotheColors.length)],
-    accessoriesType: accessoriesTypes[Math.floor(Math.random() * accessoriesTypes.length)]
-  };
-
+// 아바타 옵션 선택 함수 (HTML에서 호출)
+window.selectAvatarOption = function(option, value) {
+  // avataaarsData 업데이트
+  avataaarsData[option] = value;
+  
+  // 선택된 옵션 표시 업데이트
+  document.querySelectorAll(`[data-option="${option}"]`).forEach(item => {
+    item.classList.remove('selected');
+  });
+  
+  const selectedItem = document.querySelector(`[data-option="${option}"][data-value="${value}"]`);
+  if (selectedItem) {
+    selectedItem.classList.add('selected');
+  }
+  
   // React 컴포넌트 다시 렌더링
   renderAvataaarsReact();
 };
 
-// SVG 다운로드
-window.downloadAvatarSVG = function() {
-  const container = document.getElementById('avataaarsContainer');
-  if (!container) return;
-  
-  const svgElement = container.querySelector('svg');
-  if (!svgElement) return;
-  
-  const svgData = new XMLSerializer().serializeToString(svgElement);
-  const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
-  const svgUrl = URL.createObjectURL(svgBlob);
-  
-  const downloadLink = document.createElement('a');
-  downloadLink.href = svgUrl;
-  downloadLink.download = 'avatar.svg';
-  document.body.appendChild(downloadLink);
-  downloadLink.click();
-  document.body.removeChild(downloadLink);
-  URL.revokeObjectURL(svgUrl);
-};
+
+// 기본 선택 상태 설정
+function setDefaultSelections() {
+  // 각 옵션의 기본값에 selected 클래스 추가
+  Object.keys(avataaarsData).forEach(option => {
+    const value = avataaarsData[option];
+    const selectedItem = document.querySelector(`[data-option="${option}"][data-value="${value}"]`);
+    if (selectedItem) {
+      selectedItem.classList.add('selected');
+    }
+  });
+}
+
+// 라이브러리 로딩 확인 함수
+function waitForLibraries() {
+  return new Promise((resolve) => {
+    const checkLibraries = () => {
+      if (window.React && window.ReactDOM && window.Avataaars) {
+        console.log('모든 라이브러리가 로드되었습니다.');
+        resolve();
+      } else {
+        console.log('라이브러리 로딩 대기 중...');
+        setTimeout(checkLibraries, 100);
+      }
+    };
+    checkLibraries();
+  });
+}
 
 // 페이지 로드 시 초기화
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
   // 기본 페이지 표시
   showPage('mainPage');
   
-  // Avataaars 라이브러리 로드 후 React 컴포넌트 렌더링
-  setTimeout(() => {
-    renderAvataaarsReact();
-  }, 1000);
+  // 라이브러리 로딩 대기
+  await waitForLibraries();
+  
+  // Avataaars React 컴포넌트 렌더링
+  renderAvataaarsReact();
+  setDefaultSelections();
 });
