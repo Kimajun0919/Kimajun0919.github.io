@@ -3,414 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Haneul Card : 하늘의 걸음</title>
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
-  
-  <!-- Adobe Fonts -->
-  <script>
-    (function(d) {
-      var config = {
-        kitId: 'wcb3eag',
-        scriptTimeout: 3000,
-        async: true
-      },
-      h=d.documentElement,t=setTimeout(function(){
-        h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";
-      },config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;
-      h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';
-      tk.async=true;tk.onload=tk.onreadystatechange=function(){
-        a=this.readyState;
-        if(f||a&&a!="complete"&&a!="loaded")return;
-        f=true;clearTimeout(t);
-        try{Typekit.load(config)}catch(e){}
-      };
-      s.parentNode.insertBefore(tk,s)
-    })(document);
-  </script>
-  
-  <!-- Custom CSS -->
+    <title>팀원 관리 시스템</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-
   <!-- 메인 페이지 -->
   <div id="mainPage" class="page active">
-    <div class="main-container">
-      <div class="main-content">
-        <h1 class="main-title">The Steps of Haneul</h1>
-        <p class="main-subtitle">하늘의 걸음</p>
-        <p class="bible-verse">
-            선한 사람의 걸음을 여호와께서 정하시니<br>그분은 그 길을 기뻐하십니다.<br>
-            <span class="bible-reference">시편 37편 23절</span>
-        </p>
+        <div class="container">
+            <h1>팀원 관리 시스템</h1>
         <div class="menu-buttons">
-          <button class="menu-button" onclick="showPage('avatarPage')">아바타 생성</button>
+                <button class="menu-button" onclick="showPage('avatarPage')">아바타 생성</button>
           <button class="menu-button" onclick="showPage('searchPage')">조회</button>
         </div>
+        </div>
+    </div>
+
+    <!-- 아바타 생성 페이지 -->
+    <div id="avatarPage" class="page">
+        <div class="avatar-container">
+            <div class="avatar-header">
+                <h2>팀원 아바타 생성</h2>
+                <div class="avatar-actions">
+                    <button class="btn-secondary" onclick="showPage('mainPage')">← 돌아가기</button>
+                    <button class="btn-primary" onclick="saveAvatar()">아바타 저장</button>
+                </div>
+            </div>
+            
+            <div class="avatar-workspace">
+                <!-- 아바타 미리보기 -->
+                <div class="avatar-preview-section">
+                    <div class="preview-container">
+                        <div id="avatarPreview" class="avatar-preview">
+                            <div class="avatar-placeholder">
+                                <span>👤</span>
+                                <p>아바타 미리보기</p>
       </div>
     </div>
   </div>
 
-
-  <!-- 아바타 생성 페이지 (Avataaars) -->
-  <div id="avatarPage" class="page">
-    <div class="avatar-container">
-      <!-- 상단 헤더 -->
-      <div class="avatar-header">
-        <h2 class="avatar-title">팀원 아바타 생성</h2>
-        <div class="avatar-actions">
-          <button class="btn-secondary" onclick="showPage('mainPage')">
-            <span>←</span> 돌아가기
-          </button>
-          <button class="btn-primary" onclick="saveAvatar()">
-            아바타 저장
-          </button>
-        </div>
-      </div>
-      
-      <div class="avatar-workspace">
-        <!-- 왼쪽: 아바타 미리보기 -->
-        <div class="avatar-preview-section">
-          <div class="preview-container">
-            <div class="avatar-preview" id="avatarPreview">
-              <div class="avatar-placeholder">Your Avatar</div>
-            </div>
-          </div>
-          
-          <!-- 사용자 정보 입력 -->
-          <div class="user-info">
-            <div class="input-group">
-              <label for="avatarName">이름</label>
-              <input type="text" id="avatarName" placeholder="이름을 입력하세요">
-            </div>
+                    <!-- 사용자 정보 입력 -->
+                    <div class="user-info">
         <div class="input-group">
-              <label for="avatarTeam">팀명</label>
-              <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요">
-            </div>
-          </div>
+                            <label for="avatarName">이름</label>
+                            <input type="text" id="avatarName" placeholder="이름을 입력하세요">
         </div>
-        
-        <!-- 오른쪽: 커스터마이징 패널 -->
-        <div class="customization-panel">
-          <!-- 탭 네비게이션 -->
-          <div class="customization-tabs">
-            <button class="tab-btn active" onclick="showTab('skin')">
-              <span class="tab-icon">👤</span>
-              <span>Skin</span>
-            </button>
-            <button class="tab-btn" onclick="showTab('eyes')">
-              <span class="tab-icon">👁️</span>
-              <span>Eyes</span>
-            </button>
-            <button class="tab-btn" onclick="showTab('mouth')">
-              <span class="tab-icon">👄</span>
-              <span>Mouth</span>
-            </button>
-            <button class="tab-btn" onclick="showTab('hair')">
-              <span class="tab-icon">💇</span>
-              <span>Hair</span>
-            </button>
-            <button class="tab-btn" onclick="showTab('clothes')">
-              <span class="tab-icon">👕</span>
-              <span>Clothes</span>
-            </button>
-            <button class="tab-btn" onclick="showTab('accessories')">
-              <span class="tab-icon">👓</span>
-              <span>Accessories</span>
-            </button>
-          </div>
-          
-          <!-- 탭 콘텐츠 -->
-          <div class="tab-content active" id="skinTab">
-            <div class="option-section">
-              <h3>Skin Tone</h3>
-              <div class="color-palette">
-                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Pale')" data-value="Pale" style="background: #fdbcb4;"></div>
-                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Light')" data-value="Light" style="background: #f4c2a1;"></div>
-                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Medium')" data-value="Medium" style="background: #e8a87c;"></div>
-                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Dark')" data-value="Dark" style="background: #d2691e;"></div>
-                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Brown')" data-value="Brown" style="background: #c68642;"></div>
-                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Black')" data-value="Black" style="background: #8d4a3c;"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="tab-content" id="eyesTab">
-            <div class="option-section">
-              <h3>Eye Style</h3>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Happy')" data-property="eyeType" data-value="Happy">
-                  <div class="option-preview">😊</div>
-                  <span>Happy</span>
+        <div class="input-group">
+                            <label for="avatarTeam">팀명</label>
+                            <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요">
+                        </div>
+                    </div>
                 </div>
-                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Default')" data-property="eyeType" data-value="Default">
-                  <div class="option-preview">👁️</div>
-                  <span>Default</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Wink')" data-property="eyeType" data-value="Wink">
-                  <div class="option-preview">😉</div>
-                  <span>Wink</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Close')" data-property="eyeType" data-value="Close">
-                  <div class="option-preview">😑</div>
-                  <span>Close</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="option-section">
-              <h3>Eyebrow</h3>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectAvataaarsOption('eyebrowType', 'Default')" data-property="eyebrowType" data-value="Default">
-                  <div class="option-preview">🤨</div>
-                  <span>Default</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('eyebrowType', 'Angry')" data-property="eyebrowType" data-value="Angry">
-                  <div class="option-preview">😠</div>
-                  <span>Angry</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('eyebrowType', 'RaisedExcited')" data-property="eyebrowType" data-value="RaisedExcited">
-                  <div class="option-preview">🤩</div>
-                  <span>Excited</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="tab-content" id="mouthTab">
-            <div class="option-category">
-              <h4>입 모양</h4>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectOption('mouth', 'smile')">
-                  <div class="option-preview mouth-smile"></div>
-                  <span>웃음</span>
-                </div>
-                <div class="option-item" onclick="selectOption('mouth', 'normal')">
-                  <div class="option-preview mouth-normal"></div>
-                  <span>일반</span>
-                </div>
-                <div class="option-item" onclick="selectOption('mouth', 'surprised')">
-                  <div class="option-preview mouth-surprised"></div>
-                  <span>놀람</span>
-                </div>
-                <div class="option-item" onclick="selectOption('mouth', 'serious')">
-                  <div class="option-preview mouth-serious"></div>
-                  <span>진지</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="option-category">
-              <h4>코</h4>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectOption('nose', 'normal')">
-                  <div class="option-preview nose-normal"></div>
-                  <span>일반</span>
-                </div>
-                <div class="option-item" onclick="selectOption('nose', 'small')">
-                  <div class="option-preview nose-small"></div>
-                  <span>작은</span>
-                </div>
-                <div class="option-item" onclick="selectOption('nose', 'big')">
-                  <div class="option-preview nose-big"></div>
-                  <span>큰</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="tab-content" id="hairTab">
-            <div class="option-category">
-              <h4>머리스타일</h4>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectOption('hair', 'short')">
-                  <div class="option-preview hair-short"></div>
-                  <span>짧은머리</span>
-                </div>
-                <div class="option-item" onclick="selectOption('hair', 'long')">
-                  <div class="option-preview hair-long"></div>
-                  <span>긴머리</span>
-                </div>
-                <div class="option-item" onclick="selectOption('hair', 'curly')">
-                  <div class="option-preview hair-curly"></div>
-                  <span>곱슬머리</span>
-                </div>
-                <div class="option-item" onclick="selectOption('hair', 'bald')">
-                  <div class="option-preview hair-bald"></div>
-                  <span>대머리</span>
-                </div>
-                <div class="option-item" onclick="selectOption('hair', 'bob')">
-                  <div class="option-preview hair-bob"></div>
-                  <span>보브컷</span>
-                </div>
-                <div class="option-item" onclick="selectOption('hair', 'pixie')">
-                  <div class="option-preview hair-pixie"></div>
-                  <span>픽시컷</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="option-category">
-              <h4>머리색</h4>
-              <div class="color-palette">
-                <div class="color-option" data-color="1" onclick="selectColor('hair', 1)" style="background: #8b4513;"></div>
-                <div class="color-option" data-color="2" onclick="selectColor('hair', 2)" style="background: #654321;"></div>
-                <div class="color-option" data-color="3" onclick="selectColor('hair', 3)" style="background: #a0522d;"></div>
-                <div class="color-option" data-color="4" onclick="selectColor('hair', 4)" style="background: #000000;"></div>
-                <div class="color-option" data-color="5" onclick="selectColor('hair', 5)" style="background: #ffffff; border: 1px solid #ccc;"></div>
-                <div class="color-option" data-color="6" onclick="selectColor('hair', 6)" style="background: #ffd700;"></div>
-                <div class="color-option" data-color="7" onclick="selectColor('hair', 7)" style="background: #ff69b4;"></div>
-                <div class="color-option" data-color="8" onclick="selectColor('hair', 8)" style="background: #4169e1;"></div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="tab-content" id="clothesTab">
-            <div class="option-category">
-              <h4>의상</h4>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'BlazerShirt')" data-property="clotheType" data-value="BlazerShirt">
-                  <div class="option-preview">👔</div>
-                  <span>정장</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'BlazerSweater')" data-property="clotheType" data-value="BlazerSweater">
-                  <div class="option-preview">🧥</div>
-                  <span>스웨터</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'CollarSweater')" data-property="clotheType" data-value="CollarSweater">
-                  <div class="option-preview">👕</div>
-                  <span>카라티</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'GraphicShirt')" data-property="clotheType" data-value="GraphicShirt">
-                  <div class="option-preview">👕</div>
-                  <span>그래픽티</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'Hoodie')" data-property="clotheType" data-value="Hoodie">
-                  <div class="option-preview">🧥</div>
-                  <span>후드티</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'Overall')" data-property="clotheType" data-value="Overall">
-                  <div class="option-preview">👖</div>
-                  <span>멜빵바지</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'ShirtCrewNeck')" data-property="clotheType" data-value="ShirtCrewNeck">
-                  <div class="option-preview">👕</div>
-                  <span>크루넥</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'ShirtScoopNeck')" data-property="clotheType" data-value="ShirtScoopNeck">
-                  <div class="option-preview">👕</div>
-                  <span>스쿱넥</span>
-                </div>
-                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'ShirtVNeck')" data-property="clotheType" data-value="ShirtVNeck">
-                  <div class="option-preview">👕</div>
-                  <span>브이넥</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="tab-content" id="accessoriesTab">
-            <div class="option-category">
-              <h4>안경</h4>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectOption('glasses', 'none')">
-                  <div class="option-preview glasses-none"></div>
-                  <span>없음</span>
-                </div>
-                <div class="option-item" onclick="selectOption('glasses', 'round')">
-                  <div class="option-preview glasses-round"></div>
-                  <span>둥근안경</span>
-                </div>
-                <div class="option-item" onclick="selectOption('glasses', 'square')">
-                  <div class="option-preview glasses-square"></div>
-                  <span>사각안경</span>
-                </div>
-                <div class="option-item" onclick="selectOption('glasses', 'sunglasses')">
-                  <div class="option-preview glasses-sunglasses"></div>
-                  <span>선글라스</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="option-category">
-              <h4>수염</h4>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectOption('beard', 'none')">
-                  <div class="option-preview beard-none"></div>
-                  <span>없음</span>
-                </div>
-                <div class="option-item" onclick="selectOption('beard', 'mustache')">
-                  <div class="option-preview beard-mustache"></div>
-                  <span>콧수염</span>
-                </div>
-                <div class="option-item" onclick="selectOption('beard', 'full')">
-                  <div class="option-preview beard-full"></div>
-                  <span>턱수염</span>
-                </div>
-                <div class="option-item" onclick="selectOption('beard', 'goatee')">
-                  <div class="option-preview beard-goatee"></div>
-                  <span>염소수염</span>
-                </div>
-              </div>
-            </div>
-          </div>
+                
+                <!-- Avataaars 생성기 -->
+                <div class="customization-panel">
+                    <div class="avataaars-generator">
+                        <div id="avataaarsContainer"></div>
+                        <div class="generator-controls">
+                            <button class="btn-secondary" onclick="randomizeAvatar()">🎲 랜덤 생성</button>
+                            <button class="btn-primary" onclick="downloadAvatarSVG()">📥 SVG 다운로드</button>
         </div>
-        
-        <div class="character-preview-container">
-          <div class="character-preview" id="characterPreview">
-            <div class="character-placeholder">캐릭터 미리보기</div>
-          </div>
-        </div>
-        <button class="action-button" onclick="generateAvatar()">아바타 생성</button>
-        <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
-        <p id="avatarStatus" class="status-message"></p>
       </div>
+                </div>
+            </div>
+            
+            <div id="avatarStatus" class="status"></div>
     </div>
   </div>
 
   <!-- 조회 페이지 -->
   <div id="searchPage" class="page">
-    <div class="register-container">
-      <div class="register-card">
-        <h2 class="register-title">사원 조회</h2>
-        <div class="form-group">
-          <label for="searchName">이름</label>
+        <div class="container">
+            <h2>직원 조회</h2>
+            <div class="search-form">
+        <div class="input-group">
+                    <label for="searchName">이름</label>
           <input type="text" id="searchName" placeholder="이름을 입력하세요">
         </div>
-        <div class="form-group">
-          <label for="searchTeam">팀</label>
-          <input type="text" id="searchTeam" placeholder="팀을 입력하세요">
-        </div>
-        <button class="action-button" onclick="searchEmployee()">조회</button>
-        <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
-        <p id="searchStatus" class="status-message"></p>
-      </div>
+        <div class="input-group">
+                    <label for="searchTeam">팀명</label>
+          <input type="text" id="searchTeam" placeholder="팀명을 입력하세요">
+                </div>
+                <button class="btn-primary" onclick="searchEmployee()">검색</button>
+            </div>
+            <div id="searchResults" class="search-results"></div>
+            <div id="searchStatus" class="status"></div>
     </div>
   </div>
 
   <!-- 결과 페이지 -->
   <div id="resultPage" class="page">
-    <div class="result-container" id="resultContainer">
-      <div class="card-title">The Steps of Haneul</div>
-      <div class="result-card" id="resultCard">
-        <img id="resultPhoto" class="employee-photo" src="" alt="사원 사진">
-        <div class="employee-name" id="resultName"></div>
-        <div class="employee-team" id="resultTeam"></div>
-        <div class="employee-id" id="resultId"></div>
-      </div>
-      <div class="button-container">
-        <button class="result-button" onclick="saveAsImage()">이미지 저장</button>
-        <button class="result-button" onclick="showPage('avatarPage')">아바타 생성</button>
-        <button class="result-button" onclick="showPage('mainPage')">메인으로</button>
-      </div>
+        <div class="container">
+            <div id="resultContainer"></div>
     </div>
   </div>
 
-
-  <!-- Avataaars CDN -->
-  <script src="https://unpkg.com/avataaars@1.0.0/dist/avataaars.js"></script>
+    <!-- Avataaars 라이브러리 -->
+    <script src="https://unpkg.com/avataaars@2.0.0/dist/avataaars.js"></script>
+    <!-- React 라이브러리 (avataaars v2는 React 필요) -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
 
   <!-- JavaScript -->
   <script src="js/data.js"></script>
