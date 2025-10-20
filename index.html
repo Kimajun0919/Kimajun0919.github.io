@@ -48,6 +48,7 @@
         <div class="menu-buttons">
           <button class="menu-button" onclick="showPage('registerPage')">등록</button>
           <button class="menu-button" onclick="showPage('searchPage')">조회</button>
+          <button class="menu-button test-button" onclick="showPage('testPage')">동시 업로드 테스트</button>
         </div>
       </div>
     </div>
@@ -117,6 +118,50 @@
         <button class="result-button" onclick="saveAsImage()">이미지 저장</button>
         <button class="result-button" onclick="showPage('searchPage')">다시 조회</button>
         <button class="result-button" onclick="showPage('mainPage')">메인으로</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 테스트 페이지 -->
+  <div id="testPage" class="page">
+    <div class="register-container">
+      <div class="register-card">
+        <h2 class="register-title">동시 업로드 테스트</h2>
+        <div class="test-info">
+          <p>이 기능은 구글드라이브와 Firebase의 동시 접속 처리 능력을 테스트합니다.</p>
+          <p><strong>주의:</strong> 테스트 데이터가 생성되며, 실제 데이터베이스에 저장됩니다.</p>
+        </div>
+        
+        <div class="test-controls">
+          <button class="action-button" onclick="startBulkUpload()">150개 샘플 데이터 업로드</button>
+          <button class="action-button secondary" onclick="deleteTestData()">테스트 데이터 삭제</button>
+          <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
+        </div>
+        
+        <div class="progress-container" id="progressContainer" style="display: none;">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-text" id="progressText">0 / 150</div>
+          <div class="progress-status" id="progressStatus">준비 중...</div>
+        </div>
+        
+        <div class="test-results" id="testResults">
+          <div class="result-item">
+            <span>성공:</span>
+            <span id="successCount">0</span>
+          </div>
+          <div class="result-item">
+            <span>실패:</span>
+            <span id="failureCount">0</span>
+          </div>
+          <div class="result-item">
+            <span>소요 시간:</span>
+            <span id="elapsedTime">0초</span>
+          </div>
+        </div>
+        
+        <p id="testStatus" class="status-message"></p>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getDatabase, ref, push, get, child } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getDatabase, ref, push, get, child, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCXaqnaoQYWZGywi_PPRohGaAJj_dBVDK0",
@@ -33,6 +33,15 @@ window.showPage = function(pageId) {
     document.getElementById('searchStatus').textContent = '';
     document.getElementById('searchName').value = '';
     document.getElementById('searchTeam').value = '';
+  }
+  
+  if (pageId === 'testPage') {
+    // 테스트 페이지 초기화
+    document.getElementById('testStatus').textContent = '';
+    document.getElementById('progressContainer').style.display = 'none';
+    document.getElementById('successCount').textContent = '0';
+    document.getElementById('failureCount').textContent = '0';
+    document.getElementById('elapsedTime').textContent = '0초';
   }
 };
 
@@ -321,5 +330,261 @@ window.saveAsImage = async function() {
     console.error('이미지 저장 오류:', error);
   } finally {
     wrapper.remove();
+  }
+};
+
+// 동시 업로드 테스트 기능
+let testData = [];
+let testResults = {
+  success: 0,
+  failure: 0,
+  startTime: null
+};
+
+// back.jpg를 Base64로 변환하는 함수
+async function getBackImageAsBase64() {
+  try {
+    const response = await fetch('assets/back.jpg');
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result.split(',')[1];
+        resolve(base64);
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('이미지 로드 오류:', error);
+    return null;
+  }
+}
+
+// 샘플 데이터 생성 함수
+function generateSampleData(count) {
+  const teams = ['개발팀', '디자인팀', '마케팅팀', '영업팀', '기획팀', '인사팀', '재무팀', '운영팀'];
+  const names = ['김하늘', '이별', '박소영', '최민수', '정수진', '강태현', '윤서연', '임동현', '한지민', '송재호'];
+  
+  const sampleData = [];
+  for (let i = 0; i < count; i++) {
+    const randomName = names[Math.floor(Math.random() * names.length)];
+    const randomTeam = teams[Math.floor(Math.random() * teams.length)];
+    const randomNumber = Math.floor(Math.random() * 1000);
+    
+    sampleData.push({
+      name: `${randomName}_${randomNumber}`,
+      team: randomTeam,
+      isTestData: true
+    });
+  }
+  return sampleData;
+}
+
+// 단일 업로드 함수
+async function uploadSingleEmployee(employeeData, index) {
+  try {
+    // back.jpg를 Base64로 변환
+    const base64Image = await getBackImageAsBase64();
+    if (!base64Image) {
+      throw new Error('이미지 로드 실패');
+    }
+
+    // Google Drive에 업로드
+    const res = await fetch(scriptURL, {
+      method: "POST",
+      body: new URLSearchParams({
+        file: base64Image,
+        filename: `test_${employeeData.name}_${Date.now()}.jpg`,
+        mimeType: "image/jpeg"
+      })
+    });
+
+    const imageURL = await res.text();
+    if (imageURL.startsWith("ERROR")) {
+      throw new Error(`업로드 실패: ${imageURL}`);
+    }
+
+    // Firebase에 데이터 저장
+    const employeeId = String(Date.now() + index).slice(-6);
+    const newRef = await push(ref(db, "employees"), {
+      name: employeeData.name,
+      team: employeeData.team,
+      photoURL: imageURL,
+      employeeId: employeeId,
+      createdAt: new Date().toISOString(),
+      isTestData: true
+    });
+
+    return {
+      success: true,
+      key: newRef.key,
+      employeeId: employeeId
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+// 진행 상황 업데이트
+function updateProgress(current, total, status) {
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  const progressStatus = document.getElementById('progressStatus');
+  
+  const percentage = (current / total) * 100;
+  progressFill.style.width = `${percentage}%`;
+  progressText.textContent = `${current} / ${total}`;
+  progressStatus.textContent = status;
+}
+
+// 결과 업데이트
+function updateResults() {
+  document.getElementById('successCount').textContent = testResults.success;
+  document.getElementById('failureCount').textContent = testResults.failure;
+  
+  if (testResults.startTime) {
+    const elapsed = Math.round((Date.now() - testResults.startTime) / 1000);
+    document.getElementById('elapsedTime').textContent = `${elapsed}초`;
+  }
+}
+
+// 대량 업로드 시작
+window.startBulkUpload = async function() {
+  const testStatus = document.getElementById('testStatus');
+  const progressContainer = document.getElementById('progressContainer');
+  
+  // 초기화
+  testResults = {
+    success: 0,
+    failure: 0,
+    startTime: Date.now()
+  };
+  
+  testStatus.textContent = "🔄 테스트 데이터 생성 중...";
+  testStatus.style.color = "#3498db";
+  
+  // 샘플 데이터 생성
+  testData = generateSampleData(150);
+  
+  // UI 초기화
+  progressContainer.style.display = 'block';
+  updateProgress(0, 150, '업로드 준비 중...');
+  updateResults();
+  
+  testStatus.textContent = "📤 150개 파일을 동시에 업로드 중...";
+  
+  // 동시 업로드 (배치 처리)
+  const batchSize = 10; // 동시에 처리할 수 있는 개수
+  const batches = [];
+  
+  for (let i = 0; i < testData.length; i += batchSize) {
+    batches.push(testData.slice(i, i + batchSize));
+  }
+  
+  let completedCount = 0;
+  
+  for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+    const batch = batches[batchIndex];
+    
+    // 배치 내에서 동시 처리
+    const promises = batch.map((employee, index) => 
+      uploadSingleEmployee(employee, completedCount + index)
+    );
+    
+    const results = await Promise.all(promises);
+    
+    // 결과 처리
+    results.forEach((result) => {
+      if (result.success) {
+        testResults.success++;
+      } else {
+        testResults.failure++;
+        console.error('업로드 실패:', result.error);
+      }
+    });
+    
+    completedCount += batch.length;
+    updateProgress(completedCount, 150, `배치 ${batchIndex + 1}/${batches.length} 완료`);
+    updateResults();
+    
+    // 배치 간 짧은 대기 (서버 부하 방지)
+    if (batchIndex < batches.length - 1) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+  }
+  
+  // 완료
+  updateProgress(150, 150, '완료');
+  
+  if (testResults.failure === 0) {
+    testStatus.innerHTML = `✅ 모든 업로드가 성공했습니다! (${testResults.success}개)`;
+    testStatus.style.color = "#27ae60";
+  } else {
+    testStatus.innerHTML = `⚠️ 업로드 완료: 성공 ${testResults.success}개, 실패 ${testResults.failure}개`;
+    testStatus.style.color = "#f39c12";
+  }
+};
+
+// 테스트 데이터 삭제
+window.deleteTestData = async function() {
+  const testStatus = document.getElementById('testStatus');
+  
+  testStatus.textContent = "🗑️ 테스트 데이터 삭제 중...";
+  testStatus.style.color = "#3498db";
+  
+  try {
+    const snapshot = await get(child(ref(db), "employees"));
+    if (snapshot.exists()) {
+      const employees = snapshot.val();
+      const testDataKeys = [];
+      
+      // 테스트 데이터 키 수집
+      for (const key in employees) {
+        if (employees[key].isTestData) {
+          testDataKeys.push(key);
+        }
+      }
+      
+      if (testDataKeys.length === 0) {
+        testStatus.textContent = "📭 삭제할 테스트 데이터가 없습니다.";
+        testStatus.style.color = "#999";
+        return;
+      }
+      
+      // 배치 삭제
+      const batchSize = 20;
+      let deletedCount = 0;
+      
+      for (let i = 0; i < testDataKeys.length; i += batchSize) {
+        const batch = testDataKeys.slice(i, i + batchSize);
+        
+        const deletePromises = batch.map(key => 
+          remove(ref(db, `employees/${key}`))
+        );
+        
+        await Promise.all(deletePromises);
+        deletedCount += batch.length;
+        
+        testStatus.textContent = `🗑️ 삭제 중... ${deletedCount}/${testDataKeys.length}`;
+        
+        // 배치 간 대기
+        if (i + batchSize < testDataKeys.length) {
+          await new Promise(resolve => setTimeout(resolve, 200));
+        }
+      }
+      
+      testStatus.innerHTML = `✅ 테스트 데이터 삭제 완료! (${deletedCount}개 삭제)`;
+      testStatus.style.color = "#27ae60";
+    } else {
+      testStatus.textContent = "📭 삭제할 데이터가 없습니다.";
+      testStatus.style.color = "#999";
+    }
+  } catch (error) {
+    testStatus.textContent = `❌ 삭제 실패: ${error.message}`;
+    testStatus.style.color = "#e74c3c";
   }
 };
