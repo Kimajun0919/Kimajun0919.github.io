@@ -1141,6 +1141,31 @@ window.saveAsImage = async function() {
   }
 };
 
+// 탭 전환 함수
+window.showTab = function(tabName) {
+  // 모든 탭 버튼에서 active 클래스 제거
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // 모든 탭 콘텐츠 숨기기
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.style.display = 'none';
+  });
+  
+  // 해당 탭 버튼에 active 클래스 추가
+  const targetButton = document.querySelector(`[onclick*="showTab('${tabName}')"]`);
+  if (targetButton) {
+    targetButton.classList.add('active');
+  }
+  
+  // 해당 탭 콘텐츠 표시
+  const targetContent = document.getElementById(tabName + 'Tab');
+  if (targetContent) {
+    targetContent.style.display = 'block';
+  }
+};
+
 
 
 

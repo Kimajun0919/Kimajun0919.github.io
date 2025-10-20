@@ -85,7 +85,7 @@
               <label for="avatarName">이름</label>
               <input type="text" id="avatarName" placeholder="이름을 입력하세요">
             </div>
-            <div class="input-group">
+        <div class="input-group">
               <label for="avatarTeam">팀명</label>
               <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요">
             </div>
@@ -123,7 +123,7 @@
           </div>
           
           <!-- 탭 콘텐츠 -->
-          <div class="tab-content active" id="skin-tab">
+          <div class="tab-content active" id="skinTab">
             <div class="option-section">
               <h3>Skin Tone</h3>
               <div class="color-palette">
@@ -137,7 +137,7 @@
             </div>
           </div>
           
-          <div class="tab-content" id="eyes-tab">
+          <div class="tab-content" id="eyesTab">
             <div class="option-section">
               <h3>Eye Style</h3>
               <div class="option-grid">
@@ -179,7 +179,7 @@
             </div>
           </div>
           
-          <div class="tab-content" id="mouth-tab">
+          <div class="tab-content" id="mouthTab">
             <div class="option-category">
               <h4>입 모양</h4>
               <div class="option-grid">
@@ -221,7 +221,7 @@
             </div>
           </div>
           
-          <div class="tab-content" id="hair-tab">
+          <div class="tab-content" id="hairTab">
             <div class="option-category">
               <h4>머리스타일</h4>
               <div class="option-grid">
@@ -267,7 +267,51 @@
             </div>
           </div>
           
-          <div class="tab-content" id="accessories-tab">
+          <div class="tab-content" id="clothesTab">
+            <div class="option-category">
+              <h4>의상</h4>
+              <div class="option-grid">
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'BlazerShirt')" data-property="clotheType" data-value="BlazerShirt">
+                  <div class="option-preview">👔</div>
+                  <span>정장</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'BlazerSweater')" data-property="clotheType" data-value="BlazerSweater">
+                  <div class="option-preview">🧥</div>
+                  <span>스웨터</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'CollarSweater')" data-property="clotheType" data-value="CollarSweater">
+                  <div class="option-preview">👕</div>
+                  <span>카라티</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'GraphicShirt')" data-property="clotheType" data-value="GraphicShirt">
+                  <div class="option-preview">👕</div>
+                  <span>그래픽티</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'Hoodie')" data-property="clotheType" data-value="Hoodie">
+                  <div class="option-preview">🧥</div>
+                  <span>후드티</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'Overall')" data-property="clotheType" data-value="Overall">
+                  <div class="option-preview">👖</div>
+                  <span>멜빵바지</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'ShirtCrewNeck')" data-property="clotheType" data-value="ShirtCrewNeck">
+                  <div class="option-preview">👕</div>
+                  <span>크루넥</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'ShirtScoopNeck')" data-property="clotheType" data-value="ShirtScoopNeck">
+                  <div class="option-preview">👕</div>
+                  <span>스쿱넥</span>
+                </div>
+                <div class="option-item" onclick="selectAvataaarsOption('clotheType', 'ShirtVNeck')" data-property="clotheType" data-value="ShirtVNeck">
+                  <div class="option-preview">👕</div>
+                  <span>브이넥</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tab-content" id="accessoriesTab">
             <div class="option-category">
               <h4>안경</h4>
               <div class="option-grid">
