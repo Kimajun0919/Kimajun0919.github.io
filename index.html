@@ -4,17 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>팀원 관리 시스템</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- Adobe Fonts (optional) -->
+  <script>
+    (function(d) {
+      var config = { kitId: 'wcb3eag', scriptTimeout: 3000, async: true },
+      h=d.documentElement,t=setTimeout(function(){ h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive"; },config.scriptTimeout),
+      tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;
+      h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';
+      tk.async=true;tk.onload=tk.onreadystatechange=function(){ a=this.readyState; if(f||a&&a!="complete"&&a!="loaded")return; f=true;clearTimeout(t); try{Typekit.load(config)}catch(e){} };
+      s.parentNode.insertBefore(tk,s)
+    })(document);
+  </script>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <!-- 메인 페이지 -->
   <div id="mainPage" class="page active">
-        <div class="container">
-            <h1>팀원 관리 시스템</h1>
-        <div class="menu-buttons">
-                <button class="menu-button" onclick="showPage('avatarPage')">아바타 생성</button>
-          <button class="menu-button" onclick="showPage('searchPage')">조회</button>
-        </div>
+        <div class="main-container">
+            <div class="main-content">
+                <h1 class="main-title">팀원 관리 시스템</h1>
+                <p class="main-subtitle">아바타 생성 · 팀원 조회</p>
+                <div class="menu-buttons">
+                    <button class="menu-button" onclick="showPage('avatarPage')">아바타 생성</button>
+                    <button class="menu-button" onclick="showPage('searchPage')">조회</button>
+                </div>
+            </div>
         </div>
     </div>
 

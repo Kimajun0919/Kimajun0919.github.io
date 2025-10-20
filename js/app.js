@@ -83,13 +83,16 @@ function renderAvataaarsReact() {
     const Avatar = window.Avataaars.Avatar;
     const AvatarStyle = window.Avataaars.AvatarStyle;
     
+    // avatarStyle 문자열을 AvatarStyle 상수로 변환
+    const avatarStyleValue = avataaarsData.avatarStyle === 'Circle' ? AvatarStyle.Circle : AvatarStyle.Transparent;
+    
     avataaarsComponent = ReactDOM.render(
       React.createElement(Avatar, {
         style: {
           width: '100%',
           height: '100%'
         },
-        avatarStyle: AvatarStyle.Circle,
+        avatarStyle: avatarStyleValue,
         ...avataaarsData
       }),
       container
@@ -381,6 +384,7 @@ window.selectOption = function(property, value) {
 // 랜덤 아바타 생성 함수 (HTML에서 호출)
 window.randomizeAvatar = function() {
   // 랜덤 값 생성
+  const avatarStyles = ['Circle', 'Transparent'];
   const skinColors = ['Pale', 'Light', 'Brown', 'DarkBrown', 'Black'];
   const eyeTypes = ['Happy', 'Default', 'Wink', 'Squint', 'Side', 'Dizzy', 'Surprised', 'Close', 'Cry', 'EyeRoll', 'Hearts', 'Kiss'];
   const eyebrowTypes = ['Default', 'Angry', 'AngryNatural', 'DefaultNatural', 'FlatNatural', 'RaisedExcited', 'RaisedExcitedNatural', 'SadConcerned', 'SadConcernedNatural', 'UnibrowNatural', 'UpDown', 'UpDownNatural'];
@@ -394,6 +398,7 @@ window.randomizeAvatar = function() {
 
   // 랜덤 값으로 업데이트
   avataaarsData = {
+    avatarStyle: avatarStyles[Math.floor(Math.random() * avatarStyles.length)],
     skinColor: skinColors[Math.floor(Math.random() * skinColors.length)],
     eyeType: eyeTypes[Math.floor(Math.random() * eyeTypes.length)],
     eyebrowType: eyebrowTypes[Math.floor(Math.random() * eyebrowTypes.length)],
