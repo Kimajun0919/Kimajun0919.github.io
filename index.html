@@ -38,199 +38,122 @@
   <!-- 아바타 생성 페이지 -->
   <div id="avatarPage" class="page">
     <div class="container">
-      <h2>아바타 생성</h2>
-      <div class="avatar-generator">
-        <div class="avatar-preview">
-          <div id="avatarContainer"></div>
-          <div class="avatar-controls">
-            <button class="btn-primary" onclick="randomizeAvatar()">랜덤 생성</button>
-            <button class="btn-secondary" onclick="downloadAvatar('png')">PNG 다운로드</button>
-            <button class="btn-secondary" onclick="downloadAvatar('svg')">SVG 다운로드</button>
+      <div class="avatar-builder-header">
+        <h2>아바타 생성</h2>
+        <div class="header-actions">
+          <button class="btn" onclick="randomizeAll()" aria-label="전체 무작위 생성">🎲 전체 무작위</button>
+          <button class="btn btn-secondary" onclick="undoAvatar()" aria-label="실행 취소">↶ 실행취소</button>
+          <button class="btn btn-secondary" onclick="redoAvatar()" aria-label="다시 실행">↷ 다시실행</button>
+          <button class="btn btn-secondary" onclick="resetAvatar()" aria-label="초기화">🔄 초기화</button>
+          <button class="btn" onclick="exportPNG()" aria-label="PNG로 내보내기">💾 PNG</button>
+          <button class="btn" onclick="exportSVG()" aria-label="SVG로 내보내기">📄 SVG</button>
+          <button class="btn btn-secondary" onclick="showPage('mainPage')">← 메인으로</button>
+        </div>
+      </div>
+
+      <div class="main-grid">
+        <!-- 미리보기 패널 -->
+        <div class="preview-panel">
+          <h3>미리보기</h3>
+          <svg id="avatarPreview" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+            <!-- SVG 정의부 -->
+            <defs id="assetDefs"></defs>
+            
+            <!-- 레이어 순서대로 렌더링 -->
+            <g data-part="faceShape"></g>
+            <g data-part="ears"></g>
+            <g data-part="skinTone"></g>
+            <g data-part="hairBack"></g>
+            <g data-part="eyebrows"></g>
+            <g data-part="eyes"></g>
+            <g data-part="nose"></g>
+            <g data-part="mouth"></g>
+            <g data-part="top"></g>
+            <g data-part="hair"></g>
+          </svg>
+          
+          <div class="export-options">
+            <label>
+              <input type="checkbox" id="transparentBg" checked>
+              투명 배경
+            </label>
           </div>
         </div>
-        <div class="avatar-options">
-          <div class="option-group">
-            <label for="avatarStyle">아바타 스타일</label>
-            <select id="avatarStyle" onchange="updateAvatar()">
-              <option value="Circle">원형</option>
-              <option value="Transparent">투명</option>
-            </select>
+
+        <!-- 편집 패널 -->
+        <div class="editor-panel">
+          <!-- 얼굴형 -->
+          <div class="part-section">
+            <div class="part-title">👤 얼굴형</div>
+            <div class="options-grid" id="faceShapeOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="topType">머리 스타일</label>
-            <select id="topType" onchange="updateAvatar()">
-              <option value="NoHair">대머리</option>
-              <option value="Eyepatch">안대</option>
-              <option value="Hat">모자</option>
-              <option value="Hijab">히잡</option>
-              <option value="Turban">터번</option>
-              <option value="WinterHat1">겨울모자1</option>
-              <option value="WinterHat2">겨울모자2</option>
-              <option value="WinterHat3">겨울모자3</option>
-              <option value="WinterHat4">겨울모자4</option>
-              <option value="LongHairBigHair">긴 머리</option>
-              <option value="LongHairBob">단발</option>
-              <option value="LongHairBun">똥머리</option>
-              <option value="LongHairCurly">곱슬머리</option>
-              <option value="LongHairCurvy">웨이브</option>
-              <option value="LongHairDreads">드레드</option>
-              <option value="LongHairFrida">프리다</option>
-              <option value="LongHairFro">아프로</option>
-              <option value="LongHairFroBand">아프로 밴드</option>
-              <option value="LongHairNotTooLong">중간 길이</option>
-              <option value="LongHairShavedSides">사이드 삭발</option>
-              <option value="LongHairMiaWallace">미아 월리스</option>
-              <option value="LongHairStraight">스트레이트</option>
-              <option value="LongHairStraight2">스트레이트2</option>
-              <option value="LongHairStraightStrand">스트레이트 가닥</option>
-              <option value="ShortHairDreads01">짧은 드레드</option>
-              <option value="ShortHairDreads02">짧은 드레드2</option>
-              <option value="ShortHairFrizzle">곱슬</option>
-              <option value="ShortHairShaggyMullet">멀렛</option>
-              <option value="ShortHairShortCurly">짧은 곱슬</option>
-              <option value="ShortHairShortFlat">짧은 플랫</option>
-              <option value="ShortHairShortRound">짧은 라운드</option>
-              <option value="ShortHairShortWaved">짧은 웨이브</option>
-              <option value="ShortHairSides">사이드</option>
-              <option value="ShortHairTheCaesar">시저</option>
-              <option value="ShortHairTheCaesarSidePart">시저 사이드</option>
-            </select>
+
+          <!-- 피부색 -->
+          <div class="part-section">
+            <div class="part-title">🎨 피부색</div>
+            <div class="color-palette" id="skinToneOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="accessoriesType">액세서리</label>
-            <select id="accessoriesType" onchange="updateAvatar()">
-              <option value="Blank">없음</option>
-              <option value="Kurt">커트</option>
-              <option value="Prescription01">안경1</option>
-              <option value="Prescription02">안경2</option>
-              <option value="Round">둥근 안경</option>
-              <option value="Sunglasses">선글라스</option>
-              <option value="Wayfarers">웨이파레</option>
-            </select>
+
+          <!-- 머리스타일 -->
+          <div class="part-section">
+            <div class="part-title">💇 머리스타일</div>
+            <div class="options-grid" id="hairOptions"></div>
+            <div class="color-palette" id="hairColorOptions"></div>
+            <div class="control-group">
+              <button class="btn btn-secondary" onclick="randomizePart('hair')">🎲 무작위</button>
+            </div>
           </div>
-          <div class="option-group">
-            <label for="hairColor">머리색</label>
-            <select id="hairColor" onchange="updateAvatar()">
-              <option value="Auburn">적갈색</option>
-              <option value="Black">검은색</option>
-              <option value="Blonde">금발</option>
-              <option value="BlondeGolden">골든 블론드</option>
-              <option value="Brown">갈색</option>
-              <option value="BrownDark">진한 갈색</option>
-              <option value="PastelPink">파스텔 핑크</option>
-              <option value="Platinum">플래티넘</option>
-              <option value="Red">빨간색</option>
-              <option value="SilverGray">은회색</option>
-            </select>
+
+          <!-- 눈 -->
+          <div class="part-section">
+            <div class="part-title">👁️ 눈</div>
+            <div class="options-grid" id="eyesOptions"></div>
+            <div class="color-palette" id="eyesColorOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="facialHairType">수염</label>
-            <select id="facialHairType" onchange="updateAvatar()">
-              <option value="Blank">없음</option>
-              <option value="BeardMedium">중간 수염</option>
-              <option value="BeardLight">가벼운 수염</option>
-              <option value="BeardMagestic">위엄있는 수염</option>
-              <option value="MoustacheFancy">화려한 콧수염</option>
-              <option value="MoustacheMagnum">마그넘 콧수염</option>
-            </select>
+
+          <!-- 눈썹 -->
+          <div class="part-section">
+            <div class="part-title">✨ 눈썹</div>
+            <div class="options-grid" id="eyebrowsOptions"></div>
+            <div class="color-palette" id="eyebrowsColorOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="facialHairColor">수염색</label>
-            <select id="facialHairColor" onchange="updateAvatar()">
-              <option value="Auburn">적갈색</option>
-              <option value="Black">검은색</option>
-              <option value="Blonde">금발</option>
-              <option value="BlondeGolden">골든 블론드</option>
-              <option value="Brown">갈색</option>
-              <option value="BrownDark">진한 갈색</option>
-              <option value="Platinum">플래티넘</option>
-              <option value="Red">빨간색</option>
-            </select>
+
+          <!-- 코 -->
+          <div class="part-section">
+            <div class="part-title">👃 코</div>
+            <div class="options-grid" id="noseOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="clotheType">옷</label>
-            <select id="clotheType" onchange="updateAvatar()">
-              <option value="BlazerShirt">블레이저 셔츠</option>
-              <option value="BlazerSweater">블레이저 스웨터</option>
-              <option value="CollarSweater">칼라 스웨터</option>
-              <option value="GraphicShirt">그래픽 셔츠</option>
-              <option value="Hoodie">후드</option>
-              <option value="Overall">멜빵</option>
-              <option value="ShirtCrewNeck">크루넥 셔츠</option>
-              <option value="ShirtScoopNeck">스쿱넥 셔츠</option>
-              <option value="ShirtVNeck">브이넥 셔츠</option>
-            </select>
+
+          <!-- 입 -->
+          <div class="part-section">
+            <div class="part-title">👄 입</div>
+            <div class="options-grid" id="mouthOptions"></div>
+            <div class="color-palette" id="mouthColorOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="clotheColor">옷색</label>
-            <select id="clotheColor" onchange="updateAvatar()">
-              <option value="Black">검은색</option>
-              <option value="Blue01">파란색1</option>
-              <option value="Blue02">파란색2</option>
-              <option value="Blue03">파란색3</option>
-              <option value="Gray01">회색1</option>
-              <option value="Gray02">회색2</option>
-              <option value="Heather">히더</option>
-              <option value="PastelBlue">파스텔 블루</option>
-              <option value="PastelGreen">파스텔 그린</option>
-              <option value="PastelOrange">파스텔 오렌지</option>
-              <option value="PastelRed">파스텔 레드</option>
-              <option value="PastelYellow">파스텔 옐로우</option>
-              <option value="Pink">핑크</option>
-              <option value="Red">빨간색</option>
-              <option value="White">흰색</option>
-            </select>
+
+          <!-- 귀 -->
+          <div class="part-section">
+            <div class="part-title">👂 귀</div>
+            <div class="options-grid" id="earsOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="eyeType">눈</label>
-            <select id="eyeType" onchange="updateAvatar()">
-              <option value="Close">감은 눈</option>
-              <option value="Cry">우는 눈</option>
-              <option value="Default">기본</option>
-              <option value="Dizzy">어지러운</option>
-              <option value="EyeRoll">눈 굴림</option>
-              <option value="Happy">행복한</option>
-              <option value="Hearts">하트</option>
-              <option value="Side">옆</option>
-              <option value="Squint">찡그린</option>
-              <option value="Surprised">놀란</option>
-              <option value="Wink">윙크</option>
-              <option value="WinkWacky">장난스러운 윙크</option>
-            </select>
+
+          <!-- 상의 -->
+          <div class="part-section">
+            <div class="part-title">👕 상의</div>
+            <div class="options-grid" id="topOptions"></div>
+            <div class="color-palette" id="topColorOptions"></div>
           </div>
-          <div class="option-group">
-            <label for="eyebrowType">눈썹</label>
-            <select id="eyebrowType" onchange="updateAvatar()">
-              <option value="Angry">화난</option>
-              <option value="AngryNatural">자연스럽게 화난</option>
-              <option value="Default">기본</option>
-              <option value="DefaultNatural">자연스러운 기본</option>
-              <option value="FlatNatural">자연스럽게 평평한</option>
-              <option value="RaisedExcited">들뜬</option>
-              <option value="RaisedExcitedNatural">자연스럽게 들뜬</option>
-              <option value="SadConcerned">슬프고 걱정스러운</option>
-              <option value="SadConcernedNatural">자연스럽게 슬프고 걱정스러운</option>
-              <option value="UnibrowNatural">자연스러운 일자눈썹</option>
-              <option value="UpDown">위아래</option>
-              <option value="UpDownNatural">자연스럽게 위아래</option>
-            </select>
-          </div>
-          <div class="option-group">
-            <label for="mouthType">입</label>
-            <select id="mouthType" onchange="updateAvatar()">
-              <option value="Concerned">걱정스러운</option>
-              <option value="Default">기본</option>
-              <option value="Disbelief">불신</option>
-              <option value="Eating">먹는</option>
-              <option value="Grimace">찡그린</option>
-              <option value="Sad">슬픈</option>
-              <option value="ScreamOpen">소리지르는</option>
-              <option value="Serious">진지한</option>
-              <option value="Smile">웃는</option>
-              <option value="Tongue">혀내민</option>
-              <option value="Twinkle">반짝이는</option>
-              <option value="Vomit">토하는</option>
-            </select>
+
+          <!-- 프리셋 관리 -->
+          <div class="part-section">
+            <div class="part-title">💾 프리셋</div>
+            <div class="preset-actions">
+              <button class="btn btn-secondary" onclick="savePreset()">저장</button>
+              <button class="btn btn-secondary" onclick="loadPreset()">불러오기</button>
+              <button class="btn btn-secondary" onclick="copyJSON()">JSON 복사</button>
+              <button class="btn btn-secondary" onclick="toggleJSONViewer()">JSON 보기</button>
+            </div>
+            <div id="jsonViewer" class="json-viewer"></div>
           </div>
         </div>
       </div>
@@ -264,14 +187,9 @@
     </div>
   </div>
 
-    <!-- React 라이브러리 (avataaars v2는 React 필요) -->
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <!-- Avataaars 라이브러리 -->
-    <script src="https://unpkg.com/avataaars@2.0.0/dist/avataaars.js"></script>
-
   <!-- JavaScript -->
   <script src="js/data.js"></script>
+  <script src="js/avatar-builder.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

@@ -14,52 +14,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Avataaars 데이터
-let avataaarsData = {
-  avatarStyle: 'Circle',
-  skinColor: 'Pale',
-  eyeType: 'Happy',
-  eyebrowType: 'Default',
-  mouthType: 'Smile',
-  topType: 'ShortHairShortFlat',
-  hairColor: 'Auburn',
-  facialHairType: 'Blank',
-  facialHairColor: 'Auburn',
-  clotheType: 'BlazerShirt',
-  clotheColor: 'Black',
-  accessoriesType: 'Blank'
-};
-
-// Avataaars React 컴포넌트
-let avataaarsComponent = null;
-
 // 페이지 전환 함수 (HTML에서 호출)
 window.showPage = function(pageId) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
-  
-  if (pageId === 'avatarPage') {
-    // 아바타 생성 페이지 초기화
-    updateAvatar();
-    // React 컴포넌트도 렌더링
-    setTimeout(() => {
-      renderAvataaarsReact();
-    }, 100);
-  }
 };
 
-// Avataaars 렌더링 함수
-function renderAvataaars() {
-  const preview = document.getElementById('avatarPreview');
-  if (!preview) return;
-  
-  // Avataaars SVG 생성
-  const svg = generateAvataaarsSVG();
-  preview.innerHTML = svg;
-}
+// 구 아바타 관련 함수들 (아바타 빌더로 대체됨)
+// renderAvataaars, renderAvataaarsReact 등은 avatar-builder.js로 이동
 
-// Avataaars React 컴포넌트 렌더링
-function renderAvataaarsReact() {
+// 더미 함수들 (기존 호환성 유지용, 필요시 삭제 가능)
+function renderAvataaarsReact_OLD() {
   const container = document.getElementById('avataaarsContainer');
   if (!container || !window.React || !window.ReactDOM) {
     console.log('React 또는 ReactDOM이 로드되지 않았습니다.');

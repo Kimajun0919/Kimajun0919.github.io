@@ -1499,85 +1499,281 @@ input[type="file"] {
   }
 }
 
-/* 아바타 생성 페이지 */
-.avatar-generator {
+/* 아바타 빌더 헤더 */
+.avatar-builder-header {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.avatar-builder-header h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #007aff;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: #0051d5;
+  transform: translateY(-1px);
+}
+
+.btn:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: #f5f5f7;
+  color: #1d1d1f;
+  border: 1px solid #d2d2d7;
+}
+
+.btn-secondary:hover {
+  background: #e8e8ed;
+}
+
+/* 메인 그리드 */
+.main-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: 20px;
 }
 
-.avatar-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-}
-
-#avatarContainer {
-  width: 300px;
-  height: 300px;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  background: #f9f9f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-#avatarContainer svg {
-  width: 100%;
-  height: 100%;
-  max-width: 280px;
-  max-height: 280px;
-}
-
-.avatar-controls {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.avatar-options {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-height: 600px;
-  overflow-y: auto;
-  padding-right: 1rem;
-}
-
-.option-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.option-group label {
-  font-weight: 500;
-  color: #333;
-  font-size: 0.9rem;
-}
-
-.option-group select {
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+/* 미리보기 패널 */
+.preview-panel {
   background: white;
-  font-size: 0.9rem;
-  transition: border-color 0.3s ease;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
-.option-group select:focus {
-  outline: none;
-  border-color: #6A39D7;
-  box-shadow: 0 0 0 2px rgba(106, 57, 215, 0.2);
+.preview-panel h3 {
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.option-group select:hover {
-  border-color: #6A39D7;
+#avatarPreview {
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
+  border: 2px solid #d2d2d7;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+.export-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.export-options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+
+/* 편집 패널 */
+.editor-panel {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.part-section {
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #d2d2d7;
+}
+
+.part-section:last-child {
+  border-bottom: none;
+}
+
+.part-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 옵션 그리드 */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.option-btn {
+  aspect-ratio: 1;
+  border: 2px solid #d2d2d7;
+  border-radius: 12px;
+  background: #f5f5f7;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  text-align: center;
+}
+
+.option-btn:hover {
+  border-color: #007aff;
+  transform: scale(1.05);
+}
+
+.option-btn[aria-pressed="true"] {
+  border-color: #007aff;
+  background: rgba(0, 122, 255, 0.1);
+  border-width: 3px;
+}
+
+.option-btn:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+/* 색상 팔레트 */
+.color-palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 8px;
+}
+
+.color-btn {
+  aspect-ratio: 1;
+  border: 2px solid #d2d2d7;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.color-btn:hover {
+  transform: scale(1.1);
+}
+
+.color-btn[aria-pressed="true"] {
+  border-width: 3px;
+  border-color: #1d1d1f;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #1d1d1f;
+}
+
+.color-btn:focus {
+  outline: 2px solid #007aff;
+  outline-offset: 2px;
+}
+
+/* 컨트롤 그룹 */
+.control-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* 프리셋 액션 */
+.preset-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* JSON 뷰어 */
+.json-viewer {
+  background: #f8f8f8;
+  border: 1px solid #d2d2d7;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 10px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+
+.json-viewer.show {
+  display: block;
+}
+
+/* 스크롤바 스타일 */
+.editor-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.editor-panel::-webkit-scrollbar-track {
+  background: #f5f5f7;
+  border-radius: 4px;
+}
+
+.editor-panel::-webkit-scrollbar-thumb {
+  background: #d2d2d7;
+  border-radius: 4px;
+}
+
+.editor-panel::-webkit-scrollbar-thumb:hover {
+  background: #86868b;
+}
+
+/* 아바타 빌더 반응형 */
+@media (max-width: 1024px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #avatarPreview {
+    max-width: 300px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .options-grid {
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .avatar-builder-header h2 {
+    font-size: 20px;
+    text-align: center;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1598,23 +1794,30 @@ input[type="file"] {
     font-size: 18px;
   }
   
-  .avatar-generator {
+  .main-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
   
-  #avatarContainer {
+  #avatarPreview {
     width: 250px;
     height: 250px;
   }
   
-  .avatar-controls {
-    flex-direction: column;
-    align-items: center;
+  .options-grid {
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   }
   
-  .avatar-controls button {
+  .color-palette {
+    grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .btn {
     width: 100%;
-    max-width: 200px;
   }
 }
