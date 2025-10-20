@@ -84,7 +84,7 @@
     </div>
   </div>
 
-  <!-- 아바타 생성 페이지 (Peeps 스타일) -->
+  <!-- 아바타 생성 페이지 (Avataaars 스타일) -->
   <div id="avatarPage" class="page">
     <div class="avatar-container">
       <!-- 상단 헤더 -->
@@ -104,8 +104,8 @@
         <!-- 왼쪽: 아바타 미리보기 -->
         <div class="avatar-preview-section">
           <div class="preview-container">
-            <div class="avatar-preview" id="characterPreview">
-              <div class="character-placeholder">Your Avatar</div>
+            <div class="avatar-preview" id="avatarPreview">
+              <div class="avatar-placeholder">Your Avatar</div>
             </div>
           </div>
           
@@ -142,83 +142,68 @@
               <span class="tab-icon">💇</span>
               <span>Hair</span>
             </button>
+            <button class="tab-btn" onclick="showTab('clothes')">
+              <span class="tab-icon">👕</span>
+              <span>Clothes</span>
+            </button>
             <button class="tab-btn" onclick="showTab('accessories')">
               <span class="tab-icon">👓</span>
-              <span>Style</span>
+              <span>Accessories</span>
             </button>
           </div>
           
           <!-- 탭 콘텐츠 -->
-          
           <div class="tab-content active" id="skin-tab">
-            <div class="option-section">
-              <h3>Face Shape</h3>
-              <div class="option-grid">
-                <div class="option-item" onclick="selectOption('face', 'round')">
-                  <div class="option-preview face-round"></div>
-                  <span>Round</span>
-                </div>
-                <div class="option-item" onclick="selectOption('face', 'oval')">
-                  <div class="option-preview face-oval"></div>
-                  <span>Oval</span>
-                </div>
-                <div class="option-item" onclick="selectOption('face', 'square')">
-                  <div class="option-preview face-square"></div>
-                  <span>Square</span>
-                </div>
-              </div>
-            </div>
-            
             <div class="option-section">
               <h3>Skin Tone</h3>
               <div class="color-palette">
-                <div class="color-option" onclick="selectColor('skin', 1)" style="background: #fdbcb4;"></div>
-                <div class="color-option" onclick="selectColor('skin', 2)" style="background: #f4c2a1;"></div>
-                <div class="color-option" onclick="selectColor('skin', 3)" style="background: #e8a87c;"></div>
-                <div class="color-option" onclick="selectColor('skin', 4)" style="background: #d2691e;"></div>
-                <div class="color-option" onclick="selectColor('skin', 5)" style="background: #c68642;"></div>
-                <div class="color-option" onclick="selectColor('skin', 6)" style="background: #8d4a3c;"></div>
+                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Pale')" data-value="Pale" style="background: #fdbcb4;"></div>
+                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Light')" data-value="Light" style="background: #f4c2a1;"></div>
+                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Medium')" data-value="Medium" style="background: #e8a87c;"></div>
+                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Dark')" data-value="Dark" style="background: #d2691e;"></div>
+                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Brown')" data-value="Brown" style="background: #c68642;"></div>
+                <div class="color-option" onclick="selectAvataaarsOption('skinColor', 'Black')" data-value="Black" style="background: #8d4a3c;"></div>
               </div>
             </div>
           </div>
           
           <div class="tab-content" id="eyes-tab">
-            <div class="option-category">
-              <h4>눈 모양</h4>
+            <div class="option-section">
+              <h3>Eye Style</h3>
               <div class="option-grid">
-                <div class="option-item" onclick="selectOption('eyes', 'normal')">
-                  <div class="option-preview eyes-normal"></div>
-                  <span>일반</span>
+                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Happy')" data-property="eyeType" data-value="Happy">
+                  <div class="option-preview">😊</div>
+                  <span>Happy</span>
                 </div>
-                <div class="option-item" onclick="selectOption('eyes', 'big')">
-                  <div class="option-preview eyes-big"></div>
-                  <span>큰눈</span>
+                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Default')" data-property="eyeType" data-value="Default">
+                  <div class="option-preview">👁️</div>
+                  <span>Default</span>
                 </div>
-                <div class="option-item" onclick="selectOption('eyes', 'small')">
-                  <div class="option-preview eyes-small"></div>
-                  <span>작은눈</span>
+                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Wink')" data-property="eyeType" data-value="Wink">
+                  <div class="option-preview">😉</div>
+                  <span>Wink</span>
                 </div>
-                <div class="option-item" onclick="selectOption('eyes', 'closed')">
-                  <div class="option-preview eyes-closed"></div>
-                  <span>감은눈</span>
+                <div class="option-item" onclick="selectAvataaarsOption('eyeType', 'Close')" data-property="eyeType" data-value="Close">
+                  <div class="option-preview">😑</div>
+                  <span>Close</span>
                 </div>
               </div>
             </div>
             
-            <div class="option-category">
-              <h4>눈썹</h4>
+            <div class="option-section">
+              <h3>Eyebrow</h3>
               <div class="option-grid">
-                <div class="option-item" onclick="selectOption('eyebrows', 'normal')">
-                  <div class="option-preview eyebrows-normal"></div>
-                  <span>일반</span>
+                <div class="option-item" onclick="selectAvataaarsOption('eyebrowType', 'Default')" data-property="eyebrowType" data-value="Default">
+                  <div class="option-preview">🤨</div>
+                  <span>Default</span>
                 </div>
-                <div class="option-item" onclick="selectOption('eyebrows', 'thick')">
-                  <div class="option-preview eyebrows-thick"></div>
-                  <span>두꺼운</span>
+                <div class="option-item" onclick="selectAvataaarsOption('eyebrowType', 'Angry')" data-property="eyebrowType" data-value="Angry">
+                  <div class="option-preview">😠</div>
+                  <span>Angry</span>
                 </div>
-                <div class="option-item" onclick="selectOption('eyebrows', 'thin')">
-                  <div class="option-preview eyebrows-thin"></div>
-                  <span>얇은</span>
+                <div class="option-item" onclick="selectAvataaarsOption('eyebrowType', 'RaisedExcited')" data-property="eyebrowType" data-value="RaisedExcited">
+                  <div class="option-preview">🤩</div>
+                  <span>Excited</span>
                 </div>
               </div>
             </div>
@@ -410,6 +395,9 @@
   </div>
 
 
+  <!-- Avataaars CDN -->
+  <script src="https://unpkg.com/avataaars@latest/dist/avataaars.js"></script>
+  
   <!-- JavaScript -->
   <script src="js/data.js"></script>
   <script type="module" src="js/app.js"></script>

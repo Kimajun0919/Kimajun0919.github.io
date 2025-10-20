@@ -33,31 +33,32 @@ window.showPage = function(pageId) {
     document.getElementById('avatarStatus').textContent = '';
     document.getElementById('avatarName').value = '';
     document.getElementById('avatarTeam').value = '';
-    resetCharacterPreview();
+    resetAvatarPreview();
     
     // 기본 선택 상태 설정
-    characterData = {
-      face: 'round',
-      eyes: 'normal',
-      nose: 'normal',
-      mouth: 'smile',
-      hair: 'short',
-      shirt: 't-shirt'
+    avataaarsData = {
+      avatarStyle: 'Circle',
+      topType: 'LongHairStraight',
+      accessoriesType: 'Blank',
+      hairColor: 'BrownDark',
+      facialHairType: 'Blank',
+      facialHairColor: 'Brown',
+      clotheType: 'BlazerShirt',
+      clotheColor: 'PastelBlue',
+      eyeType: 'Happy',
+      eyebrowType: 'Default',
+      mouthType: 'Smile',
+      skinColor: 'Light',
+      skinTone: 'Light'
     };
     
     // 기본 선택 버튼 활성화
-    document.querySelectorAll('.option-btn').forEach(btn => {
+    document.querySelectorAll('.color-option').forEach(btn => {
       btn.classList.remove('selected');
     });
-    document.querySelector('[data-type="face"][data-value="round"]').classList.add('selected');
-    document.querySelector('[data-type="eyes"][data-value="normal"]').classList.add('selected');
-    document.querySelector('[data-type="nose"][data-value="normal"]').classList.add('selected');
-    document.querySelector('[data-type="mouth"][data-value="smile"]').classList.add('selected');
-    document.querySelector('[data-type="hair"][data-value="short"]').classList.add('selected');
-    document.querySelector('[data-type="shirt"][data-value="t-shirt"]').classList.add('selected');
     
-    // 기본 캐릭터 렌더링
-    renderCharacter();
+    // 기본 아바타 렌더링
+    renderAvataaars();
   }
   
 };
@@ -362,24 +363,83 @@ function showEmployeeResult(employee) {
 }
 
 
-// 캐릭터 데이터 구조 (아이폰 메모지 스타일)
-let characterData = {
-  face: 'round',
-  eyes: 'normal',
-  eyebrows: 'normal',
-  nose: 'normal',
-  mouth: 'smile',
-  hair: 'short',
-  skinColor: 1,
-  hairColor: 1,
-  glasses: 'none',
-  beard: 'none'
+// Avataaars 데이터 구조
+let avataaarsData = {
+  avatarStyle: 'Circle',
+  topType: 'LongHairStraight',
+  accessoriesType: 'Blank',
+  hairColor: 'BrownDark',
+  facialHairType: 'Blank',
+  facialHairColor: 'Brown',
+  clotheType: 'BlazerShirt',
+  clotheColor: 'PastelBlue',
+  eyeType: 'Happy',
+  eyebrowType: 'Default',
+  mouthType: 'Smile',
+  skinColor: 'Light',
+  skinTone: 'Light'
 };
 
-// 캐릭터 관련 함수들
-function resetCharacterPreview() {
-  const preview = document.getElementById('characterPreview');
-  preview.innerHTML = '<div class="character-placeholder">캐릭터 미리보기</div>';
+// Avataaars 관련 함수들
+function resetAvatarPreview() {
+  const preview = document.getElementById('avatarPreview');
+  preview.innerHTML = '<div class="avatar-placeholder">Your Avatar</div>';
+}
+
+function renderAvataaars() {
+  const preview = document.getElementById('avatarPreview');
+  
+  // Avataaars 컴포넌트 생성
+  const avatarElement = document.createElement('div');
+  avatarElement.id = 'avataaars-container';
+  
+  // Avataaars SVG 생성
+  const svg = generateAvataaarsSVG(avataaarsData);
+  avatarElement.innerHTML = svg;
+  
+  preview.innerHTML = '';
+  preview.appendChild(avatarElement);
+  
+  // 애니메이션 효과
+  avatarElement.style.opacity = '0';
+  avatarElement.style.transform = 'scale(0.8)';
+  
+  setTimeout(() => {
+    avatarElement.style.transition = 'all 0.3s ease';
+    avatarElement.style.opacity = '1';
+    avatarElement.style.transform = 'scale(1)';
+  }, 50);
+}
+
+function generateAvataaarsSVG(data) {
+  // Avataaars SVG 생성 로직
+  // 실제로는 Avataaars 라이브러리의 함수를 사용해야 합니다
+  return `
+    <svg viewBox="0 0 264 280" width="264" height="280" xmlns="http://www.w3.org/2000/svg">
+      <g id="Avataaars">
+        <!-- 여기에 Avataaars SVG 내용이 들어갑니다 -->
+        <circle cx="132" cy="140" r="120" fill="#fdbcb4"/>
+        <text x="132" y="150" text-anchor="middle" font-size="16" fill="#333">Avataaars</text>
+      </g>
+    </svg>
+  `;
+}
+
+function selectAvataaarsOption(property, value) {
+  avataaarsData[property] = value;
+  
+  // 선택된 옵션 표시
+  document.querySelectorAll(`[data-property="${property}"]`).forEach(item => {
+    item.classList.remove('selected');
+  });
+  
+  const clickedElement = event.target.closest('[data-property]');
+  if (clickedElement) {
+    clickedElement.classList.add('selected');
+  }
+  
+  // 아바타 렌더링
+  renderAvataaars();
 }
 
 function selectOption(type, value) {
@@ -1008,17 +1068,17 @@ window.generateAvatar = async function() {
   try {
     const employeeId = String(Date.now()).slice(-6);
 
-    // Firebase에 캐릭터 데이터를 텍스트로 저장
+    // Firebase에 Avataaars 데이터를 텍스트로 저장
     const newRef = await push(ref(db, "employees"), {
       name: name,
       team: team,
-      photoURL: `character:${JSON.stringify(characterData)}`, // 캐릭터 데이터를 JSON 문자열로 저장
+      photoURL: `avataaars:${JSON.stringify(avataaarsData)}`, // Avataaars 데이터를 JSON 문자열로 저장
       employeeId: employeeId,
       createdAt: new Date().toISOString(),
-      characterData: characterData // 캐릭터 데이터도 별도로 저장
+      avataaarsData: avataaarsData // Avataaars 데이터도 별도로 저장
     });
 
-    avatarStatus.innerHTML = `✅ 캐릭터 생성 완료!`;
+    avatarStatus.innerHTML = `✅ 아바타 생성 완료!`;
     avatarStatus.style.color = "#27ae60";
     
     // 결과 페이지로 이동
@@ -1026,9 +1086,9 @@ window.generateAvatar = async function() {
       showEmployeeResult({
         name: name,
         team: team,
-        photoURL: `character:${JSON.stringify(characterData)}`,
+        photoURL: `avataaars:${JSON.stringify(avataaarsData)}`,
         employeeId: employeeId,
-        characterData: characterData
+        avataaarsData: avataaarsData
       });
     }, 1500);
 
