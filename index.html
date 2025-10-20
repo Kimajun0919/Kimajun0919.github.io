@@ -47,7 +47,7 @@
         </p>
         <div class="menu-buttons">
           <button class="menu-button" onclick="showPage('registerPage')">등록</button>
-          <button class="menu-button" onclick="showPage('searchPage')">조회</button>
+          <button class="menu-button" onclick="showPage('avatarPage')">아바타 생성</button>
           <button class="menu-button test-button" onclick="showPage('testPage')">동시 업로드 테스트</button>
         </div>
       </div>
@@ -84,22 +84,86 @@
     </div>
   </div>
 
-  <!-- 조회 페이지 -->
-  <div id="searchPage" class="page">
+  <!-- 아바타 생성 페이지 -->
+  <div id="avatarPage" class="page">
     <div class="search-container">
       <div class="search-card">
-        <h2 class="register-title">조회</h2>
+        <h2 class="register-title">아바타 생성</h2>
         <div class="input-group">
           <label class="input-label">이름</label>
-          <input type="text" id="searchName" placeholder="이름을 입력하세요">
+          <input type="text" id="avatarName" placeholder="이름을 입력하세요">
         </div>
         <div class="input-group">
           <label class="input-label">팀명</label>
-          <input type="text" id="searchTeam" placeholder="팀명을 입력하세요">
+          <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요">
         </div>
-        <button class="action-button" onclick="searchEmployee()">조회하기</button>
+        <div class="character-customization">
+          <div class="customization-section">
+            <label class="customization-label">얼굴형</label>
+            <div class="customization-options">
+              <button class="option-btn" data-type="face" data-value="round" onclick="selectOption('face', 'round')">둥근형</button>
+              <button class="option-btn" data-type="face" data-value="oval" onclick="selectOption('face', 'oval')">타원형</button>
+              <button class="option-btn" data-type="face" data-value="square" onclick="selectOption('face', 'square')">각진형</button>
+            </div>
+          </div>
+          
+          <div class="customization-section">
+            <label class="customization-label">눈</label>
+            <div class="customization-options">
+              <button class="option-btn" data-type="eyes" data-value="normal" onclick="selectOption('eyes', 'normal')">일반</button>
+              <button class="option-btn" data-type="eyes" data-value="big" onclick="selectOption('eyes', 'big')">큰눈</button>
+              <button class="option-btn" data-type="eyes" data-value="small" onclick="selectOption('eyes', 'small')">작은눈</button>
+              <button class="option-btn" data-type="eyes" data-value="closed" onclick="selectOption('eyes', 'closed')">감은눈</button>
+            </div>
+          </div>
+          
+          <div class="customization-section">
+            <label class="customization-label">코</label>
+            <div class="customization-options">
+              <button class="option-btn" data-type="nose" data-value="normal" onclick="selectOption('nose', 'normal')">일반</button>
+              <button class="option-btn" data-type="nose" data-value="small" onclick="selectOption('nose', 'small')">작은코</button>
+              <button class="option-btn" data-type="nose" data-value="big" onclick="selectOption('nose', 'big')">큰코</button>
+            </div>
+          </div>
+          
+          <div class="customization-section">
+            <label class="customization-label">입</label>
+            <div class="customization-options">
+              <button class="option-btn" data-type="mouth" data-value="smile" onclick="selectOption('mouth', 'smile')">웃음</button>
+              <button class="option-btn" data-type="mouth" data-value="normal" onclick="selectOption('mouth', 'normal')">일반</button>
+              <button class="option-btn" data-type="mouth" data-value="surprised" onclick="selectOption('mouth', 'surprised')">놀람</button>
+            </div>
+          </div>
+          
+          <div class="customization-section">
+            <label class="customization-label">머리스타일</label>
+            <div class="customization-options">
+              <button class="option-btn" data-type="hair" data-value="short" onclick="selectOption('hair', 'short')">짧은머리</button>
+              <button class="option-btn" data-type="hair" data-value="long" onclick="selectOption('hair', 'long')">긴머리</button>
+              <button class="option-btn" data-type="hair" data-value="curly" onclick="selectOption('hair', 'curly')">곱슬머리</button>
+              <button class="option-btn" data-type="hair" data-value="bald" onclick="selectOption('hair', 'bald')">대머리</button>
+            </div>
+          </div>
+          
+          <div class="customization-section">
+            <label class="customization-label">윗옷</label>
+            <div class="customization-options">
+              <button class="option-btn" data-type="shirt" data-value="t-shirt" onclick="selectOption('shirt', 't-shirt')">티셔츠</button>
+              <button class="option-btn" data-type="shirt" data-value="shirt" onclick="selectOption('shirt', 'shirt')">셔츠</button>
+              <button class="option-btn" data-type="shirt" data-value="hoodie" onclick="selectOption('shirt', 'hoodie')">후드</button>
+              <button class="option-btn" data-type="shirt" data-value="dress" onclick="selectOption('shirt', 'dress')">드레스</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="character-preview-container">
+          <div class="character-preview" id="characterPreview">
+            <div class="character-placeholder">캐릭터 미리보기</div>
+          </div>
+        </div>
+        <button class="action-button" onclick="generateAvatar()">아바타 생성</button>
         <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
-        <p id="searchStatus" class="status-message"></p>
+        <p id="avatarStatus" class="status-message"></p>
       </div>
     </div>
   </div>
@@ -116,7 +180,7 @@
       </div>
       <div class="button-container">
         <button class="result-button" onclick="saveAsImage()">이미지 저장</button>
-        <button class="result-button" onclick="showPage('searchPage')">다시 조회</button>
+        <button class="result-button" onclick="showPage('avatarPage')">아바타 생성</button>
         <button class="result-button" onclick="showPage('mainPage')">메인으로</button>
       </div>
     </div>
@@ -133,7 +197,7 @@
         </div>
         
         <div class="test-controls">
-          <button class="action-button" onclick="startBulkUpload()">150개 샘플 데이터 업로드</button>
+          <button class="action-button" onclick="startBulkUpload()">50개 샘플 데이터 업로드</button>
           <button class="action-button secondary" onclick="deleteTestData()">테스트 데이터 삭제</button>
           <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
         </div>
@@ -142,7 +206,7 @@
           <div class="progress-bar">
             <div class="progress-fill" id="progressFill"></div>
           </div>
-          <div class="progress-text" id="progressText">0 / 150</div>
+          <div class="progress-text" id="progressText">0 / 50</div>
           <div class="progress-status" id="progressStatus">준비 중...</div>
         </div>
         

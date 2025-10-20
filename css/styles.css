@@ -627,6 +627,179 @@ input[type="file"] {
   font-weight: 600;
 }
 
+/* 아바타 생성 페이지 스타일 */
+.avatar-preview-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.avatar-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-preview:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+}
+
+.avatar-placeholder {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.avatar-generated {
+  font-size: 32px;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* 캐릭터 커스터마이징 스타일 */
+.character-customization {
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(248, 249, 250, 0.8);
+  border-radius: 15px;
+  border: 1px solid #e9ecef;
+}
+
+.customization-section {
+  margin-bottom: 20px;
+}
+
+.customization-section:last-child {
+  margin-bottom: 0;
+}
+
+.customization-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0c443b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.customization-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.option-btn {
+  padding: 8px 12px;
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 20px;
+  font-size: 12px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Noto Serif KR', serif;
+}
+
+.option-btn:hover {
+  border-color: #0c443b;
+  color: #0c443b;
+  transform: translateY(-1px);
+}
+
+.option-btn.selected {
+  background: #0c443b;
+  border-color: #0c443b;
+  color: white;
+}
+
+.character-preview-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.character-preview {
+  width: 200px;
+  height: 250px;
+  margin: 0 auto;
+  background: #f8f9fa;
+  border-radius: 20px;
+  border: 2px dashed #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.character-placeholder {
+  color: #6c757d;
+  font-size: 14px;
+  text-align: center;
+}
+
+.character-rendered {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 캐릭터 부위별 스타일 */
+.character-face {
+  position: absolute;
+  z-index: 1;
+}
+
+.character-hair {
+  position: absolute;
+  z-index: 2;
+}
+
+.character-eyes {
+  position: absolute;
+  z-index: 3;
+}
+
+.character-nose {
+  position: absolute;
+  z-index: 3;
+}
+
+.character-mouth {
+  position: absolute;
+  z-index: 3;
+}
+
+.character-shirt {
+  position: absolute;
+  z-index: 0;
+}
+
+/* 아바타 색상 변형들 */
+.avatar-preview.avatar-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+.avatar-preview.avatar-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+.avatar-preview.avatar-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+.avatar-preview.avatar-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+.avatar-preview.avatar-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+.avatar-preview.avatar-6 { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+.avatar-preview.avatar-7 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+.avatar-preview.avatar-8 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+
 /* 반응형 */
 @media (max-width: 768px) {
   body {

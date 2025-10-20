@@ -29,10 +29,35 @@ window.showPage = function(pageId) {
     document.getElementById('fileLabel').textContent = '📷 사진을 선택하세요';
   }
   
-  if (pageId === 'searchPage') {
-    document.getElementById('searchStatus').textContent = '';
-    document.getElementById('searchName').value = '';
-    document.getElementById('searchTeam').value = '';
+  if (pageId === 'avatarPage') {
+    document.getElementById('avatarStatus').textContent = '';
+    document.getElementById('avatarName').value = '';
+    document.getElementById('avatarTeam').value = '';
+    resetCharacterPreview();
+    
+    // 기본 선택 상태 설정
+    characterData = {
+      face: 'round',
+      eyes: 'normal',
+      nose: 'normal',
+      mouth: 'smile',
+      hair: 'short',
+      shirt: 't-shirt'
+    };
+    
+    // 기본 선택 버튼 활성화
+    document.querySelectorAll('.option-btn').forEach(btn => {
+      btn.classList.remove('selected');
+    });
+    document.querySelector('[data-type="face"][data-value="round"]').classList.add('selected');
+    document.querySelector('[data-type="eyes"][data-value="normal"]').classList.add('selected');
+    document.querySelector('[data-type="nose"][data-value="normal"]').classList.add('selected');
+    document.querySelector('[data-type="mouth"][data-value="smile"]').classList.add('selected');
+    document.querySelector('[data-type="hair"][data-value="short"]').classList.add('selected');
+    document.querySelector('[data-type="shirt"][data-value="t-shirt"]').classList.add('selected');
+    
+    // 기본 캐릭터 렌더링
+    renderCharacter();
   }
   
   if (pageId === 'testPage') {
@@ -148,8 +173,14 @@ window.registerEmployee = async function() {
       status.innerHTML = `✅ 등록 완료!`;
       status.style.color = "#27ae60";
       
+      // 결과 페이지로 이동
       setTimeout(() => {
-        showPage('mainPage');
+        showEmployeeResult({
+          name: name,
+          team: team,
+          photoURL: imageURL,
+          employeeId: employeeId
+        });
       }, 1500);
     };
     reader.readAsDataURL(compressedBlob);
@@ -159,53 +190,537 @@ window.registerEmployee = async function() {
   }
 };
 
-window.searchEmployee = async function() {
-  const name = document.getElementById("searchName").value.trim();
-  const team = document.getElementById("searchTeam").value.trim();
-  const searchStatus = document.getElementById("searchStatus");
+// 캐릭터를 표시하는 함수
+function displayCharacter(photoElement, characterData) {
+  if (!characterData) return;
+  
+  photoElement.style.display = 'none';
+  
+  // 캐릭터 컨테이너 생성
+  const characterContainer = document.createElement('div');
+  characterContainer.className = 'employee-character';
+  characterContainer.style.cssText = `
+    width: 100%;
+    height: 320px;
+    background: #f8f9fa;
+    border-radius: 16px 16px 0 0;
+    margin: 16px 16px 0 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 85%,
+      90% 88%,
+      80% 90%,
+      70% 91%,
+      60% 90%,
+      50% 88%,
+      40% 90%,
+      30% 91%,
+      20% 90%,
+      10% 88%,
+      0 85%
+    );
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+  
+  // 캐릭터 렌더링
+  renderCharacterInContainer(characterContainer, characterData);
+  
+  // 기존 이미지 다음에 캐릭터 삽입
+  photoElement.parentNode.insertBefore(characterContainer, photoElement.nextSibling);
+}
 
-  if (!name || !team) {
-    searchStatus.textContent = "❌ 이름과 팀을 모두 입력하세요.";
-    searchStatus.style.color = "#e74c3c";
-    return;
-  }
+// 컨테이너 내에서 캐릭터 렌더링
+function renderCharacterInContainer(container, charData) {
+  container.innerHTML = '<div class="character-rendered"></div>';
+  const charContainer = container.querySelector('.character-rendered');
+  
+  // 얼굴 렌더링
+  const face = document.createElement('div');
+  face.className = 'character-face';
+  face.style.cssText = getFaceStyle(charData.face);
+  charContainer.appendChild(face);
+  
+  // 머리 렌더링
+  const hair = document.createElement('div');
+  hair.className = 'character-hair';
+  hair.style.cssText = getHairStyle(charData.hair);
+  charContainer.appendChild(hair);
+  
+  // 눈 렌더링
+  const eyes = document.createElement('div');
+  eyes.className = 'character-eyes';
+  eyes.style.cssText = getEyesStyle(charData.eyes);
+  charContainer.appendChild(eyes);
+  
+  // 코 렌더링
+  const nose = document.createElement('div');
+  nose.className = 'character-nose';
+  nose.style.cssText = getNoseStyle(charData.nose);
+  charContainer.appendChild(nose);
+  
+  // 입 렌더링
+  const mouth = document.createElement('div');
+  mouth.className = 'character-mouth';
+  mouth.style.cssText = getMouthStyle(charData.mouth);
+  charContainer.appendChild(mouth);
+  
+  // 윗옷 렌더링
+  const shirt = document.createElement('div');
+  shirt.className = 'character-shirt';
+  shirt.style.cssText = getShirtStyle(charData.shirt);
+  charContainer.appendChild(shirt);
+}
 
-  searchStatus.textContent = "🔍 조회 중...";
-  searchStatus.style.color = "#3498db";
-
-  const snapshot = await get(child(ref(db), "employees"));
-  if (snapshot.exists()) {
-    const employees = snapshot.val();
-    let found = false;
-
-    for (const key in employees) {
-      const emp = employees[key];
-          if (emp.name === name && emp.team === team) {
-            document.getElementById('resultPhoto').src = emp.photoURL;
-            document.getElementById('resultName').textContent = emp.name;
-            document.getElementById('resultTeam').textContent = emp.team;
+// 직원 결과 표시 함수
+function showEmployeeResult(employee) {
+  document.getElementById('resultName').textContent = employee.name;
+  document.getElementById('resultTeam').textContent = employee.team;
             
             // 랜덤한 성경 말씀 선택
             const randomVerse = verses[Math.floor(Math.random() * verses.length)];
             document.getElementById('resultId').innerHTML = 
               `${randomVerse.content}<br><span style="display:block;margin-top:8px;opacity:0.7;">${randomVerse.reference}</span>`;
             
-            showPage('resultPage');
-            found = true;
-            break;
-          }
+  // 캐릭터 또는 이미지 표시
+  const photoElement = document.getElementById('resultPhoto');
+  
+  if (employee.photoURL && employee.photoURL.startsWith('character:')) {
+    // 캐릭터 정보 파싱
+    try {
+      const characterJson = employee.photoURL.replace('character:', '');
+      const characterData = JSON.parse(characterJson);
+      displayCharacter(photoElement, characterData);
+    } catch (error) {
+      console.error('캐릭터 데이터 파싱 오류:', error);
+      photoElement.src = employee.photoURL;
+      photoElement.style.display = 'block';
     }
-
-    if (!found) {
-      searchStatus.textContent = "❌ 해당 정보를 찾을 수 없습니다.";
-      searchStatus.style.color = "#e74c3c";
-    }
+  } else if (employee.characterData) {
+    displayCharacter(photoElement, employee.characterData);
+  } else if (employee.photoURL && employee.photoURL.startsWith('avatar:')) {
+    // 기존 아바타 정보 파싱 (하위 호환성)
+    const avatarParts = employee.photoURL.split(':');
+    const avatarData = {
+      text: avatarParts[1],
+      style: avatarParts[2]
+    };
+    displayAvatar(photoElement, avatarData);
   } else {
-    searchStatus.textContent = "등록된 팀원이 없습니다.";
-    searchStatus.style.color = "#999";
+    photoElement.src = employee.photoURL;
+    photoElement.style.display = 'block';
+  }
+  
+            showPage('resultPage');
+}
+
+
+// 캐릭터 데이터 구조
+let characterData = {
+  face: 'round',
+  eyes: 'normal',
+  nose: 'normal',
+  mouth: 'smile',
+  hair: 'short',
+  shirt: 't-shirt'
+};
+
+// 캐릭터 관련 함수들
+function resetCharacterPreview() {
+  const preview = document.getElementById('characterPreview');
+  preview.innerHTML = '<div class="character-placeholder">캐릭터 미리보기</div>';
+}
+
+function selectOption(type, value) {
+  characterData[type] = value;
+  
+  // 선택된 버튼 표시
+  document.querySelectorAll(`[data-type="${type}"]`).forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  document.querySelector(`[data-type="${type}"][data-value="${value}"]`).classList.add('selected');
+  
+  // 캐릭터 렌더링
+  renderCharacter();
+}
+
+function renderCharacter() {
+  const preview = document.getElementById('characterPreview');
+  preview.innerHTML = '<div class="character-rendered"></div>';
+  
+  const container = preview.querySelector('.character-rendered');
+  
+  // 얼굴 렌더링
+  const face = document.createElement('div');
+  face.className = 'character-face';
+  face.style.cssText = getFaceStyle(characterData.face);
+  container.appendChild(face);
+  
+  // 머리 렌더링
+  const hair = document.createElement('div');
+  hair.className = 'character-hair';
+  hair.style.cssText = getHairStyle(characterData.hair);
+  container.appendChild(hair);
+  
+  // 눈 렌더링
+  const eyes = document.createElement('div');
+  eyes.className = 'character-eyes';
+  eyes.style.cssText = getEyesStyle(characterData.eyes);
+  container.appendChild(eyes);
+  
+  // 코 렌더링
+  const nose = document.createElement('div');
+  nose.className = 'character-nose';
+  nose.style.cssText = getNoseStyle(characterData.nose);
+  container.appendChild(nose);
+  
+  // 입 렌더링
+  const mouth = document.createElement('div');
+  mouth.className = 'character-mouth';
+  mouth.style.cssText = getMouthStyle(characterData.mouth);
+  container.appendChild(mouth);
+  
+  // 윗옷 렌더링
+  const shirt = document.createElement('div');
+  shirt.className = 'character-shirt';
+  shirt.style.cssText = getShirtStyle(characterData.shirt);
+  container.appendChild(shirt);
+}
+
+// 각 부위별 스타일 함수들
+function getFaceStyle(faceType) {
+  const styles = {
+    'round': `
+      width: 120px;
+      height: 120px;
+      background: #fdbcb4;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 3px solid #f4a6a6;
+    `,
+    'oval': `
+      width: 100px;
+      height: 140px;
+      background: #fdbcb4;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 3px solid #f4a6a6;
+    `,
+    'square': `
+      width: 120px;
+      height: 120px;
+      background: #fdbcb4;
+      border-radius: 20%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 3px solid #f4a6a6;
+    `
+  };
+  return styles[faceType] || styles['round'];
+}
+
+function getEyesStyle(eyeType) {
+  const styles = {
+    'normal': `
+      width: 20px;
+      height: 20px;
+      background: #333;
+      border-radius: 50%;
+      top: 40%;
+      left: 30%;
+      box-shadow: 35px 0 0 #333;
+    `,
+    'big': `
+      width: 25px;
+      height: 25px;
+      background: #333;
+      border-radius: 50%;
+      top: 40%;
+      left: 30%;
+      box-shadow: 35px 0 0 #333;
+    `,
+    'small': `
+      width: 15px;
+      height: 15px;
+      background: #333;
+      border-radius: 50%;
+      top: 40%;
+      left: 35%;
+      box-shadow: 25px 0 0 #333;
+    `,
+    'closed': `
+      width: 30px;
+      height: 8px;
+      background: #333;
+      border-radius: 10px;
+      top: 40%;
+      left: 25%;
+      box-shadow: 35px 0 0 #333;
+    `
+  };
+  return styles[eyeType] || styles['normal'];
+}
+
+function getNoseStyle(noseType) {
+  const styles = {
+    'normal': `
+      width: 8px;
+      height: 12px;
+      background: #f4a6a6;
+      border-radius: 50%;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'small': `
+      width: 6px;
+      height: 8px;
+      background: #f4a6a6;
+      border-radius: 50%;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'big': `
+      width: 12px;
+      height: 16px;
+      background: #f4a6a6;
+      border-radius: 50%;
+      top: 55%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `
+  };
+  return styles[noseType] || styles['normal'];
+}
+
+function getMouthStyle(mouthType) {
+  const styles = {
+    'smile': `
+      width: 30px;
+      height: 15px;
+      border: 3px solid #333;
+      border-top: none;
+      border-radius: 0 0 30px 30px;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: transparent;
+    `,
+    'normal': `
+      width: 20px;
+      height: 3px;
+      background: #333;
+      border-radius: 2px;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'surprised': `
+      width: 15px;
+      height: 15px;
+      background: #333;
+      border-radius: 50%;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `
+  };
+  return styles[mouthType] || styles['smile'];
+}
+
+function getHairStyle(hairType) {
+  const styles = {
+    'short': `
+      width: 140px;
+      height: 80px;
+      background: #8b4513;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'long': `
+      width: 120px;
+      height: 100px;
+      background: #654321;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 50px 0 #654321, 0 100px 0 #654321;
+    `,
+    'curly': `
+      width: 130px;
+      height: 90px;
+      background: #a0522d;
+      border-radius: 50%;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 
+        -20px 20px 0 #a0522d,
+        20px 20px 0 #a0522d,
+        -30px 40px 0 #a0522d,
+        30px 40px 0 #a0522d;
+    `,
+    'bald': `
+      width: 120px;
+      height: 120px;
+      background: transparent;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `
+  };
+  return styles[hairType] || styles['short'];
+}
+
+function getShirtStyle(shirtType) {
+  const styles = {
+    't-shirt': `
+      width: 100px;
+      height: 80px;
+      background: #ff6b6b;
+      border-radius: 10px;
+      top: 85%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'shirt': `
+      width: 90px;
+      height: 85px;
+      background: #4ecdc4;
+      border-radius: 5px;
+      top: 85%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'hoodie': `
+      width: 110px;
+      height: 90px;
+      background: #95a5a6;
+      border-radius: 15px;
+      top: 85%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'dress': `
+      width: 80px;
+      height: 100px;
+      background: #f39c12;
+      border-radius: 10px 10px 20px 20px;
+      top: 85%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `
+  };
+  return styles[shirtType] || styles['t-shirt'];
+}
+
+function generateAvatarFromName(name) {
+  if (!name) return null;
+  
+  // 이름에서 첫 글자 추출
+  const firstChar = name.charAt(0).toUpperCase();
+  
+  // 이름의 해시값을 기반으로 색상과 스타일 결정
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  const colorIndex = Math.abs(hash) % 8 + 1;
+  const avatarStyle = `avatar-${colorIndex}`;
+  
+  return {
+    text: firstChar,
+    style: avatarStyle
+  };
+}
+
+function updateAvatarPreview(name) {
+  const preview = document.getElementById('avatarPreview');
+  
+  if (!name) {
+    resetAvatarPreview();
+    return;
+  }
+  
+  const avatar = generateAvatarFromName(name);
+  if (avatar) {
+    preview.className = `avatar-preview ${avatar.style}`;
+    preview.innerHTML = `<div class="avatar-generated">${avatar.text}</div>`;
+  }
+}
+
+// 아바타 생성 함수
+window.generateAvatar = async function() {
+  const name = document.getElementById("avatarName").value.trim();
+  const team = document.getElementById("avatarTeam").value.trim();
+  const avatarStatus = document.getElementById("avatarStatus");
+
+  if (!name || !team) {
+    avatarStatus.textContent = "❌ 이름과 팀을 모두 입력하세요.";
+    avatarStatus.style.color = "#e74c3c";
+    return;
+  }
+
+  avatarStatus.textContent = "🎨 캐릭터 생성 중...";
+  avatarStatus.style.color = "#3498db";
+
+  try {
+    const employeeId = String(Date.now()).slice(-6);
+
+    // Firebase에 캐릭터 데이터를 텍스트로 저장
+    const newRef = await push(ref(db, "employees"), {
+      name: name,
+      team: team,
+      photoURL: `character:${JSON.stringify(characterData)}`, // 캐릭터 데이터를 JSON 문자열로 저장
+      employeeId: employeeId,
+      createdAt: new Date().toISOString(),
+      characterData: characterData // 캐릭터 데이터도 별도로 저장
+    });
+
+    avatarStatus.innerHTML = `✅ 캐릭터 생성 완료!`;
+    avatarStatus.style.color = "#27ae60";
+    
+    // 결과 페이지로 이동
+    setTimeout(() => {
+      showEmployeeResult({
+        name: name,
+        team: team,
+        photoURL: `character:${JSON.stringify(characterData)}`,
+        employeeId: employeeId,
+        characterData: characterData
+      });
+    }, 1500);
+
+  } catch (error) {
+    avatarStatus.textContent = "❌ 오류 발생: " + error.message;
+    avatarStatus.style.color = "#e74c3c";
   }
 };
 
+// 이름 입력 시 아바타 미리보기 업데이트
+document.addEventListener('DOMContentLoaded', function() {
+  const nameInput = document.getElementById('avatarName');
+  if (nameInput) {
+    nameInput.addEventListener('input', function() {
+      updateAvatarPreview(this.value);
+    });
+  }
+});
 
 window.saveAsImage = async function() {
   const name = document.getElementById('resultName').textContent;
@@ -381,36 +896,15 @@ function generateSampleData(count) {
   return sampleData;
 }
 
-// 단일 업로드 함수
+// 단일 업로드 함수 (이미지 업로드 없이 데이터만 저장)
 async function uploadSingleEmployee(employeeData, index) {
   try {
-    // back.jpg를 Base64로 변환
-    const base64Image = await getBackImageAsBase64();
-    if (!base64Image) {
-      throw new Error('이미지 로드 실패');
-    }
-
-    // Google Drive에 업로드
-    const res = await fetch(scriptURL, {
-      method: "POST",
-      body: new URLSearchParams({
-        file: base64Image,
-        filename: `test_${employeeData.name}_${Date.now()}.jpg`,
-        mimeType: "image/jpeg"
-      })
-    });
-
-    const imageURL = await res.text();
-    if (imageURL.startsWith("ERROR")) {
-      throw new Error(`업로드 실패: ${imageURL}`);
-    }
-
-    // Firebase에 데이터 저장
+    // Firebase에 데이터만 저장 (이미지 업로드 생략)
     const employeeId = String(Date.now() + index).slice(-6);
     const newRef = await push(ref(db, "employees"), {
       name: employeeData.name,
       team: employeeData.team,
-      photoURL: imageURL,
+      photoURL: "test_image_placeholder", // 테스트용 플레이스홀더
       employeeId: employeeId,
       createdAt: new Date().toISOString(),
       isTestData: true
@@ -467,15 +961,15 @@ window.startBulkUpload = async function() {
   testStatus.textContent = "🔄 테스트 데이터 생성 중...";
   testStatus.style.color = "#3498db";
   
-  // 샘플 데이터 생성
-  testData = generateSampleData(150);
+  // 샘플 데이터 생성 (테스트용으로 50개로 조정)
+  testData = generateSampleData(50);
   
   // UI 초기화
   progressContainer.style.display = 'block';
-  updateProgress(0, 150, '업로드 준비 중...');
+  updateProgress(0, 50, '업로드 준비 중...');
   updateResults();
   
-  testStatus.textContent = "📤 150개 파일을 진짜 동시에 업로드 중...";
+  testStatus.textContent = "📤 50개 파일을 진짜 동시에 업로드 중...";
   
   // 진짜 동시 업로드 - 모든 150개를 한 번에 시작
   const allPromises = testData.map((employee, index) => 
@@ -495,14 +989,14 @@ window.startBulkUpload = async function() {
         testResults.failure++;
         console.error(`업로드 실패 ${index + 1}:`, result.error);
       }
-      updateProgress(completedCount, 150, `${completedCount}개 완료`);
+      updateProgress(completedCount, 50, `${completedCount}개 완료`);
       updateResults();
       return result;
     }).catch(error => {
       completedCount++;
       testResults.failure++;
       console.error(`업로드 오류 ${index + 1}:`, error);
-      updateProgress(completedCount, 150, `${completedCount}개 완료`);
+      updateProgress(completedCount, 50, `${completedCount}개 완료`);
       updateResults();
       return { success: false, error: error.message };
     })
@@ -512,7 +1006,7 @@ window.startBulkUpload = async function() {
   await Promise.allSettled(promisesWithCallback);
   
   // 완료
-  updateProgress(150, 150, '완료');
+  updateProgress(50, 50, '완료');
   
   if (testResults.failure === 0) {
     testStatus.innerHTML = `✅ 모든 업로드가 성공했습니다! (${testResults.success}개)`;
