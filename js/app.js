@@ -62,6 +62,56 @@ window.showPage = function(pageId) {
   
 };
 
+// 사원 조회 함수
+window.searchEmployee = async function() {
+  const name = document.getElementById("searchName").value.trim();
+  const team = document.getElementById("searchTeam").value.trim();
+  const status = document.getElementById("searchStatus");
+  
+  if (!name && !team) {
+    status.textContent = "이름 또는 팀을 입력해주세요.";
+    status.style.color = "#e74c3c";
+    return;
+  }
+  
+  status.textContent = "조회 중...";
+  status.style.color = "#3498db";
+  
+  try {
+    const snapshot = await get(child(ref(db), "employees"));
+    if (snapshot.exists()) {
+      const employees = snapshot.val();
+      let foundEmployee = null;
+      
+      // 이름과 팀으로 검색
+      for (const key in employees) {
+        const employee = employees[key];
+        const nameMatch = !name || employee.name === name;
+        const teamMatch = !team || employee.team === team;
+        
+        if (nameMatch && teamMatch) {
+          foundEmployee = { ...employee, key };
+          break;
+        }
+      }
+      
+      if (foundEmployee) {
+        showEmployeeResult(foundEmployee);
+      } else {
+        status.textContent = "해당하는 사원을 찾을 수 없습니다.";
+        status.style.color = "#e74c3c";
+      }
+    } else {
+      status.textContent = "등록된 사원이 없습니다.";
+      status.style.color = "#e74c3c";
+    }
+  } catch (error) {
+    console.error('조회 오류:', error);
+    status.textContent = `조회 중 오류가 발생했습니다: ${error.message}`;
+    status.style.color = "#e74c3c";
+  }
+};
+
 // 이미지 압축 함수 (속도 향상을 위해)
 function compressImage(file, maxWidth = 800, quality = 0.8) {
   return new Promise((resolve) => {
@@ -335,11 +385,16 @@ function resetCharacterPreview() {
 function selectOption(type, value) {
   characterData[type] = value;
   
-  // 선택된 버튼 표시
-  document.querySelectorAll(`[data-type="${type}"]`).forEach(btn => {
-    btn.classList.remove('selected');
+  // 선택된 버튼 표시 (onclick 속성으로 찾기)
+  document.querySelectorAll('.option-item').forEach(item => {
+    item.classList.remove('selected');
   });
-  document.querySelector(`[data-type="${type}"][data-value="${value}"]`).classList.add('selected');
+  
+  // 클릭된 버튼을 찾아서 selected 클래스 추가
+  const clickedButton = event.target.closest('.option-item');
+  if (clickedButton) {
+    clickedButton.classList.add('selected');
+  }
   
   // 캐릭터 렌더링
   renderCharacter();
@@ -349,10 +404,15 @@ function selectColor(type, colorIndex) {
   characterData[type + 'Color'] = colorIndex;
   
   // 선택된 색상 버튼 표시
-  document.querySelectorAll(`[data-color="${colorIndex}"]`).forEach(btn => {
-    btn.classList.remove('selected');
+  document.querySelectorAll('.color-option').forEach(item => {
+    item.classList.remove('selected');
   });
-  document.querySelector(`[data-color="${colorIndex}"]`).classList.add('selected');
+  
+  // 클릭된 버튼을 찾아서 selected 클래스 추가
+  const clickedButton = event.target.closest('.color-option');
+  if (clickedButton) {
+    clickedButton.classList.add('selected');
+  }
   
   // 캐릭터 렌더링
   renderCharacter();
@@ -380,6 +440,10 @@ function renderCharacter() {
   preview.innerHTML = '<div class="character-rendered"></div>';
   
   const container = preview.querySelector('.character-rendered');
+  
+  // 부드러운 애니메이션을 위한 페이드 인 효과
+  container.style.opacity = '0';
+  container.style.transform = 'scale(0.8)';
   
   // 얼굴 렌더링 (피부색 적용)
   const face = document.createElement('div');
@@ -432,6 +496,13 @@ function renderCharacter() {
     beard.style.cssText = getBeardStyle(characterData.beard);
     container.appendChild(beard);
   }
+  
+  // 애니메이션 효과
+  setTimeout(() => {
+    container.style.transition = 'all 0.3s ease';
+    container.style.opacity = '1';
+    container.style.transform = 'scale(1)';
+  }, 50);
 }
 
 // 각 부위별 스타일 함수들
@@ -440,41 +511,55 @@ function getFaceStyle(faceType, skinColor = 1) {
     1: '#fdbcb4',
     2: '#f4c2a1', 
     3: '#e8a87c',
-    4: '#d2691e'
+    4: '#d2691e',
+    5: '#c68642',
+    6: '#8d4a3c'
   };
   
   const skinColorValue = skinColors[skinColor] || skinColors[1];
   
   const styles = {
     'round': `
-      width: 120px;
-      height: 120px;
-      background: ${skinColorValue};
-      border-radius: 50%;
+      width: 160px;
+      height: 180px;
+      background: radial-gradient(ellipse at 30% 20%, ${skinColorValue} 0%, ${skinColorValue}dd 70%, ${skinColorValue}aa 100%);
+      border-radius: 50% 50% 50% 50%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border: 3px solid ${skinColorValue};
+      box-shadow: 
+        inset 0 15px 30px rgba(255,255,255,0.3),
+        inset 0 -10px 20px rgba(0,0,0,0.1),
+        0 5px 15px rgba(0,0,0,0.1);
+      border: 3px solid rgba(255,255,255,0.4);
     `,
     'oval': `
-      width: 100px;
-      height: 140px;
-      background: ${skinColorValue};
-      border-radius: 50%;
+      width: 140px;
+      height: 200px;
+      background: radial-gradient(ellipse at 30% 20%, ${skinColorValue} 0%, ${skinColorValue}dd 70%, ${skinColorValue}aa 100%);
+      border-radius: 50% 50% 45% 45%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border: 3px solid ${skinColorValue};
+      box-shadow: 
+        inset 0 15px 30px rgba(255,255,255,0.3),
+        inset 0 -10px 20px rgba(0,0,0,0.1),
+        0 5px 15px rgba(0,0,0,0.1);
+      border: 3px solid rgba(255,255,255,0.4);
     `,
     'square': `
-      width: 120px;
-      height: 120px;
-      background: ${skinColorValue};
-      border-radius: 20%;
+      width: 170px;
+      height: 180px;
+      background: radial-gradient(ellipse at 30% 20%, ${skinColorValue} 0%, ${skinColorValue}dd 70%, ${skinColorValue}aa 100%);
+      border-radius: 30% 30% 40% 40%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border: 3px solid ${skinColorValue};
+      box-shadow: 
+        inset 0 15px 30px rgba(255,255,255,0.3),
+        inset 0 -10px 20px rgba(0,0,0,0.1),
+        0 5px 15px rgba(0,0,0,0.1);
+      border: 3px solid rgba(255,255,255,0.4);
     `
   };
   return styles[faceType] || styles['round'];
@@ -483,40 +568,47 @@ function getFaceStyle(faceType, skinColor = 1) {
 function getEyesStyle(eyeType) {
   const styles = {
     'normal': `
-      width: 20px;
-      height: 20px;
-      background: #333;
+      width: 28px;
+      height: 28px;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #ffffff 40%, #4a90e2 45%, #2c3e50 70%);
       border-radius: 50%;
-      top: 40%;
-      left: 30%;
-      box-shadow: 35px 0 0 #333;
+      top: 42%;
+      left: 28%;
+      box-shadow: 48px 0 0 radial-gradient(circle at 30% 30%, #ffffff 0%, #ffffff 40%, #4a90e2 45%, #2c3e50 70%);
+      border: 2px solid rgba(255,255,255,0.6);
+      position: relative;
     `,
     'big': `
-      width: 25px;
-      height: 25px;
-      background: #333;
+      width: 34px;
+      height: 34px;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #ffffff 40%, #4a90e2 45%, #2c3e50 70%);
       border-radius: 50%;
-      top: 40%;
-      left: 30%;
-      box-shadow: 35px 0 0 #333;
+      top: 42%;
+      left: 24%;
+      box-shadow: 54px 0 0 radial-gradient(circle at 30% 30%, #ffffff 0%, #ffffff 40%, #4a90e2 45%, #2c3e50 70%);
+      border: 2px solid rgba(255,255,255,0.6);
+      position: relative;
     `,
     'small': `
-      width: 15px;
-      height: 15px;
-      background: #333;
+      width: 22px;
+      height: 22px;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #ffffff 40%, #4a90e2 45%, #2c3e50 70%);
       border-radius: 50%;
-      top: 40%;
-      left: 35%;
-      box-shadow: 25px 0 0 #333;
+      top: 42%;
+      left: 32%;
+      box-shadow: 42px 0 0 radial-gradient(circle at 30% 30%, #ffffff 0%, #ffffff 40%, #4a90e2 45%, #2c3e50 70%);
+      border: 2px solid rgba(255,255,255,0.6);
+      position: relative;
     `,
     'closed': `
-      width: 30px;
+      width: 36px;
       height: 8px;
-      background: #333;
-      border-radius: 10px;
-      top: 40%;
-      left: 25%;
-      box-shadow: 35px 0 0 #333;
+      background: linear-gradient(to bottom, #8b4513 0%, #654321 100%);
+      border-radius: 50px;
+      top: 42%;
+      left: 24%;
+      box-shadow: 48px 0 0 linear-gradient(to bottom, #8b4513 0%, #654321 100%);
+      position: relative;
     `
   };
   return styles[eyeType] || styles['normal'];
@@ -525,31 +617,34 @@ function getEyesStyle(eyeType) {
 function getNoseStyle(noseType) {
   const styles = {
     'normal': `
-      width: 8px;
-      height: 12px;
-      background: #f4a6a6;
-      border-radius: 50%;
+      width: 12px;
+      height: 20px;
+      background: linear-gradient(135deg, #f4a6a6 0%, #e8a87c 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
       top: 55%;
       left: 50%;
       transform: translate(-50%, -50%);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     `,
     'small': `
-      width: 6px;
-      height: 8px;
-      background: #f4a6a6;
-      border-radius: 50%;
+      width: 8px;
+      height: 14px;
+      background: linear-gradient(135deg, #f4a6a6 0%, #e8a87c 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
       top: 55%;
       left: 50%;
       transform: translate(-50%, -50%);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     `,
     'big': `
-      width: 12px;
-      height: 16px;
-      background: #f4a6a6;
-      border-radius: 50%;
+      width: 16px;
+      height: 24px;
+      background: linear-gradient(135deg, #f4a6a6 0%, #e8a87c 100%);
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
       top: 55%;
       left: 50%;
       transform: translate(-50%, -50%);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
     `
   };
   return styles[noseType] || styles['normal'];
@@ -558,30 +653,51 @@ function getNoseStyle(noseType) {
 function getMouthStyle(mouthType) {
   const styles = {
     'smile': `
-      width: 30px;
-      height: 15px;
-      border: 3px solid #333;
+      width: 32px;
+      height: 16px;
+      border: 2px solid #d2691e;
       border-top: none;
-      border-radius: 0 0 30px 30px;
+      border-radius: 0 0 32px 32px;
       top: 70%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: transparent;
+      background: linear-gradient(to bottom, #ff6b6b 0%, #ff8e8e 100%);
     `,
     'normal': `
-      width: 20px;
-      height: 3px;
-      background: #333;
+      width: 24px;
+      height: 4px;
+      background: linear-gradient(to bottom, #d2691e 0%, #8b4513 100%);
       border-radius: 2px;
       top: 70%;
       left: 50%;
       transform: translate(-50%, -50%);
     `,
     'surprised': `
-      width: 15px;
-      height: 15px;
-      background: #333;
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle, #ff6b6b 30%, #ff8e8e 70%);
       border-radius: 50%;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid #d2691e;
+    `,
+    'frown': `
+      width: 28px;
+      height: 14px;
+      border: 2px solid #d2691e;
+      border-bottom: none;
+      border-radius: 28px 28px 0 0;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(to top, #ff6b6b 0%, #ff8e8e 100%);
+    `,
+    'serious': `
+      width: 26px;
+      height: 6px;
+      background: linear-gradient(to bottom, #d2691e 0%, #8b4513 100%);
+      border-radius: 3px;
       top: 70%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -590,48 +706,89 @@ function getMouthStyle(mouthType) {
   return styles[mouthType] || styles['smile'];
 }
 
-function getHairStyle(hairType) {
+function getHairStyle(hairType, hairColor = 1) {
+  const hairColors = {
+    1: '#8b4513', // Brown
+    2: '#654321', // Dark Brown
+    3: '#a0522d', // Sienna
+    4: '#000000', // Black
+    5: '#ffffff', // White
+    6: '#ffd700', // Gold
+    7: '#ff69b4', // Hot Pink
+    8: '#4169e1'  // Royal Blue
+  };
+  
+  const hairColorValue = hairColors[hairColor] || hairColors[1];
+  const hairColorDark = hairColorValue + 'cc';
+  
   const styles = {
     'short': `
-      width: 140px;
-      height: 80px;
-      background: #8b4513;
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      top: 35%;
+      width: 150px;
+      height: 90px;
+      background: radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%);
+      border-radius: 50% 50% 45% 45%;
+      top: 30%;
       left: 50%;
       transform: translate(-50%, -50%);
+      box-shadow: inset 0 10px 20px rgba(0,0,0,0.2);
     `,
     'long': `
-      width: 120px;
-      height: 100px;
-      background: #654321;
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      top: 35%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 50px 0 #654321, 0 100px 0 #654321;
-    `,
-    'curly': `
       width: 130px;
-      height: 90px;
-      background: #a0522d;
-      border-radius: 50%;
-      top: 35%;
+      height: 110px;
+      background: radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%);
+      border-radius: 50% 50% 40% 40%;
+      top: 30%;
       left: 50%;
       transform: translate(-50%, -50%);
       box-shadow: 
-        -20px 20px 0 #a0522d,
-        20px 20px 0 #a0522d,
-        -30px 40px 0 #a0522d,
-        30px 40px 0 #a0522d;
+        0 60px 0 radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%),
+        0 120px 0 radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%),
+        inset 0 10px 20px rgba(0,0,0,0.2);
+    `,
+    'curly': `
+      width: 140px;
+      height: 100px;
+      background: radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%);
+      border-radius: 50%;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 
+        -25px 25px 0 radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%),
+        25px 25px 0 radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%),
+        -35px 45px 0 radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%),
+        35px 45px 0 radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%),
+        inset 0 10px 20px rgba(0,0,0,0.2);
     `,
     'bald': `
-      width: 120px;
-      height: 120px;
+      width: 140px;
+      height: 160px;
       background: transparent;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+    `,
+    'bob': `
+      width: 135px;
+      height: 85px;
+      background: radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%);
+      border-radius: 50% 50% 40% 40%;
+      top: 32%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 
+        0 45px 0 radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%),
+        inset 0 10px 20px rgba(0,0,0,0.2);
+    `,
+    'pixie': `
+      width: 125px;
+      height: 75px;
+      background: radial-gradient(ellipse at center, ${hairColorValue} 0%, ${hairColorDark} 100%);
+      border-radius: 50% 50% 45% 45%;
+      top: 33%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: inset 0 10px 20px rgba(0,0,0,0.2);
     `
   };
   return styles[hairType] || styles['short'];
@@ -677,6 +834,124 @@ function getShirtStyle(shirtType) {
     `
   };
   return styles[shirtType] || styles['t-shirt'];
+}
+
+// 눈썹 스타일 함수
+function getEyebrowsStyle(eyebrowType) {
+  const styles = {
+    'normal': `
+      width: 40px;
+      height: 4px;
+      background: #8b4513;
+      border-radius: 2px;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'thick': `
+      width: 45px;
+      height: 6px;
+      background: #654321;
+      border-radius: 3px;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'thin': `
+      width: 35px;
+      height: 2px;
+      background: #a0522d;
+      border-radius: 1px;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `
+  };
+  
+  return styles[eyebrowType] || styles['normal'];
+}
+
+// 안경 스타일 함수
+function getGlassesStyle(glassesType) {
+  const styles = {
+    'none': `
+      width: 0px;
+      height: 0px;
+      background: transparent;
+    `,
+    'round': `
+      width: 60px;
+      height: 30px;
+      border: 3px solid #333;
+      border-radius: 50%;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.1);
+    `,
+    'square': `
+      width: 60px;
+      height: 30px;
+      border: 3px solid #333;
+      border-radius: 5px;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.1);
+    `,
+    'sunglasses': `
+      width: 60px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 15px;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 2px solid #333;
+    `
+  };
+  
+  return styles[glassesType] || styles['none'];
+}
+
+// 수염 스타일 함수
+function getBeardStyle(beardType) {
+  const styles = {
+    'none': `
+      width: 0px;
+      height: 0px;
+      background: transparent;
+    `,
+    'mustache': `
+      width: 30px;
+      height: 8px;
+      background: #8b4513;
+      border-radius: 15px;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'full': `
+      width: 50px;
+      height: 25px;
+      background: #8b4513;
+      border-radius: 25px;
+      top: 75%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `,
+    'goatee': `
+      width: 20px;
+      height: 20px;
+      background: #8b4513;
+      border-radius: 50%;
+      top: 70%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    `
+  };
+  
+  return styles[beardType] || styles['none'];
 }
 
 function generateAvatarFromName(name) {

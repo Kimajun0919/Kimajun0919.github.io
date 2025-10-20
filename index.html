@@ -48,6 +48,7 @@
         <div class="menu-buttons">
           <button class="menu-button" onclick="showPage('registerPage')">등록</button>
           <button class="menu-button" onclick="showPage('avatarPage')">아바타 생성</button>
+          <button class="menu-button" onclick="showPage('searchPage')">조회</button>
         </div>
       </div>
     </div>
@@ -83,56 +84,100 @@
     </div>
   </div>
 
-  <!-- 아바타 생성 페이지 -->
+  <!-- 아바타 생성 페이지 (Peeps 스타일) -->
   <div id="avatarPage" class="page">
-    <div class="search-container">
-      <div class="search-card">
-        <h2 class="register-title">아바타 생성</h2>
-        <div class="input-group">
-          <label class="input-label">이름</label>
-          <input type="text" id="avatarName" placeholder="이름을 입력하세요">
+    <div class="avatar-container">
+      <!-- 상단 헤더 -->
+      <div class="avatar-header">
+        <h2 class="avatar-title">Create Your Avatar</h2>
+        <div class="avatar-actions">
+          <button class="btn-secondary" onclick="showPage('mainPage')">
+            <span>←</span> Back
+          </button>
+          <button class="btn-primary" onclick="generateAvatar()">
+            Save Avatar
+          </button>
         </div>
-        <div class="input-group">
-          <label class="input-label">팀명</label>
-          <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요">
-        </div>
-        <div class="memoji-customization">
-          <div class="customization-tabs">
-            <button class="tab-btn active" onclick="showTab('skin')">피부</button>
-            <button class="tab-btn" onclick="showTab('eyes')">눈</button>
-            <button class="tab-btn" onclick="showTab('mouth')">입</button>
-            <button class="tab-btn" onclick="showTab('hair')">머리</button>
-            <button class="tab-btn" onclick="showTab('accessories')">악세사리</button>
+      </div>
+      
+      <div class="avatar-workspace">
+        <!-- 왼쪽: 아바타 미리보기 -->
+        <div class="avatar-preview-section">
+          <div class="preview-container">
+            <div class="avatar-preview" id="characterPreview">
+              <div class="character-placeholder">Your Avatar</div>
+            </div>
           </div>
           
+          <!-- 사용자 정보 입력 -->
+          <div class="user-info">
+            <div class="input-group">
+              <label for="avatarName">Name</label>
+              <input type="text" id="avatarName" placeholder="Enter your name">
+            </div>
+            <div class="input-group">
+              <label for="avatarTeam">Team</label>
+              <input type="text" id="avatarTeam" placeholder="Enter your team">
+            </div>
+          </div>
+        </div>
+        
+        <!-- 오른쪽: 커스터마이징 패널 -->
+        <div class="customization-panel">
+          <!-- 탭 네비게이션 -->
+          <div class="customization-tabs">
+            <button class="tab-btn active" onclick="showTab('skin')">
+              <span class="tab-icon">👤</span>
+              <span>Skin</span>
+            </button>
+            <button class="tab-btn" onclick="showTab('eyes')">
+              <span class="tab-icon">👁️</span>
+              <span>Eyes</span>
+            </button>
+            <button class="tab-btn" onclick="showTab('mouth')">
+              <span class="tab-icon">👄</span>
+              <span>Mouth</span>
+            </button>
+            <button class="tab-btn" onclick="showTab('hair')">
+              <span class="tab-icon">💇</span>
+              <span>Hair</span>
+            </button>
+            <button class="tab-btn" onclick="showTab('accessories')">
+              <span class="tab-icon">👓</span>
+              <span>Style</span>
+            </button>
+          </div>
+          
+          <!-- 탭 콘텐츠 -->
+          
           <div class="tab-content active" id="skin-tab">
-            <div class="option-category">
-              <h4>얼굴형</h4>
+            <div class="option-section">
+              <h3>Face Shape</h3>
               <div class="option-grid">
                 <div class="option-item" onclick="selectOption('face', 'round')">
                   <div class="option-preview face-round"></div>
-                  <span>둥근형</span>
+                  <span>Round</span>
                 </div>
                 <div class="option-item" onclick="selectOption('face', 'oval')">
                   <div class="option-preview face-oval"></div>
-                  <span>타원형</span>
+                  <span>Oval</span>
                 </div>
                 <div class="option-item" onclick="selectOption('face', 'square')">
                   <div class="option-preview face-square"></div>
-                  <span>각진형</span>
+                  <span>Square</span>
                 </div>
               </div>
             </div>
             
-            <div class="option-category">
-              <h4>피부색</h4>
+            <div class="option-section">
+              <h3>Skin Tone</h3>
               <div class="color-palette">
-                <div class="color-option" data-color="1" onclick="selectColor('skin', 1)" style="background: #fdbcb4;"></div>
-                <div class="color-option" data-color="2" onclick="selectColor('skin', 2)" style="background: #f4c2a1;"></div>
-                <div class="color-option" data-color="3" onclick="selectColor('skin', 3)" style="background: #e8a87c;"></div>
-                <div class="color-option" data-color="4" onclick="selectColor('skin', 4)" style="background: #d2691e;"></div>
-                <div class="color-option" data-color="5" onclick="selectColor('skin', 5)" style="background: #c68642;"></div>
-                <div class="color-option" data-color="6" onclick="selectColor('skin', 6)" style="background: #8d4a3c;"></div>
+                <div class="color-option" onclick="selectColor('skin', 1)" style="background: #fdbcb4;"></div>
+                <div class="color-option" onclick="selectColor('skin', 2)" style="background: #f4c2a1;"></div>
+                <div class="color-option" onclick="selectColor('skin', 3)" style="background: #e8a87c;"></div>
+                <div class="color-option" onclick="selectColor('skin', 4)" style="background: #d2691e;"></div>
+                <div class="color-option" onclick="selectColor('skin', 5)" style="background: #c68642;"></div>
+                <div class="color-option" onclick="selectColor('skin', 6)" style="background: #8d4a3c;"></div>
               </div>
             </div>
           </div>
@@ -322,6 +367,26 @@
         <button class="action-button" onclick="generateAvatar()">아바타 생성</button>
         <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
         <p id="avatarStatus" class="status-message"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 조회 페이지 -->
+  <div id="searchPage" class="page">
+    <div class="register-container">
+      <div class="register-card">
+        <h2 class="register-title">사원 조회</h2>
+        <div class="form-group">
+          <label for="searchName">이름</label>
+          <input type="text" id="searchName" placeholder="이름을 입력하세요">
+        </div>
+        <div class="form-group">
+          <label for="searchTeam">팀</label>
+          <input type="text" id="searchTeam" placeholder="팀을 입력하세요">
+        </div>
+        <button class="action-button" onclick="searchEmployee()">조회</button>
+        <button class="action-button secondary" onclick="showPage('mainPage')">돌아가기</button>
+        <p id="searchStatus" class="status-message"></p>
       </div>
     </div>
   </div>
