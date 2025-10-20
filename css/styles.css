@@ -529,103 +529,6 @@ input[type="file"] {
   transform: translateY(-2px);
 }
 
-/* 테스트 페이지 스타일 */
-.test-button {
-  background: rgba(220, 53, 69, 0.2) !important;
-  border-color: rgba(220, 53, 69, 0.4) !important;
-  color: rgba(220, 53, 69, 1) !important;
-}
-
-.test-button:hover {
-  background: rgba(220, 53, 69, 0.12) !important;
-  border-color: rgba(220, 53, 69, 0.6) !important;
-}
-
-.test-info {
-  background: rgba(255, 193, 7, 0.1);
-  border: 1px solid rgba(255, 193, 7, 0.3);
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 25px;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.test-info p {
-  margin-bottom: 8px;
-  color: #856404;
-}
-
-.test-info p:last-child {
-  margin-bottom: 0;
-}
-
-.test-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 25px;
-}
-
-.progress-container {
-  margin-bottom: 25px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 20px;
-  background: #e0e0e0;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 10px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #28a745, #20c997);
-  width: 0%;
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  text-align: center;
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.progress-status {
-  text-align: center;
-  font-size: 12px;
-  color: #999;
-}
-
-.test-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 15px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background: rgba(248, 249, 250, 0.8);
-  border-radius: 10px;
-}
-
-.result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
-
-.result-item span:first-child {
-  color: #666;
-  font-weight: 500;
-}
-
-.result-item span:last-child {
-  color: #0c443b;
-  font-weight: 600;
-}
 
 /* 아바타 생성 페이지 스타일 */
 .avatar-preview-container {
@@ -668,62 +571,192 @@ input[type="file"] {
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
-/* 캐릭터 커스터마이징 스타일 */
-.character-customization {
+/* 아이폰 메모지 스타일 커스터마이징 */
+.memoji-customization {
   margin: 20px 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.customization-tabs {
+  display: flex;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 15px 10px;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+}
+
+.tab-btn:hover {
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
+}
+
+.tab-btn.active {
+  background: #007aff;
+  color: white;
+  font-weight: 600;
+}
+
+.tab-content {
+  display: none;
   padding: 20px;
-  background: rgba(248, 249, 250, 0.8);
-  border-radius: 15px;
-  border: 1px solid #e9ecef;
+  min-height: 200px;
 }
 
-.customization-section {
-  margin-bottom: 20px;
+.tab-content.active {
+  display: block;
 }
 
-.customization-section:last-child {
+.option-category {
+  margin-bottom: 25px;
+}
+
+.option-category:last-child {
   margin-bottom: 0;
 }
 
-.customization-label {
-  display: block;
-  font-size: 14px;
+.option-category h4 {
+  font-size: 16px;
   font-weight: 600;
-  color: #0c443b;
-  margin-bottom: 8px;
-  text-align: center;
+  color: #1d1d1f;
+  margin-bottom: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
 
-.customization-options {
+.option-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+}
+
+.option-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.option-item:hover {
+  background: rgba(0, 122, 255, 0.1);
+  border-color: rgba(0, 122, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.option-item.selected {
+  background: #007aff;
+  border-color: #007aff;
+  color: white;
+}
+
+.option-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  background: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.option-item.selected .option-preview {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.option-item span {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.color-palette {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
 }
 
-.option-btn {
-  padding: 8px 12px;
-  background: #fff;
-  border: 2px solid #e0e0e0;
-  border-radius: 20px;
-  font-size: 12px;
-  color: #666;
+.color-option {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 3px solid transparent;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Noto Serif KR', serif;
+  position: relative;
 }
 
-.option-btn:hover {
-  border-color: #0c443b;
-  color: #0c443b;
-  transform: translateY(-1px);
+.color-option:hover {
+  transform: scale(1.1);
+  border-color: rgba(0, 122, 255, 0.5);
 }
 
-.option-btn.selected {
-  background: #0c443b;
-  border-color: #0c443b;
-  color: white;
+.color-option.selected {
+  border-color: #007aff;
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.3);
 }
+
+/* 미리보기 아이콘들 */
+.face-round::before { content: '⭕'; }
+.face-oval::before { content: '🥚'; }
+.face-square::before { content: '⬜'; }
+
+.eyes-normal::before { content: '👀'; }
+.eyes-big::before { content: '👁️'; }
+.eyes-small::before { content: '😑'; }
+.eyes-closed::before { content: '😊'; }
+
+.eyebrows-normal::before { content: '🙂'; }
+.eyebrows-thick::before { content: '🤨'; }
+.eyebrows-thin::before { content: '😐'; }
+
+.mouth-smile::before { content: '😊'; }
+.mouth-normal::before { content: '😐'; }
+.mouth-surprised::before { content: '😮'; }
+.mouth-serious::before { content: '😠'; }
+
+.nose-normal::before { content: '👃'; }
+.nose-small::before { content: '🤏'; }
+.nose-big::before { content: '👃'; }
+
+.hair-short::before { content: '👦'; }
+.hair-long::before { content: '👩'; }
+.hair-curly::before { content: '👩‍🦱'; }
+.hair-bald::before { content: '👨‍🦲'; }
+.hair-bob::before { content: '👩‍🦱'; }
+.hair-pixie::before { content: '👩‍🦲'; }
+
+.glasses-none::before { content: '😐'; }
+.glasses-round::before { content: '🤓'; }
+.glasses-square::before { content: '👓'; }
+.glasses-sunglasses::before { content: '😎'; }
+
+.beard-none::before { content: '😐'; }
+.beard-mustache::before { content: '🤨'; }
+.beard-full::before { content: '🧔'; }
+.beard-goatee::before { content: '🧔‍♂️'; }
 
 .character-preview-container {
   margin: 20px 0;
@@ -763,32 +796,71 @@ input[type="file"] {
 .character-face {
   position: absolute;
   z-index: 1;
+  transition: all 0.3s ease;
 }
 
 .character-hair {
   position: absolute;
   z-index: 2;
+  transition: all 0.3s ease;
 }
 
 .character-eyes {
   position: absolute;
   z-index: 3;
+  transition: all 0.3s ease;
 }
 
 .character-nose {
   position: absolute;
   z-index: 3;
+  transition: all 0.3s ease;
 }
 
 .character-mouth {
   position: absolute;
   z-index: 3;
+  transition: all 0.3s ease;
 }
 
 .character-shirt {
   position: absolute;
   z-index: 0;
+  transition: all 0.3s ease;
 }
+
+/* 캐릭터 애니메이션 */
+.character-face:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+}
+
+.character-eyes:hover {
+  transform: scale(1.1);
+}
+
+.character-mouth:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+/* 캐릭터 색상 팔레트 */
+.character-skin-1 { background: #fdbcb4; }
+.character-skin-2 { background: #f4c2a1; }
+.character-skin-3 { background: #e8a87c; }
+.character-skin-4 { background: #d2691e; }
+
+.character-hair-1 { background: #8b4513; }
+.character-hair-2 { background: #654321; }
+.character-hair-3 { background: #a0522d; }
+.character-hair-4 { background: #000000; }
+.character-hair-5 { background: #ffffff; }
+.character-hair-6 { background: #ffd700; }
+
+.character-shirt-1 { background: #ff6b6b; }
+.character-shirt-2 { background: #4ecdc4; }
+.character-shirt-3 { background: #95a5a6; }
+.character-shirt-4 { background: #f39c12; }
+.character-shirt-5 { background: #9b59b6; }
+.character-shirt-6 { background: #1abc9c; }
 
 /* 아바타 색상 변형들 */
 .avatar-preview.avatar-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }

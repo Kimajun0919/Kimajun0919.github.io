@@ -60,14 +60,6 @@ window.showPage = function(pageId) {
     renderCharacter();
   }
   
-  if (pageId === 'testPage') {
-    // 테스트 페이지 초기화
-    document.getElementById('testStatus').textContent = '';
-    document.getElementById('progressContainer').style.display = 'none';
-    document.getElementById('successCount').textContent = '0';
-    document.getElementById('failureCount').textContent = '0';
-    document.getElementById('elapsedTime').textContent = '0초';
-  }
 };
 
 // 이미지 압축 함수 (속도 향상을 위해)
@@ -315,19 +307,23 @@ function showEmployeeResult(employee) {
     photoElement.src = employee.photoURL;
     photoElement.style.display = 'block';
   }
-  
+            
             showPage('resultPage');
 }
 
 
-// 캐릭터 데이터 구조
+// 캐릭터 데이터 구조 (아이폰 메모지 스타일)
 let characterData = {
   face: 'round',
   eyes: 'normal',
+  eyebrows: 'normal',
   nose: 'normal',
   mouth: 'smile',
   hair: 'short',
-  shirt: 't-shirt'
+  skinColor: 1,
+  hairColor: 1,
+  glasses: 'none',
+  beard: 'none'
 };
 
 // 캐릭터 관련 함수들
@@ -349,23 +345,59 @@ function selectOption(type, value) {
   renderCharacter();
 }
 
+function selectColor(type, colorIndex) {
+  characterData[type + 'Color'] = colorIndex;
+  
+  // 선택된 색상 버튼 표시
+  document.querySelectorAll(`[data-color="${colorIndex}"]`).forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  document.querySelector(`[data-color="${colorIndex}"]`).classList.add('selected');
+  
+  // 캐릭터 렌더링
+  renderCharacter();
+}
+
+// 탭 전환 함수
+function showTab(tabName) {
+  // 모든 탭 버튼 비활성화
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  
+  // 모든 탭 콘텐츠 숨기기
+  document.querySelectorAll('.tab-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  
+  // 선택된 탭 활성화
+  document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+  document.getElementById(`${tabName}-tab`).classList.add('active');
+}
+
 function renderCharacter() {
   const preview = document.getElementById('characterPreview');
   preview.innerHTML = '<div class="character-rendered"></div>';
   
   const container = preview.querySelector('.character-rendered');
   
-  // 얼굴 렌더링
+  // 얼굴 렌더링 (피부색 적용)
   const face = document.createElement('div');
   face.className = 'character-face';
-  face.style.cssText = getFaceStyle(characterData.face);
+  face.style.cssText = getFaceStyle(characterData.face, characterData.skinColor);
   container.appendChild(face);
   
-  // 머리 렌더링
+  // 머리 렌더링 (머리색 적용)
   const hair = document.createElement('div');
   hair.className = 'character-hair';
-  hair.style.cssText = getHairStyle(characterData.hair);
+  hair.style.cssText = getHairStyle(characterData.hair, characterData.hairColor);
   container.appendChild(hair);
+  
+  // 눈썹 렌더링
+  const eyebrows = document.createElement('div');
+  eyebrows.className = 'character-eyebrows';
+  eyebrows.style.cssText = getEyebrowsStyle(characterData.eyebrows);
+  container.appendChild(eyebrows);
   
   // 눈 렌더링
   const eyes = document.createElement('div');
@@ -385,45 +417,64 @@ function renderCharacter() {
   mouth.style.cssText = getMouthStyle(characterData.mouth);
   container.appendChild(mouth);
   
-  // 윗옷 렌더링
-  const shirt = document.createElement('div');
-  shirt.className = 'character-shirt';
-  shirt.style.cssText = getShirtStyle(characterData.shirt);
-  container.appendChild(shirt);
+  // 안경 렌더링
+  if (characterData.glasses !== 'none') {
+    const glasses = document.createElement('div');
+    glasses.className = 'character-glasses';
+    glasses.style.cssText = getGlassesStyle(characterData.glasses);
+    container.appendChild(glasses);
+  }
+  
+  // 수염 렌더링
+  if (characterData.beard !== 'none') {
+    const beard = document.createElement('div');
+    beard.className = 'character-beard';
+    beard.style.cssText = getBeardStyle(characterData.beard);
+    container.appendChild(beard);
+  }
 }
 
 // 각 부위별 스타일 함수들
-function getFaceStyle(faceType) {
+function getFaceStyle(faceType, skinColor = 1) {
+  const skinColors = {
+    1: '#fdbcb4',
+    2: '#f4c2a1', 
+    3: '#e8a87c',
+    4: '#d2691e'
+  };
+  
+  const skinColorValue = skinColors[skinColor] || skinColors[1];
+  
   const styles = {
     'round': `
       width: 120px;
       height: 120px;
-      background: #fdbcb4;
+      background: ${skinColorValue};
       border-radius: 50%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border: 3px solid #f4a6a6;
+      border: 3px solid ${skinColorValue};
     `,
     'oval': `
       width: 100px;
       height: 140px;
-      background: #fdbcb4;
+      background: ${skinColorValue};
       border-radius: 50%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border: 3px solid #f4a6a6;
+      border: 3px solid ${skinColorValue};
     `,
     'square': `
       width: 120px;
       height: 120px;
-      background: #fdbcb4;
+      background: ${skinColorValue};
       border-radius: 20%;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      border: 3px solid #f4a6a6;
+      border: 3px solid ${skinColorValue};
     `
   };
   return styles[faceType] || styles['round'];
@@ -848,231 +899,6 @@ window.saveAsImage = async function() {
   }
 };
 
-// 동시 업로드 테스트 기능
-let testData = [];
-let testResults = {
-  success: 0,
-  failure: 0,
-  startTime: null
-};
 
-// back.jpg를 Base64로 변환하는 함수
-async function getBackImageAsBase64() {
-  try {
-    const response = await fetch('assets/back.jpg');
-    const blob = await response.blob();
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result.split(',')[1];
-        resolve(base64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(blob);
-    });
-  } catch (error) {
-    console.error('이미지 로드 오류:', error);
-    return null;
-  }
-}
 
-// 샘플 데이터 생성 함수
-function generateSampleData(count) {
-  const teams = ['개발팀', '디자인팀', '마케팅팀', '영업팀', '기획팀', '인사팀', '재무팀', '운영팀'];
-  const names = ['김하늘', '이별', '박소영', '최민수', '정수진', '강태현', '윤서연', '임동현', '한지민', '송재호'];
-  
-  const sampleData = [];
-  for (let i = 0; i < count; i++) {
-    const randomName = names[Math.floor(Math.random() * names.length)];
-    const randomTeam = teams[Math.floor(Math.random() * teams.length)];
-    const randomNumber = Math.floor(Math.random() * 1000);
-    
-    sampleData.push({
-      name: `${randomName}_${randomNumber}`,
-      team: randomTeam,
-      isTestData: true
-    });
-  }
-  return sampleData;
-}
 
-// 단일 업로드 함수 (이미지 업로드 없이 데이터만 저장)
-async function uploadSingleEmployee(employeeData, index) {
-  try {
-    // Firebase에 데이터만 저장 (이미지 업로드 생략)
-    const employeeId = String(Date.now() + index).slice(-6);
-    const newRef = await push(ref(db, "employees"), {
-      name: employeeData.name,
-      team: employeeData.team,
-      photoURL: "test_image_placeholder", // 테스트용 플레이스홀더
-      employeeId: employeeId,
-      createdAt: new Date().toISOString(),
-      isTestData: true
-    });
-
-    return {
-      success: true,
-      key: newRef.key,
-      employeeId: employeeId
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message
-    };
-  }
-}
-
-// 진행 상황 업데이트
-function updateProgress(current, total, status) {
-  const progressFill = document.getElementById('progressFill');
-  const progressText = document.getElementById('progressText');
-  const progressStatus = document.getElementById('progressStatus');
-  
-  const percentage = (current / total) * 100;
-  progressFill.style.width = `${percentage}%`;
-  progressText.textContent = `${current} / ${total}`;
-  progressStatus.textContent = status;
-}
-
-// 결과 업데이트
-function updateResults() {
-  document.getElementById('successCount').textContent = testResults.success;
-  document.getElementById('failureCount').textContent = testResults.failure;
-  
-  if (testResults.startTime) {
-    const elapsed = Math.round((Date.now() - testResults.startTime) / 1000);
-    document.getElementById('elapsedTime').textContent = `${elapsed}초`;
-  }
-}
-
-// 대량 업로드 시작
-window.startBulkUpload = async function() {
-  const testStatus = document.getElementById('testStatus');
-  const progressContainer = document.getElementById('progressContainer');
-  
-  // 초기화
-  testResults = {
-    success: 0,
-    failure: 0,
-    startTime: Date.now()
-  };
-  
-  testStatus.textContent = "🔄 테스트 데이터 생성 중...";
-  testStatus.style.color = "#3498db";
-  
-  // 샘플 데이터 생성 (테스트용으로 50개로 조정)
-  testData = generateSampleData(50);
-  
-  // UI 초기화
-  progressContainer.style.display = 'block';
-  updateProgress(0, 50, '업로드 준비 중...');
-  updateResults();
-  
-  testStatus.textContent = "📤 50개 파일을 진짜 동시에 업로드 중...";
-  
-  // 진짜 동시 업로드 - 모든 150개를 한 번에 시작
-  const allPromises = testData.map((employee, index) => 
-    uploadSingleEmployee(employee, index)
-  );
-  
-  // 모든 업로드를 동시에 시작하고 결과를 실시간으로 추적
-  let completedCount = 0;
-  
-  // 각 Promise에 완료 콜백 추가
-  const promisesWithCallback = allPromises.map((promise, index) => 
-    promise.then(result => {
-      completedCount++;
-      if (result.success) {
-        testResults.success++;
-      } else {
-        testResults.failure++;
-        console.error(`업로드 실패 ${index + 1}:`, result.error);
-      }
-      updateProgress(completedCount, 50, `${completedCount}개 완료`);
-      updateResults();
-      return result;
-    }).catch(error => {
-      completedCount++;
-      testResults.failure++;
-      console.error(`업로드 오류 ${index + 1}:`, error);
-      updateProgress(completedCount, 50, `${completedCount}개 완료`);
-      updateResults();
-      return { success: false, error: error.message };
-    })
-  );
-  
-  // 모든 업로드 완료 대기
-  await Promise.allSettled(promisesWithCallback);
-  
-  // 완료
-  updateProgress(50, 50, '완료');
-  
-  if (testResults.failure === 0) {
-    testStatus.innerHTML = `✅ 모든 업로드가 성공했습니다! (${testResults.success}개)`;
-    testStatus.style.color = "#27ae60";
-  } else {
-    testStatus.innerHTML = `⚠️ 업로드 완료: 성공 ${testResults.success}개, 실패 ${testResults.failure}개`;
-    testStatus.style.color = "#f39c12";
-  }
-};
-
-// 테스트 데이터 삭제
-window.deleteTestData = async function() {
-  const testStatus = document.getElementById('testStatus');
-  
-  testStatus.textContent = "🗑️ 테스트 데이터 삭제 중...";
-  testStatus.style.color = "#3498db";
-  
-  try {
-    const snapshot = await get(child(ref(db), "employees"));
-    if (snapshot.exists()) {
-      const employees = snapshot.val();
-      const testDataKeys = [];
-      
-      // 테스트 데이터 키 수집
-      for (const key in employees) {
-        if (employees[key].isTestData) {
-          testDataKeys.push(key);
-        }
-      }
-      
-      if (testDataKeys.length === 0) {
-        testStatus.textContent = "📭 삭제할 테스트 데이터가 없습니다.";
-        testStatus.style.color = "#999";
-        return;
-      }
-      
-      // 배치 삭제
-      const batchSize = 20;
-      let deletedCount = 0;
-      
-      for (let i = 0; i < testDataKeys.length; i += batchSize) {
-        const batch = testDataKeys.slice(i, i + batchSize);
-        
-        const deletePromises = batch.map(key => 
-          remove(ref(db, `employees/${key}`))
-        );
-        
-        await Promise.all(deletePromises);
-        deletedCount += batch.length;
-        
-        testStatus.textContent = `🗑️ 삭제 중... ${deletedCount}/${testDataKeys.length}`;
-        
-        // 배치 간 대기
-        if (i + batchSize < testDataKeys.length) {
-          await new Promise(resolve => setTimeout(resolve, 200));
-        }
-      }
-      
-      testStatus.innerHTML = `✅ 테스트 데이터 삭제 완료! (${deletedCount}개 삭제)`;
-      testStatus.style.color = "#27ae60";
-    } else {
-      testStatus.textContent = "📭 삭제할 데이터가 없습니다.";
-      testStatus.style.color = "#999";
-    }
-  } catch (error) {
-    testStatus.textContent = `❌ 삭제 실패: ${error.message}`;
-    testStatus.style.color = "#e74c3c";
-  }
-};
