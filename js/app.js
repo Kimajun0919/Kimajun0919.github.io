@@ -39,10 +39,8 @@ window.showPage = function(pageId) {
   document.getElementById(pageId).classList.add('active');
   
   if (pageId === 'avatarPage') {
-    document.getElementById('avatarStatus').textContent = '';
-    document.getElementById('avatarName').value = '';
-    document.getElementById('avatarTeam').value = '';
-    renderAvataaars();
+    // 아바타 생성 페이지 초기화
+    updateAvatar();
     // React 컴포넌트도 렌더링
     setTimeout(() => {
       renderAvataaarsReact();
@@ -725,6 +723,81 @@ window.selectAvatarOption = function(option, value) {
   
   // React 컴포넌트 다시 렌더링
   renderAvataaarsReact();
+};
+
+// 아바타 업데이트 함수 (새로운 아바타 생성 페이지용)
+window.updateAvatar = function() {
+  // 모든 select 요소에서 값 가져와서 avataaarsData 업데이트
+  const selects = document.querySelectorAll('#avatarPage select');
+  selects.forEach(select => {
+    const property = select.id;
+    const value = select.value;
+    if (avataaarsData.hasOwnProperty(property)) {
+      avataaarsData[property] = value;
+    }
+  });
+  
+  // 아바타 컨테이너에 렌더링
+  const container = document.getElementById('avatarContainer');
+  if (container) {
+    container.innerHTML = generateAvataaarsSVG();
+  }
+  
+  // React 컴포넌트도 업데이트
+  renderAvataaarsReact();
+};
+
+// 아바타 다운로드 함수 (새로운 아바타 생성 페이지용)
+window.downloadAvatar = function(format) {
+  const container = document.getElementById('avatarContainer');
+  let svg = '';
+  
+  if (container) {
+    const svgElement = container.querySelector('svg');
+    if (svgElement) {
+      svg = new XMLSerializer().serializeToString(svgElement);
+    }
+  }
+  
+  if (!svg) {
+    svg = generateAvataaarsSVG();
+  }
+  
+  if (format === 'svg') {
+    // SVG 다운로드
+    const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+    const svgUrl = URL.createObjectURL(svgBlob);
+    
+    const downloadLink = document.createElement('a');
+    downloadLink.href = svgUrl;
+    downloadLink.download = 'avatar.svg';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    URL.revokeObjectURL(svgUrl);
+  } else {
+    // PNG 다운로드
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    canvas.width = 400;
+    canvas.height = 400;
+    
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, 400, 400);
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'avatar.png';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    };
+    
+    img.src = 'data:image/svg+xml;base64,' + btoa(svg);
+  }
 };
 
 
