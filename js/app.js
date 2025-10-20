@@ -16,6 +16,7 @@ const db = getDatabase(app);
 
 // Avataaars 데이터
 let avataaarsData = {
+  avatarStyle: 'Circle',
   skinColor: 'Pale',
   eyeType: 'Happy',
   eyebrowType: 'Default',
