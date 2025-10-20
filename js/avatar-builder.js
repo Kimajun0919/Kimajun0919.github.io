@@ -284,6 +284,10 @@ function renderBuilderAvatar(state) {
   renderBuilderPart('top', AVATAR_ASSETS.top[state.top.id]);
 }
 
+// 전역 함수로 노출
+window.renderBuilderAvatar = renderBuilderAvatar;
+window.builderState = builderState;
+
 function renderBuilderPart(partName, svgContent) {
   const group = document.querySelector(`[data-part="${partName}"]`);
   if (group) {
@@ -322,6 +326,10 @@ function redoAvatar() {
     saveBuilderToLocalStorage();
   }
 }
+
+// 전역 함수로 노출
+window.undoAvatar = undoAvatar;
+window.redoAvatar = redoAvatar;
 
 // 로컬 스토리지
 function saveBuilderToLocalStorage() {
@@ -368,6 +376,9 @@ function randomizeAll() {
   saveBuilderToLocalStorage();
 }
 
+// 전역 함수로 노출
+window.randomizeAll = randomizeAll;
+
 function randomizePart(part) {
   const styles = Object.keys(AVATAR_ASSETS[part]);
   const randomId = styles[Math.floor(Math.random() * styles.length)];
@@ -385,6 +396,9 @@ function randomizePart(part) {
   saveBuilderToHistory();
   saveBuilderToLocalStorage();
 }
+
+// 전역 함수로 노출
+window.randomizePart = randomizePart;
 
 // 초기화
 function resetAvatar() {
@@ -406,6 +420,9 @@ function resetAvatar() {
     saveBuilderToLocalStorage();
   }
 }
+
+// 전역 함수로 노출
+window.resetAvatar = resetAvatar;
 
 // 내보내기
 function exportSVG() {
@@ -460,6 +477,10 @@ function exportPNG() {
   img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
 }
 
+// 전역 함수로 노출
+window.exportSVG = exportSVG;
+window.exportPNG = exportPNG;
+
 // 프리셋 관리
 function savePreset() {
   const presets = JSON.parse(localStorage.getItem('builderAvatarPresets') || '[]');
@@ -509,6 +530,12 @@ function toggleJSONViewer() {
     viewer.textContent = JSON.stringify(builderState, null, 2);
   }
 }
+
+// 전역 함수로 노출
+window.savePreset = savePreset;
+window.loadPreset = loadPreset;
+window.copyJSON = copyJSON;
+window.toggleJSONViewer = toggleJSONViewer;
 
 // 키보드 접근성
 document.addEventListener('keydown', (e) => {
