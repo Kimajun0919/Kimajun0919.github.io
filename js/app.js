@@ -467,17 +467,23 @@ window.downloadAvatar = function(name, employeeId) {
 
 // 이미지로 저장 함수 (결과 페이지용)
 window.saveAsImage = async function() {
+  console.log('saveAsImage 함수 시작');
+  
   // 현재 직원 정보 확인
   if (!window.currentEmployee) {
+    console.error('저장할 직원 정보가 없습니다.');
     alert('저장할 직원 정보가 없습니다.');
     return;
   }
 
   const employee = window.currentEmployee;
   const baseName = employee.name || 'avatar';
+  console.log('직원 정보:', employee);
 
   // html2canvas 로드
+  console.log('html2canvas 로드 시작');
   const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
+  console.log('html2canvas 로드 완료');
 
   // 오프스크린 래퍼 생성 (9:16, 2160x3840)
   const wrapper = document.createElement('div');
@@ -596,23 +602,32 @@ window.saveAsImage = async function() {
   await new Promise(r => setTimeout(r, 500));
 
   // 캡처
-  const canvas = await html2canvas.default(wrapper, {
-    width: 2160,
-    height: 3840,
-    windowWidth: 2160,
-    windowHeight: 3840,
-    backgroundColor: null,
-    useCORS: true,
-    allowTaint: true,
-    logging: false,
-    removeContainer: false
-  });
+  console.log('html2canvas 캡처 시작');
+  try {
+    const canvas = await html2canvas.default(wrapper, {
+      width: 2160,
+      height: 3840,
+      windowWidth: 2160,
+      windowHeight: 3840,
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      logging: true, // 로깅 활성화
+      removeContainer: false
+    });
+    console.log('html2canvas 캡처 완료', canvas);
 
-  // 다운로드
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png', 0.95);
-  a.download = `${baseName}_2160x3840.png`;
-  a.click();
+    // 다운로드
+    console.log('다운로드 시작');
+    const a = document.createElement('a');
+    a.href = canvas.toDataURL('image/png', 0.95);
+    a.download = `${baseName}_2160x3840.png`;
+    a.click();
+    console.log('다운로드 완료');
+  } catch (error) {
+    console.error('html2canvas 오류:', error);
+    alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
+  }
 
   // 정리
   wrapper.remove();
