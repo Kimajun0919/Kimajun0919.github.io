@@ -94,7 +94,7 @@ function createDicebearAvatar(options = {}) {
       apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
     }
     if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
-      apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+      apiUrl += `&glassesProbability=100&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
     }
     if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
       apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
@@ -146,7 +146,7 @@ function createDicebearAvatarPNG(options = {}) {
       apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
     }
     if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
-      apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+      apiUrl += `&glassesProbability=100&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
     }
     if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
       apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;

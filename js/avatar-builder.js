@@ -3,7 +3,7 @@
 // 상태 관리 (lorelei 스타일 고정)
 let builderState = {
   style: 'lorelei', // 고정
-  seed: '',
+  seed: 'default-avatar', // 고정된 seed로 항상 동일한 기본 이미지
   hair: 'variant01',
   eyes: 'variant01',
   eyebrows: 'variant01',
@@ -18,10 +18,14 @@ const MAX_BUILDER_HISTORY = 10;
 
 // 초기화
 function initAvatarBuilder() {
-  // 랜덤 seed 생성
-  builderState.seed = generateRandomSeed();
-  
+  // 로컬 스토리지에서 불러오기 (없으면 기본값 사용)
   loadBuilderFromLocalStorage();
+  
+  // 로컬 스토리지에 저장된 값이 없으면 기본 seed 유지
+  if (!builderState.seed) {
+    builderState.seed = 'default-avatar';
+  }
+  
   window.builderState = builderState; // 전역 상태 동기화
   setupBuilderUI();
   renderBuilderAvatar(builderState);
