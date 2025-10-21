@@ -367,7 +367,7 @@ input[type="file"] {
 /* 저장 모드 (사원증 비율 3:4) */
 .result-container.saving-mode {
   width: 1080px;
-  height: 1440px;
+  height: 1920px;
   background-image: url('../assets/images/back.jpg');
   background-position: center center;
   background-size: cover;
@@ -378,6 +378,7 @@ input[type="file"] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .result-container.saving-mode .result-card {
@@ -387,6 +388,8 @@ input[type="file"] {
   box-shadow: 0 16px 64px rgba(0,0,0,0.12);
   overflow: visible;
   margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .employee-photo {
@@ -417,10 +420,15 @@ input[type="file"] {
 
 .result-container.saving-mode .employee-photo {
   width: 872px;
-  height: 700px;
-  margin: 24px;
+  height: 1000px;
+  margin: 24px 24px 0 24px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.1);
   border-radius: 32px 32px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fff;
   clip-path: polygon(
     0 0,
     100% 0,
@@ -453,12 +461,12 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-name {
-  font-size: 64px;
+  font-size: 72px;
   color: #1d1d1f;
   font-weight: 600;
   letter-spacing: -1px;
-  margin: -105px 0 0 0;
-  padding: 120px 68px 12px 68px;
+  margin: -150px 0 0 0;
+  padding: 170px 68px 16px 68px;
   text-align: left;
   background: #fff;
   border-radius: 56px 56px 0 0;
@@ -479,12 +487,12 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-team {
-  font-size: 32px;
+  font-size: 36px;
   color: #86868b;
   font-weight: 500;
   letter-spacing: 0;
   margin: 0;
-  padding: 0 68px 20px 68px;
+  padding: 0 68px 24px 68px;
   text-align: left;
   background: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
@@ -513,17 +521,43 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-id {
-  font-size: 24px;
+  font-size: 28px;
   color: #a1a1a6;
-  line-height: 1.7;
+  line-height: 1.8;
   margin: 0;
-  padding: 0 68px 48px 68px;
+  padding: 0 68px 68px 68px;
   text-align: left;
   font-weight: 400;
   letter-spacing: 0.2px;
   background: #fff;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
   border-radius: 0 0 24px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* 로고 스타일 (배경 하단 중앙) */
+.result-logo {
+  display: none; /* 평소에는 숨김 */
+}
+
+.result-container.saving-mode .result-logo {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+.result-container.saving-mode .haneul-logo {
+  width: 180px;
+  height: auto;
+  opacity: 0.6;
 }
 
 

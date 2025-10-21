@@ -430,11 +430,11 @@ window.saveAsImage = async function() {
       }
     }
     
-    // Dicebear PNG URL 생성
+    // Dicebear PNG URL 생성 (고해상도)
     if (avatarData) {
       const style = avatarData.style || 'lorelei';
       const seed = avatarData.seed || Date.now().toString();
-      avatarPngUrl = `https://api.dicebear.com/9.x/${style}/png?seed=${encodeURIComponent(seed)}&scale=100`;
+      avatarPngUrl = `https://api.dicebear.com/9.x/${style}/png?seed=${encodeURIComponent(seed)}&size=2048`;
       
       // 아바타 옵션 추가
       if (avatarData.hair) avatarPngUrl += `&hair=${encodeURIComponent(avatarData.hair)}`;
@@ -453,7 +453,7 @@ window.saveAsImage = async function() {
     // 4. html2canvas 로드
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
-    // 5. 오프스크린에 고정 크기 컨테이너 생성
+    // 5. 오프스크린에 고정 크기 컨테이너 생성 (9:16 비율)
     const offscreenContainer = document.createElement('div');
     offscreenContainer.className = 'result-container saving-mode';
     offscreenContainer.style.cssText = `
@@ -461,7 +461,7 @@ window.saveAsImage = async function() {
       left: -9999px;
       top: 0;
       width: 1080px !important;
-      height: 1440px !important;
+      height: 1920px !important;
       background-image: url('assets/images/back.jpg');
       background-position: center center;
       background-size: cover;
@@ -497,13 +497,13 @@ window.saveAsImage = async function() {
       flex-direction: column;
     `;
     
-    // 7. 카드 내부 요소들에 saving-mode 스타일 강제 적용
+    // 7. 카드 내부 요소들에 saving-mode 스타일 강제 적용 (9:16 비율)
     const clonedPhoto = clonedCard.querySelector('.employee-photo');
     if (clonedPhoto) {
       clonedPhoto.style.cssText = `
         width: 872px !important;
-        height: 700px !important;
-        margin: 24px !important;
+        height: 1000px !important;
+        margin: 24px 24px 0 24px !important;
         box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         border-radius: 32px 32px 0 0;
         display: flex;
@@ -533,12 +533,12 @@ window.saveAsImage = async function() {
     const clonedName = clonedCard.querySelector('.employee-name');
     if (clonedName) {
       clonedName.style.cssText = `
-        font-size: 64px !important;
+        font-size: 72px !important;
         color: #1d1d1f;
         font-weight: 600;
         letter-spacing: -1px;
-        margin: -105px 0 0 0 !important;
-        padding: 120px 68px 12px 68px !important;
+        margin: -150px 0 0 0 !important;
+        padding: 170px 68px 16px 68px !important;
         text-align: left;
         background: #fff;
         border-radius: 56px 56px 0 0;
@@ -549,12 +549,12 @@ window.saveAsImage = async function() {
     const clonedTeam = clonedCard.querySelector('.employee-team');
     if (clonedTeam) {
       clonedTeam.style.cssText = `
-        font-size: 32px !important;
+        font-size: 36px !important;
         color: #86868b;
         font-weight: 500;
         letter-spacing: 0;
         margin: 0 !important;
-        padding: 0 68px 20px 68px !important;
+        padding: 0 68px 24px 68px !important;
         text-align: left;
         background: #fff;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
@@ -564,17 +564,21 @@ window.saveAsImage = async function() {
     const clonedId = clonedCard.querySelector('.employee-id');
     if (clonedId) {
       clonedId.style.cssText = `
-        font-size: 24px !important;
+        font-size: 28px !important;
         color: #a1a1a6;
-        line-height: 1.7;
+        line-height: 1.8;
         margin: 0 !important;
-        padding: 0 68px 48px 68px !important;
+        padding: 0 68px 32px 68px !important;
         text-align: left;
         font-weight: 400;
         letter-spacing: 0.2px;
         background: #fff;
         font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-        border-radius: 0 0 24px 24px;
+        border-radius: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
       `;
     }
     
@@ -582,15 +586,43 @@ window.saveAsImage = async function() {
     const verseRef = clonedCard.querySelector('.verse-reference');
     if (verseRef) {
       verseRef.style.cssText = `
-        font-size: 20px !important;
+        font-size: 24px !important;
         color: #999;
-        margin-top: 6px;
+        margin-top: 8px;
         display: block;
         opacity: 0.75;
       `;
     }
     
     offscreenContainer.appendChild(clonedCard);
+    
+    // 배경 하단에 로고 추가
+    const logoContainer = document.createElement('div');
+    logoContainer.className = 'result-logo';
+    logoContainer.style.cssText = `
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+    `;
+    
+    const logoImg = document.createElement('img');
+    logoImg.src = 'assets/images/HaneulLogo.png';
+    logoImg.alt = 'Haneul Logo';
+    logoImg.className = 'haneul-logo';
+    logoImg.style.cssText = `
+      width: 180px !important;
+      height: auto !important;
+      opacity: 0.6;
+    `;
+    
+    logoContainer.appendChild(logoImg);
+    offscreenContainer.appendChild(logoContainer);
+    
     document.body.appendChild(offscreenContainer);
     
     console.log('오프스크린 컨테이너 생성 완료');
@@ -619,23 +651,23 @@ window.saveAsImage = async function() {
     
     console.log('캡처 시작...');
     
-    // 9. 고정 크기로 캡처
+    // 9. 고정 크기로 초고화질 캡처 (9:16 비율 - Instagram Story/Reels)
     const canvas = await html2canvas.default(offscreenContainer, {
       backgroundColor: null,
       useCORS: true,
       allowTaint: true,
       logging: false,
-      scale: 2, // 고해상도 (실제 출력: 2160x2880px)
+      scale: 3, // 초고해상도 (실제 출력: 3240x5760px, 9:16 비율)
       width: 1080,
-      height: 1440,
+      height: 1920,
       windowWidth: 1080,
-      windowHeight: 1440
+      windowHeight: 1920
     });
     
     console.log('캡처 완료:', canvas.width, 'x', canvas.height);
     
-    // 10. 다운로드
-    const dataURL = canvas.toDataURL('image/png', 0.95);
+    // 10. 최고 품질로 다운로드
+    const dataURL = canvas.toDataURL('image/png', 1.0);
     const link = document.createElement('a');
     link.download = `${employee.name}_카드.png`;
     link.href = dataURL;
