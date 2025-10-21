@@ -73,6 +73,10 @@ window.saveAvatar = async function() {
 
     status.innerHTML = `✅ 아바타 저장 완료!`;
     status.style.color = "#27ae60";
+    
+    // 입력 필드 초기화
+    document.getElementById('avatarName').value = '';
+    document.getElementById('avatarTeam').value = '';
       
     // 결과 페이지로 이동
     setTimeout(() => {
@@ -84,6 +88,11 @@ window.saveAvatar = async function() {
         verseReference,
         employeeId: employeeId
       });
+      
+      // 새 아바타 생성 (randomizePart가 정의되어 있을 때만)
+      if (typeof window.randomizePart === 'function') {
+        window.randomizePart('all');
+      }
     }, 1500);
   } catch (error) {
     status.textContent = "❌ 저장 실패: " + error.message;

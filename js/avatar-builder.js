@@ -343,16 +343,20 @@ function createColorOptions() {
   if (skinContainer) {
     skinContainer.innerHTML = '';
     AVATAR_COLORS.skin.forEach(color => {
-    const btn = document.createElement('button');
-    btn.className = 'color-btn';
+      const btn = document.createElement('button');
+      btn.className = 'color-btn';
       btn.style.backgroundColor = color;
-    btn.onclick = () => {
+      btn.onclick = () => {
         builderState.backgroundColor = [color];
         renderBuilderAvatar(builderState);
         updateActiveButton(skinContainer, btn);
         saveBuilderToHistory();
         saveBuilderToLocalStorage();
       };
+      // 현재 선택된 배경색이면 active 클래스 추가
+      if (builderState.backgroundColor && builderState.backgroundColor.length > 0 && builderState.backgroundColor[0] === color) {
+        btn.classList.add('active');
+      }
       skinContainer.appendChild(btn);
     });
   }
@@ -453,6 +457,7 @@ function undoAvatar() {
     builderHistoryIndex--;
     builderState = JSON.parse(JSON.stringify(builderHistory[builderHistoryIndex]));
     renderBuilderAvatar(builderState);
+    setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
     saveBuilderToLocalStorage();
   }
 }
@@ -462,6 +467,7 @@ function redoAvatar() {
     builderHistoryIndex++;
     builderState = JSON.parse(JSON.stringify(builderHistory[builderHistoryIndex]));
     renderBuilderAvatar(builderState);
+    setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
     saveBuilderToLocalStorage();
   }
 }
@@ -534,63 +540,15 @@ function exportAvatarAsPNG() {
   img.src = url;
 }
 
-// 아바타 저장 (기존 기능 유지)
-function saveAvatar() {
-  const name = document.getElementById('avatarName')?.value.trim();
-  const team = document.getElementById('avatarTeam')?.value.trim();
-  const status = document.getElementById('avatarStatus');
-  
-  if (!name || !team) {
-    if (status) {
-      status.textContent = '이름과 팀명을 모두 입력해주세요.';
-      status.className = 'status-message error';
-    }
-    return;
-  }
-
-  // 아바타 데이터 저장
-  const avatarData = {
-    name: name,
-    team: team,
-    avatarState: builderState,
-    svgData: document.getElementById('avatarPreview')?.innerHTML || '',
-    createdAt: new Date().toISOString()
-  };
-
-  // localStorage에 저장 (실제 환경에서는 서버로 전송)
-  try {
-    const saved = JSON.parse(localStorage.getItem('savedAvatars') || '[]');
-    saved.push(avatarData);
-    localStorage.setItem('savedAvatars', JSON.stringify(saved));
-    
-    if (status) {
-      status.textContent = '아바타가 성공적으로 저장되었습니다!';
-      status.className = 'status-message success';
-    }
-    
-    // 입력 필드 초기화
-    if (document.getElementById('avatarName')) document.getElementById('avatarName').value = '';
-    if (document.getElementById('avatarTeam')) document.getElementById('avatarTeam').value = '';
-    
-    // 새 아바타 생성
-    setTimeout(() => {
-      randomizePart('all');
-    }, 1000);
-  } catch (e) {
-    if (status) {
-      status.textContent = '저장 중 오류가 발생했습니다.';
-      status.className = 'status-message error';
-    }
-    console.error('Save error:', e);
-  }
-}
+// 아바타 저장 함수는 app.js에서 정의됩니다 (Firebase 사용)
+// 이 함수는 window 객체에 이미 정의되어 있으므로 여기서 재정의하지 않습니다.
 
 // 전역 함수로 노출
 window.initAvatarBuilder = initAvatarBuilder;
 window.renderBuilderAvatar = renderBuilderAvatar;
 window.builderState = builderState;
 window.randomizePart = randomizePart;
-window.saveAvatar = saveAvatar;
+// saveAvatar는 app.js에서 정의됨
 window.exportAvatarAsSVG = exportAvatarAsSVG;
 window.exportAvatarAsPNG = exportAvatarAsPNG;
 window.undoAvatar = undoAvatar;
