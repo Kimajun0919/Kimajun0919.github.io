@@ -26,6 +26,8 @@ function initAvatarBuilder() {
   builderState.seed = generateRandomSeed();
   
   loadBuilderFromLocalStorage();
+  window.builderState = builderState; // 전역 상태 동기화
+  console.log('initAvatarBuilder - builderState:', builderState);
   setupBuilderUI();
   renderBuilderAvatar(builderState);
   saveBuilderToHistory();
@@ -375,6 +377,9 @@ function renderBuilderAvatar(state) {
   const preview = document.getElementById('avatarPreview');
   if (!preview) return;
 
+  // 전역 상태 동기화 (렌더링할 때마다)
+  window.builderState = builderState;
+
   // Dicebear 옵션 구성
   const dicebearOptions = {
     seed: state.seed,
@@ -407,6 +412,7 @@ function renderBuilderAvatar(state) {
 // 옵션 적용
 function applyBuilderOption(part, value) {
   builderState[part] = value;
+  window.builderState = builderState; // 전역 상태 동기화
   renderBuilderAvatar(builderState);
   saveBuilderToHistory();
   saveBuilderToLocalStorage();
@@ -434,6 +440,8 @@ function randomizePart(part) {
     builderState.seed = generateRandomSeed();
   }
   
+  window.builderState = builderState; // 전역 상태 동기화
+  console.log('randomizePart - builderState:', builderState);
   renderBuilderAvatar(builderState);
   setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
   saveBuilderToHistory();
@@ -456,6 +464,7 @@ function undoAvatar() {
   if (builderHistoryIndex > 0) {
     builderHistoryIndex--;
     builderState = JSON.parse(JSON.stringify(builderHistory[builderHistoryIndex]));
+    window.builderState = builderState; // 전역 상태 동기화
     renderBuilderAvatar(builderState);
     setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
     saveBuilderToLocalStorage();
@@ -466,6 +475,7 @@ function redoAvatar() {
   if (builderHistoryIndex < builderHistory.length - 1) {
     builderHistoryIndex++;
     builderState = JSON.parse(JSON.stringify(builderHistory[builderHistoryIndex]));
+    window.builderState = builderState; // 전역 상태 동기화
     renderBuilderAvatar(builderState);
     setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
     saveBuilderToLocalStorage();
@@ -475,6 +485,8 @@ function redoAvatar() {
 // 로컬 스토리지
 function saveBuilderToLocalStorage() {
   try {
+    // 전역 상태 동기화 (저장하기 전)
+    window.builderState = builderState;
     localStorage.setItem('avatarBuilderState', JSON.stringify(builderState));
   } catch (e) {
     console.error('Failed to save to localStorage:', e);
@@ -484,9 +496,11 @@ function saveBuilderToLocalStorage() {
 function loadBuilderFromLocalStorage() {
   try {
     const saved = localStorage.getItem('avatarBuilderState');
-  if (saved) {
+    if (saved) {
       const parsed = JSON.parse(saved);
       builderState = { ...builderState, ...parsed };
+      window.builderState = builderState; // 전역 상태 동기화
+      console.log('Loaded from localStorage:', builderState);
     }
   } catch (e) {
     console.error('Failed to load from localStorage:', e);
