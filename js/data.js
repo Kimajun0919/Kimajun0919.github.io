@@ -373,3 +373,6 @@ const verses = [
         reference: "시편 23편 1절"
     }
 ];
+
+// verses 배열을 전역으로 노출
+window.verses = verses;
