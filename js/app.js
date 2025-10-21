@@ -102,19 +102,14 @@ window.saveAvatar = async function() {
 
 // 현재 아바타 상태 가져오기
 function getCurrentAvatarState() {
-  console.log('getCurrentAvatarState called');
-  console.log('window.builderState:', window.builderState);
-  
   if (typeof window.builderState !== 'undefined' && window.builderState !== null) {
     // builderState가 초기화된 상태인지 확인 (seed가 있는지)
     if (window.builderState.seed && window.builderState.seed !== '') {
-      console.log('Returning builderState with seed:', window.builderState.seed);
       // 깊은 복사로 반환 (참조 문제 방지)
       return JSON.parse(JSON.stringify(window.builderState));
     }
   }
   
-  console.warn('builderState가 초기화되지 않음, 기본값 반환');
   // 기본 상태 반환 (lorelei 스타일 고정)
   return {
     style: 'lorelei',
@@ -465,7 +460,9 @@ window.saveAsImage = async function() {
   // API URL 생성
   let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
   if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
-    apiUrl += `&backgroundColor=${encodeURIComponent(dicebearOptions.backgroundColor.join(','))}`;
+    // backgroundColor에서 # 제거 (Dicebear API는 hex 코드만 받음)
+    const bgColors = dicebearOptions.backgroundColor.map(color => color.replace('#', ''));
+    apiUrl += `&backgroundColor=${bgColors.join(',')}`;
   }
   if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
     apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
@@ -605,7 +602,9 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   // API URL 생성
   let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
   if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
-    apiUrl += `&backgroundColor=${encodeURIComponent(dicebearOptions.backgroundColor.join(','))}`;
+    // backgroundColor에서 # 제거 (Dicebear API는 hex 코드만 받음)
+    const bgColors = dicebearOptions.backgroundColor.map(color => color.replace('#', ''));
+    apiUrl += `&backgroundColor=${bgColors.join(',')}`;
   }
   if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
     apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;

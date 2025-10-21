@@ -27,7 +27,6 @@ function initAvatarBuilder() {
   
   loadBuilderFromLocalStorage();
   window.builderState = builderState; // 전역 상태 동기화
-  console.log('initAvatarBuilder - builderState:', builderState);
   setupBuilderUI();
   renderBuilderAvatar(builderState);
   saveBuilderToHistory();
@@ -383,8 +382,6 @@ function renderBuilderAvatar(state) {
   // 전역 상태 동기화 (렌더링할 때마다)
   window.builderState = builderState;
 
-  console.log('renderBuilderAvatar - state:', state);
-
   // Dicebear 옵션 구성
   const dicebearOptions = {
     seed: state.seed,
@@ -403,8 +400,6 @@ function renderBuilderAvatar(state) {
   if (state.freckles && state.freckles !== '') dicebearOptions.freckles = [state.freckles];
   if (state.hairAccessories && state.hairAccessories !== '') dicebearOptions.hairAccessories = [state.hairAccessories];
 
-  console.log('dicebearOptions:', dicebearOptions);
-
   // 아바타 생성
   const svg = createDicebearAvatar({
     style: state.style,
@@ -412,12 +407,8 @@ function renderBuilderAvatar(state) {
     dicebearOptions: dicebearOptions
   });
 
-  console.log('Generated avatar HTML:', svg);
-
   // SVG 렌더링
   preview.innerHTML = svg;
-  
-  console.log('Preview innerHTML set:', preview.innerHTML);
 }
 
 // 옵션 적용
@@ -452,7 +443,6 @@ function randomizePart(part) {
   }
   
   window.builderState = builderState; // 전역 상태 동기화
-  console.log('randomizePart - builderState:', builderState);
   renderBuilderAvatar(builderState);
   setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
   saveBuilderToHistory();
@@ -511,7 +501,6 @@ function loadBuilderFromLocalStorage() {
       const parsed = JSON.parse(saved);
       builderState = { ...builderState, ...parsed };
       window.builderState = builderState; // 전역 상태 동기화
-      console.log('Loaded from localStorage:', builderState);
     }
   } catch (e) {
     console.error('Failed to load from localStorage:', e);

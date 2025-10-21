@@ -72,8 +72,6 @@ function createDicebearAvatar(options = {}) {
   const seed = options.seed || Date.now().toString();
   const dicebearOptions = options.dicebearOptions || {};
   
-  console.log('createDicebearAvatar called with:', { style, seed, dicebearOptions });
-  
   try {
     // API URL 생성
     let apiUrl = `https://api.dicebear.com/9.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
@@ -84,7 +82,9 @@ function createDicebearAvatar(options = {}) {
     
     // 옵션 추가
     if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
-      apiUrl += `&backgroundColor=${encodeURIComponent(dicebearOptions.backgroundColor.join(','))}`;
+      // backgroundColor에서 # 제거 (Dicebear API는 hex 코드만 받음)
+      const bgColors = dicebearOptions.backgroundColor.map(color => color.replace('#', ''));
+      apiUrl += `&backgroundColor=${bgColors.join(',')}`;
     }
     if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
       apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
@@ -114,10 +114,8 @@ function createDicebearAvatar(options = {}) {
       apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
     }
     
-    console.log('Generated Dicebear API URL:', apiUrl);
-    
     // SVG를 img 태그로 반환 (object-fit: contain으로 비율 유지)
-    const imgHtml = `<img src="${apiUrl}" alt="Avatar" style="width: 100%; height: 100%; display: block; object-fit: contain;" crossorigin="anonymous" onload="console.log('Avatar image loaded successfully')" onerror="console.error('Avatar image failed to load:', this.src)" />`;
+    const imgHtml = `<img src="${apiUrl}" alt="Avatar" style="width: 100%; height: 100%; display: block; object-fit: contain;" crossorigin="anonymous" />`;
     return imgHtml;
   } catch (error) {
     console.error('Error creating Dicebear avatar:', error);
