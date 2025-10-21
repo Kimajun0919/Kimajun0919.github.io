@@ -120,9 +120,6 @@ function getCurrentAvatarState() {
     mouth: 'happy01',
     nose: 'variant01',
     glasses: '',
-    earrings: '',
-    freckles: '',
-    hairAccessories: '',
     backgroundColor: []
   };
 }
@@ -153,9 +150,6 @@ function generateAvatarSVG(avatarData) {
       if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
       if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
       if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
-      if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
-      if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
-      if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
 
       const svg = window.createDicebearAvatar({
         style: style,
@@ -453,9 +447,6 @@ window.saveAsImage = async function() {
   if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
   if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
   if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
-  if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
-  if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
-  if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
 
   // API URL 생성
   let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
@@ -481,15 +472,6 @@ window.saveAsImage = async function() {
   }
   if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
     apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
-  }
-  if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
-    apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
-  }
-  if (dicebearOptions.freckles && dicebearOptions.freckles.length > 0) {
-    apiUrl += `&freckles=${encodeURIComponent(dicebearOptions.freckles.join(','))}`;
-  }
-  if (dicebearOptions.hairAccessories && dicebearOptions.hairAccessories.length > 0) {
-    apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
   }
 
   // img 태그로 아바타 삽입
@@ -595,9 +577,6 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
   if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
   if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
-  if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
-  if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
-  if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
 
   // API URL 생성
   let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
@@ -623,15 +602,6 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   }
   if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
     apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
-  }
-  if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
-    apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
-  }
-  if (dicebearOptions.freckles && dicebearOptions.freckles.length > 0) {
-    apiUrl += `&freckles=${encodeURIComponent(dicebearOptions.freckles.join(','))}`;
-  }
-  if (dicebearOptions.hairAccessories && dicebearOptions.hairAccessories.length > 0) {
-    apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
   }
 
   // img 태그로 아바타 삽입
