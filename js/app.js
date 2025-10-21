@@ -454,12 +454,94 @@ window.saveAsImage = async function() {
       flex-direction: column;
     `;
     
+    // 6. 카드 내부 요소들에 saving-mode 스타일 강제 적용
+    const clonedPhoto = clonedCard.querySelector('.employee-photo');
+    if (clonedPhoto) {
+      clonedPhoto.style.cssText = `
+        width: 872px !important;
+        height: 700px !important;
+        margin: 24px !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        border-radius: 32px 32px 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #fff;
+        clip-path: polygon(
+          0 0, 100% 0, 100% 85%,
+          90% 88%, 80% 90%, 70% 91%, 60% 90%, 50% 88%,
+          40% 90%, 30% 91%, 20% 90%, 10% 88%, 0 85%
+        );
+      `;
+    }
+    
+    const clonedName = clonedCard.querySelector('.employee-name');
+    if (clonedName) {
+      clonedName.style.cssText = `
+        font-size: 64px !important;
+        color: #1d1d1f;
+        font-weight: 600;
+        letter-spacing: -1px;
+        margin: -105px 0 0 0 !important;
+        padding: 120px 68px 12px 68px !important;
+        text-align: left;
+        background: #fff;
+        border-radius: 56px 56px 0 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      `;
+    }
+    
+    const clonedTeam = clonedCard.querySelector('.employee-team');
+    if (clonedTeam) {
+      clonedTeam.style.cssText = `
+        font-size: 32px !important;
+        color: #86868b;
+        font-weight: 500;
+        letter-spacing: 0;
+        margin: 0 !important;
+        padding: 0 68px 20px 68px !important;
+        text-align: left;
+        background: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+      `;
+    }
+    
+    const clonedId = clonedCard.querySelector('.employee-id');
+    if (clonedId) {
+      clonedId.style.cssText = `
+        font-size: 24px !important;
+        color: #a1a1a6;
+        line-height: 1.7;
+        margin: 0 !important;
+        padding: 0 68px 48px 68px !important;
+        text-align: left;
+        font-weight: 400;
+        letter-spacing: 0.2px;
+        background: #fff;
+        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+        border-radius: 0 0 24px 24px;
+      `;
+    }
+    
+    // verse-reference 스타일도 적용
+    const verseRef = clonedCard.querySelector('.verse-reference');
+    if (verseRef) {
+      verseRef.style.cssText = `
+        font-size: 20px !important;
+        color: #999;
+        margin-top: 6px;
+        display: block;
+        opacity: 0.75;
+      `;
+    }
+    
     offscreenContainer.appendChild(clonedCard);
     document.body.appendChild(offscreenContainer);
     
     console.log('오프스크린 컨테이너 생성 완료');
     
-    // 6. 폰트 로드 및 렌더링 대기
+    // 7. 폰트 로드 및 렌더링 대기
     if (document.fonts && document.fonts.ready) {
       await document.fonts.ready;
     }
@@ -467,7 +549,7 @@ window.saveAsImage = async function() {
     
     console.log('캡처 시작...');
     
-    // 7. 고정 크기로 캡처
+    // 8. 고정 크기로 캡처
     const canvas = await html2canvas.default(offscreenContainer, {
       backgroundColor: null,
       useCORS: true,
@@ -482,7 +564,7 @@ window.saveAsImage = async function() {
     
     console.log('캡처 완료:', canvas.width, 'x', canvas.height);
     
-    // 8. 다운로드
+    // 9. 다운로드
     const dataURL = canvas.toDataURL('image/png', 0.95);
     const link = document.createElement('a');
     link.download = `${employee.name}_카드.png`;
@@ -492,7 +574,7 @@ window.saveAsImage = async function() {
     console.log('다운로드 완료');
     alert('이미지가 저장되었습니다!');
     
-    // 9. 오프스크린 컨테이너 제거
+    // 10. 오프스크린 컨테이너 제거
     offscreenContainer.remove();
     
   } catch (error) {
