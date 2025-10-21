@@ -396,203 +396,93 @@ window.downloadAvatar = function(name, employeeId) {
   img.src = 'data:image/svg+xml;base64,' + btoa(svg);
 };
 
-// 이미지로 저장 함수 (결과 페이지용) - 완전히 새로 작성
+// 이미지로 저장 함수 (오프스크린 고정 비율 캡처)
 window.saveAsImage = async function() {
-  console.log('=== 이미지 저장 시작 ===');
+  console.log('=== 이미지 저장 시작 (고정 비율) ===');
   
-  // 1. 현재 직원 정보 가져오기
+  // 1. 현재 직원 정보 확인
   if (!window.currentEmployee) {
     alert('저장할 직원 정보가 없습니다.');
     return;
   }
   
   const employee = window.currentEmployee;
-  console.log('직원 정보:', employee);
+  console.log('직원 정보:', employee.name);
   
-  // 2. 아바타 데이터 파싱
-  let avatarData = employee.avatarData;
-  if (typeof avatarData === 'string') {
-    try {
-      avatarData = JSON.parse(avatarData);
-    } catch (e) {
-      console.error('아바타 데이터 파싱 실패:', e);
-      alert('아바타 데이터를 읽을 수 없습니다.');
-      return;
-    }
-  }
-  console.log('아바타 데이터:', avatarData);
-  
-  // 3. html2canvas 로드
-  const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
-  
-  // 4. 오프스크린 래퍼 생성 (배경 포함)
-  const wrapper = document.createElement('div');
-  wrapper.style.cssText = `
-    position: fixed;
-    left: -99999px;
-    top: 0;
-    width: 2160px;
-    height: 3840px;
-    background: url('assets/images/back.jpg') center/cover no-repeat;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  `;
-  
-  // 5. 카드 생성
-  const card = document.createElement('div');
-  card.style.cssText = `
-    background: #f8f8f8;
-    border-radius: 64px;
-    width: 1840px;
-    height: 3200px;
-    box-shadow: 0 24px 96px rgba(0,0,0,0.12);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  `;
-  
-  // 6. 아바타 영역 생성
-  const photoArea = document.createElement('div');
-  photoArea.style.cssText = `
-    width: 1750px;
-    height: 1400px;
-    margin: 36px 36px 0 36px;
-    border-radius: 40px 40px 0 0;
-    box-shadow: 0 16px 48px rgba(0,0,0,0.12);
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  `;
-  
-  // 7. 아바타 이미지 생성 및 Data URL로 변환
-  const avatarImgHtml = window.createDicebearAvatar(avatarData);
-  console.log('아바타 HTML 생성:', avatarImgHtml.substring(0, 200));
-  
-  // img 태그 HTML에서 src URL 추출
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = avatarImgHtml;
-  const tempImg = tempDiv.querySelector('img');
-  const avatarUrl = tempImg.src;
-  
-  console.log('아바타 URL:', avatarUrl);
-  
-  // Dicebear API에서 SVG 다운로드
-  const svgResponse = await fetch(avatarUrl);
-  const svgText = await svgResponse.text();
-  console.log('SVG 다운로드 완료:', svgText.substring(0, 100));
-  
-  // SVG를 Data URL로 변환
-  const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
-  const reader = new FileReader();
-  const svgDataUrl = await new Promise((resolve) => {
-    reader.onloadend = () => resolve(reader.result);
-    reader.readAsDataURL(svgBlob);
-  });
-  
-  console.log('SVG Data URL 생성 완료');
-  
-  // Data URL을 사용한 img 요소 생성
-  const avatarImg = document.createElement('img');
-  avatarImg.src = svgDataUrl;
-  avatarImg.style.cssText = `
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  `;
-  
-  // 이미지 로드 완료를 Promise로 대기
-  await new Promise((resolve, reject) => {
-    avatarImg.onload = () => {
-      console.log('아바타 이미지 렌더링 완료');
-      resolve();
-    };
-    avatarImg.onerror = (error) => {
-      console.error('아바타 이미지 로드 실패:', error);
-      resolve();
-    };
-  });
-  
-  photoArea.appendChild(avatarImg);
-  
-  // 8. 이름 영역
-  const nameArea = document.createElement('div');
-  nameArea.style.cssText = `
-    font-size: 104px;
-    font-weight: 700;
-    padding: 160px 96px 16px 96px;
-    margin: -120px 0 0 0;
-    background: #fff;
-    text-align: left;
-  `;
-  nameArea.textContent = employee.name;
-  
-  // 9. 팀 영역
-  const teamArea = document.createElement('div');
-  teamArea.style.cssText = `
-    font-size: 48px;
-    padding: 0 96px 28px 96px;
-    background: #fff;
-    text-align: left;
-    color: #666;
-  `;
-  teamArea.textContent = employee.team;
-  
-  // 10. 말씀 영역
-  const verseArea = document.createElement('div');
-  verseArea.style.cssText = `
-    font-size: 36px;
-    line-height: 1.8;
-    padding: 0 96px 96px 96px;
-    background: #fff;
-    border-radius: 0 0 36px 36px;
-    text-align: left;
-    flex: 1;
-    overflow: hidden;
-  `;
-  verseArea.innerHTML = employee.verseContent 
-    ? `${employee.verseContent}<br><span style="display:block;margin-top:6px;opacity:0.75;">${employee.verseReference || ''}</span>` 
-    : '';
-  
-  // 11. 카드 조립
-  card.appendChild(photoArea);
-  card.appendChild(nameArea);
-  card.appendChild(teamArea);
-  card.appendChild(verseArea);
-  wrapper.appendChild(card);
-  document.body.appendChild(wrapper);
-  
-  console.log('DOM 구조 생성 완료');
-  
-  // 12. 폰트 로드 대기
-  if (document.fonts && document.fonts.ready) {
-    await document.fonts.ready;
+  // 2. 원본 result-card 가져오기
+  const originalCard = document.getElementById('resultCard');
+  if (!originalCard) {
+    alert('결과 카드를 찾을 수 없습니다.');
+    return;
   }
   
-  // 13. 추가 렌더링 대기 (SVG 렌더링 보장)
-  await new Promise(resolve => setTimeout(resolve, 500));
-  
-  console.log('렌더링 대기 완료');
-  
-  // 14. html2canvas로 캡처
   try {
-    const canvas = await html2canvas.default(wrapper, {
-      width: 2160,
-      height: 3840,
-      windowWidth: 2160,
-      windowHeight: 3840,
+    // 3. html2canvas 로드
+    const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
+    
+    // 4. 오프스크린에 고정 크기 컨테이너 생성
+    const offscreenContainer = document.createElement('div');
+    offscreenContainer.className = 'result-container saving-mode';
+    offscreenContainer.style.cssText = `
+      position: fixed;
+      left: -9999px;
+      top: 0;
+      width: 1080px !important;
+      height: 1440px !important;
+      background-image: url('assets/images/back.jpg');
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+    `;
+    
+    // 5. 카드 복제 (deep clone)
+    const clonedCard = originalCard.cloneNode(true);
+    clonedCard.style.cssText = `
+      width: 920px !important;
+      background: #f8f8f8;
+      border-radius: 48px;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.12);
+      overflow: hidden;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    `;
+    
+    offscreenContainer.appendChild(clonedCard);
+    document.body.appendChild(offscreenContainer);
+    
+    console.log('오프스크린 컨테이너 생성 완료');
+    
+    // 6. 폰트 로드 및 렌더링 대기
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
+    await new Promise(resolve => setTimeout(resolve, 300));
+    
+    console.log('캡처 시작...');
+    
+    // 7. 고정 크기로 캡처
+    const canvas = await html2canvas.default(offscreenContainer, {
       backgroundColor: null,
       useCORS: true,
       allowTaint: true,
-      logging: true,
-      scale: 1
+      logging: false,
+      scale: 2, // 고해상도 (실제 출력: 2160x2880px)
+      width: 1080,
+      height: 1440,
+      windowWidth: 1080,
+      windowHeight: 1440
     });
     
     console.log('캡처 완료:', canvas.width, 'x', canvas.height);
     
-    // 15. 다운로드
+    // 8. 다운로드
     const dataURL = canvas.toDataURL('image/png', 0.95);
     const link = document.createElement('a');
     link.download = `${employee.name}_카드.png`;
@@ -602,13 +492,17 @@ window.saveAsImage = async function() {
     console.log('다운로드 완료');
     alert('이미지가 저장되었습니다!');
     
+    // 9. 오프스크린 컨테이너 제거
+    offscreenContainer.remove();
+    
   } catch (error) {
     console.error('캡처 오류:', error);
     alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
+    // 오류 시에도 오프스크린 컨테이너 제거
+    const offscreen = document.querySelector('.result-container.saving-mode');
+    if (offscreen) offscreen.remove();
   }
   
-  // 16. 정리
-  wrapper.remove();
   console.log('=== 이미지 저장 완료 ===');
 };
 
