@@ -237,7 +237,7 @@ function createBasicAvatarSVG(avatarData) {
   `;
 }
 
-// 직원 검색 함수 (HTML에서 호출)
+// 검색 함수 (HTML에서 호출)
 window.searchEmployee = async function() {
   const name = document.getElementById('searchName').value.trim();
   const team = document.getElementById('searchTeam').value.trim();
@@ -276,14 +276,14 @@ window.searchEmployee = async function() {
 
       if (filteredEmployees.length > 0) {
         displaySearchResults(filteredEmployees);
-        status.textContent = `✅ ${filteredEmployees.length}명의 직원을 찾았습니다!`;
+        status.textContent = `✅ ${filteredEmployees.length}명을 찾았습니다!`;
         status.style.color = "#27ae60";
       } else {
-        status.textContent = "❌ 해당 조건에 맞는 직원이 없습니다.";
+        status.textContent = "❌ 해당 조건에 맞는 사람이 없습니다.";
         status.style.color = "#e74c3c";
       }
     } else {
-      status.textContent = "❌ 저장된 직원이 없습니다.";
+      status.textContent = "❌ 저장된 데이터가 없습니다.";
       status.style.color = "#e74c3c";
     }
   } catch (error) {
@@ -342,9 +342,9 @@ function displaySearchResults(employees) {
   // searchPage에 그대로 유지 (resultPage로 이동하지 않음)
 }
 
-// 직원 상세 결과 표시 (HTML에서 호출)
+// 상세 결과 표시 (HTML에서 호출)
 window.showEmployeeResult = function(employee) {
-  // 현재 직원 정보를 전역 변수에 저장 (다운로드용)
+  // 현재 정보를 전역 변수에 저장 (다운로드용)
   window.currentEmployee = employee;
   
   // 카드 내용 생성
@@ -393,15 +393,15 @@ window.showEmployeeResult = function(employee) {
   showPage('resultPage');
 };
 
-// 직원 삭제 함수 (HTML에서 호출)
+// 삭제 함수 (HTML에서 호출)
 window.deleteEmployee = async function(employeeId) {
-  if (!confirm('정말로 이 직원을 삭제하시겠습니까?')) {
+  if (!confirm('정말로 이 데이터를 삭제하시겠습니까?')) {
     return;
   }
 
   try {
     await remove(ref(db, `employees/${employeeId}`));
-    alert('직원이 삭제되었습니다.');
+    alert('데이터가 삭제되었습니다.');
     showPage('searchPage');
   } catch (error) {
     alert('삭제 실패: ' + error.message);
@@ -454,7 +454,7 @@ window.saveAsImage = async function() {
     const characterDiv = resultCard.querySelector('.line-character');
     const originalHTML = characterDiv ? characterDiv.innerHTML : '';
     
-    // 현재 직원의 아바타 데이터로 PNG 생성
+    // 현재 아바타 데이터로 PNG 생성
     if (characterDiv && window.currentEmployee && window.currentEmployee.avatarData) {
       try {
         const avatarData = typeof window.currentEmployee.avatarData === 'string' 
