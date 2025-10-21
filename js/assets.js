@@ -1,6 +1,58 @@
 // ===== Dicebear HTTP API 기반 아바타 에셋 =====
 // lorelei 스타일로 고정
 
+// 헤어스타일 레이블
+const HAIR_LABELS = {
+  'variant01': '짧은머리1',
+  'variant02': '짧은머리2',
+  'variant03': '짧은머리3',
+  'variant04': '짧은머리4',
+  'variant05': '단발1',
+  'variant06': '단발2',
+  'variant07': '단발3',
+  'variant08': '단발4',
+  'variant09': '보브컷1',
+  'variant10': '보브컷2',
+  'variant11': '보브컷3',
+  'variant12': '보브컷4',
+  'variant13': '중단발1',
+  'variant14': '중단발2',
+  'variant15': '중단발3',
+  'variant16': '중단발4',
+  'variant17': '긴머리1',
+  'variant18': '긴머리2',
+  'variant19': '긴머리3',
+  'variant20': '긴머리4',
+  'variant21': '웨이브1',
+  'variant22': '웨이브2',
+  'variant23': '웨이브3',
+  'variant24': '웨이브4',
+  'variant25': '곱슬머리1',
+  'variant26': '곱슬머리2',
+  'variant27': '곱슬머리3',
+  'variant28': '곱슬머리4',
+  'variant29': '포니테일1',
+  'variant30': '포니테일2',
+  'variant31': '포니테일3',
+  'variant32': '포니테일4',
+  'variant33': '번1',
+  'variant34': '번2',
+  'variant35': '번3',
+  'variant36': '번4',
+  'variant37': '땋은머리1',
+  'variant38': '땋은머리2',
+  'variant39': '땋은머리3',
+  'variant40': '땋은머리4',
+  'variant41': '앞머리1',
+  'variant42': '앞머리2',
+  'variant43': '앞머리3',
+  'variant44': '앞머리4',
+  'variant45': '옆머리1',
+  'variant46': '옆머리2',
+  'variant47': '특이1',
+  'variant48': '특이2'
+};
+
 // lorelei 스타일 옵션
 const LORELEI_OPTIONS = {
   hair: ['variant01', 'variant02', 'variant03', 'variant04', 'variant05', 'variant06', 'variant07', 'variant08', 'variant09', 'variant10', 'variant11', 'variant12', 'variant13', 'variant14', 'variant15', 'variant16', 'variant17', 'variant18', 'variant19', 'variant20', 'variant21', 'variant22', 'variant23', 'variant24', 'variant25', 'variant26', 'variant27', 'variant28', 'variant29', 'variant30', 'variant31', 'variant32', 'variant33', 'variant34', 'variant35', 'variant36', 'variant37', 'variant38', 'variant39', 'variant40', 'variant41', 'variant42', 'variant43', 'variant44', 'variant45', 'variant46', 'variant47', 'variant48'],
@@ -80,6 +132,7 @@ const AVATAR_COLORS = {
 };
 
 // 전역 변수로 노출
+window.HAIR_LABELS = HAIR_LABELS;
 window.LORELEI_OPTIONS = LORELEI_OPTIONS;
 window.AVATAR_COLORS = AVATAR_COLORS;
 window.createDicebearAvatar = createDicebearAvatar;
