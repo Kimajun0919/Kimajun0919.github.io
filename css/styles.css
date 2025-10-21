@@ -484,9 +484,9 @@ input[type="file"] {
   position: relative;
 }
 
-/* 로고 스타일 */
+/* 로고 스타일 - 기본적으로 숨김 */
 .result-logo {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   position: absolute;
