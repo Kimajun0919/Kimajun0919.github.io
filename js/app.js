@@ -467,19 +467,36 @@ window.saveAsImage = async function() {
     overflow: hidden;
   `;
   
-  // 7. 아바타 이미지 생성 및 삽입
+  // 7. 아바타 이미지 생성 및 Data URL로 변환
   const avatarImgHtml = window.createDicebearAvatar(avatarData);
   console.log('아바타 HTML 생성:', avatarImgHtml.substring(0, 200));
   
-  // img 태그 HTML에서 src 추출
+  // img 태그 HTML에서 src URL 추출
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = avatarImgHtml;
   const tempImg = tempDiv.querySelector('img');
+  const avatarUrl = tempImg.src;
   
-  // 새로운 img 요소 생성 (html2canvas 호환성 향상)
+  console.log('아바타 URL:', avatarUrl);
+  
+  // Dicebear API에서 SVG 다운로드
+  const svgResponse = await fetch(avatarUrl);
+  const svgText = await svgResponse.text();
+  console.log('SVG 다운로드 완료:', svgText.substring(0, 100));
+  
+  // SVG를 Data URL로 변환
+  const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+  const reader = new FileReader();
+  const svgDataUrl = await new Promise((resolve) => {
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(svgBlob);
+  });
+  
+  console.log('SVG Data URL 생성 완료');
+  
+  // Data URL을 사용한 img 요소 생성
   const avatarImg = document.createElement('img');
-  avatarImg.src = tempImg.src;
-  avatarImg.crossOrigin = 'anonymous';
+  avatarImg.src = svgDataUrl;
   avatarImg.style.cssText = `
     width: 100%;
     height: 100%;
@@ -489,12 +506,12 @@ window.saveAsImage = async function() {
   // 이미지 로드 완료를 Promise로 대기
   await new Promise((resolve, reject) => {
     avatarImg.onload = () => {
-      console.log('아바타 이미지 로드 완료');
+      console.log('아바타 이미지 렌더링 완료');
       resolve();
     };
     avatarImg.onerror = (error) => {
       console.error('아바타 이미지 로드 실패:', error);
-      resolve(); // 에러여도 계속 진행
+      resolve();
     };
   });
   
@@ -555,7 +572,7 @@ window.saveAsImage = async function() {
   }
   
   // 13. 추가 렌더링 대기 (SVG 렌더링 보장)
-  await new Promise(resolve => setTimeout(resolve, 300));
+  await new Promise(resolve => setTimeout(resolve, 500));
   
   console.log('렌더링 대기 완료');
   
@@ -610,15 +627,28 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   photo.className = 'employee-photo';
   photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
 
-  // 아바타 이미지 생성 (html2canvas 호환성 향상)
+  // 아바타 이미지 생성 및 Data URL로 변환
   const avatarImgHtml = generateAvatarSVG(avatarData);
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = avatarImgHtml;
   const tempImg = tempDiv.querySelector('img');
+  const avatarUrl = tempImg.src;
   
+  // Dicebear API에서 SVG 다운로드
+  const svgResponse = await fetch(avatarUrl);
+  const svgText = await svgResponse.text();
+  
+  // SVG를 Data URL로 변환
+  const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+  const reader = new FileReader();
+  const svgDataUrl = await new Promise((resolve) => {
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(svgBlob);
+  });
+  
+  // Data URL을 사용한 img 요소 생성
   const avatarImg = document.createElement('img');
-  avatarImg.src = tempImg.src;
-  avatarImg.crossOrigin = 'anonymous';
+  avatarImg.src = svgDataUrl;
   avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
   
   // 이미지 로드 대기
