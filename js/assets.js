@@ -199,11 +199,11 @@ const AVATAR_ASSETS = {
   },
 
   hair: {
-    short_01: `
+    short_modern: `
       <defs>
-        <linearGradient id="hairGradient_short1" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="hairGradient_short_modern" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
-          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.85" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.88" />
         </linearGradient>
         <filter id="hairShadow">
           <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
@@ -212,216 +212,623 @@ const AVATAR_ASSETS = {
           <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      <path d="M 256 135 Q 155 138 115 205 Q 112 180 115 160 Q 118 110 256 95 Q 394 110 397 160 Q 400 180 400 205 Q 357 138 256 135 Z" 
-            fill="url(#hairGradient_short1)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <path d="M 175 140 Q 215 125 256 130 Q 297 125 337 140" 
-            stroke="rgba(255,255,255,0.25)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M 190 150 Q 220 140 256 143 Q 292 140 322 150" 
-            stroke="rgba(0,0,0,0.08)" stroke-width="1.5" fill="none"/>
-      <ellipse cx="200" cy="145" rx="12" ry="8" fill="rgba(255,255,255,0.15)"/>
-      <ellipse cx="312" cy="145" rx="12" ry="8" fill="rgba(255,255,255,0.15)"/>
+      <!-- 메인 헤어 볼륨 -->
+      <path d="M 256 115 Q 145 118 110 195 Q 108 170 112 145 Q 120 105 180 95 Q 218 92 256 93 Q 294 92 332 95 Q 392 105 400 145 Q 404 170 404 195 Q 369 118 256 115 Z" 
+            fill="url(#hairGradient_short_modern)" filter="url(#hairShadow)"/>
+      <!-- 앞머리 레이어 -->
+      <path d="M 200 115 Q 228 108 256 110 Q 284 108 312 115 Q 295 130 256 135 Q 217 130 200 115 Z" 
+            fill="url(#hairGradient_short_modern)" opacity="0.9"/>
+      <!-- 하이라이트 -->
+      <path d="M 165 130 Q 210 110 256 115 Q 302 110 347 130" 
+            stroke="rgba(255,255,255,0.35)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M 185 145 Q 220 125 256 128 Q 292 125 327 145" 
+            stroke="rgba(255,255,255,0.22)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 텍스처 디테일 -->
+      <path d="M 175 135 L 180 145 M 200 125 L 205 138 M 225 118 L 228 132" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M 337 135 L 332 145 M 312 125 L 307 138 M 287 118 L 284 132" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="1.5" stroke-linecap="round"/>
+      <!-- 볼륨 하이라이트 -->
+      <ellipse cx="190" cy="135" rx="16" ry="12" fill="rgba(255,255,255,0.2)"/>
+      <ellipse cx="322" cy="135" rx="16" ry="12" fill="rgba(255,255,255,0.2)"/>
+      <!-- 얼굴 윤곽선 -->
+      <path d="M 115 185 Q 120 195 128 205" stroke="rgba(0,0,0,0.12)" stroke-width="2" fill="none"/>
+      <path d="M 397 185 Q 392 195 384 205" stroke="rgba(0,0,0,0.12)" stroke-width="2" fill="none"/>
     `,
-    short_02: `
+    short_messy: `
       <defs>
-        <linearGradient id="hairGradient_short2" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="hairGradient_short_messy" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.85" />
+        </linearGradient>
+      </defs>
+      <!-- 베이스 헤어 -->
+      <path d="M 256 105 Q 140 110 108 190 Q 106 165 110 140 Q 118 100 256 95 Q 394 100 402 140 Q 406 165 404 190 Q 372 110 256 105 Z" 
+            fill="url(#hairGradient_short_messy)" filter="url(#hairShadow)"/>
+      <!-- 볼륨감 있는 앞머리 -->
+      <path d="M 220 108 Q 238 95 256 98 Q 274 95 292 108 Q 280 120 256 125 Q 232 120 220 108 Z" 
+            fill="url(#hairGradient_short_messy)" opacity="0.95"/>
+      <path d="M 190 118 Q 210 105 230 110 L 225 125 Z" 
+            fill="url(#hairGradient_short_messy)" opacity="0.9"/>
+      <path d="M 322 118 Q 302 105 282 110 L 287 125 Z" 
+            fill="url(#hairGradient_short_messy)" opacity="0.9"/>
+      <!-- 삐죽한 머리카락 -->
+      <path d="M 256 95 L 253 85 M 268 98 L 270 88 M 244 98 L 240 88" 
+            stroke="var(--hair-color)" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+      <!-- 하이라이트 -->
+      <path d="M 155 138 Q 205 108 256 112 Q 307 108 357 138" 
+            stroke="rgba(255,255,255,0.38)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="180" cy="125" rx="18" ry="13" fill="rgba(255,255,255,0.25)"/>
+      <ellipse cx="332" cy="125" rx="18" ry="13" fill="rgba(255,255,255,0.25)"/>
+      <!-- 텍스처 -->
+      <path d="M 165 150 Q 180 140 195 148 M 347 150 Q 332 140 317 148" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="2" stroke-linecap="round"/>
+    `,
+    medium_side: `
+      <defs>
+        <linearGradient id="hairGradient_medium_side" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.82" />
+        </linearGradient>
+      </defs>
+      <!-- 베이스 -->
+      <path d="M 256 100 Q 125 105 100 210 L 100 245 Q 105 225 118 210 Q 125 155 256 135 Q 387 155 394 210 Q 407 225 412 245 L 412 210 Q 387 105 256 100 Z" 
+            fill="url(#hairGradient_medium_side)" filter="url(#hairShadow)"/>
+      <!-- 사이드 파트 -->
+      <path d="M 220 135 Q 238 115 256 120 L 256 150 Q 240 145 225 155 Z" 
+            fill="url(#hairGradient_medium_side)" opacity="0.92"/>
+      <path d="M 292 135 Q 274 115 256 120 L 256 150 Q 272 145 287 155 Z" 
+            fill="url(#hairGradient_medium_side)" opacity="0.88"/>
+      <!-- 옆머리 볼륨 -->
+      <path d="M 118 200 Q 125 215 140 228 M 394 200 Q 387 215 372 228" 
+            stroke="rgba(0,0,0,0.12)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 하이라이트 -->
+      <path d="M 135 165 Q 190 140 256 145 Q 322 140 377 165" 
+            stroke="rgba(255,255,255,0.28)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M 150 190 Q 200 165 256 168 Q 312 165 362 190" 
+            stroke="rgba(255,255,255,0.18)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 볼륨 하이라이트 -->
+      <ellipse cx="175" cy="155" rx="17" ry="12" fill="rgba(255,255,255,0.22)"/>
+      <ellipse cx="337" cy="155" rx="17" ry="12" fill="rgba(255,255,255,0.22)"/>
+      <!-- 텍스처 -->
+      <path d="M 145 175 Q 165 165 185 175 M 367 175 Q 347 165 327 175" 
+            stroke="rgba(0,0,0,0.08)" stroke-width="2" stroke-linecap="round"/>
+    `,
+    long_straight: `
+      <defs>
+        <linearGradient id="hairGradient_long_straight" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="70%" style="stop-color:var(--hair-color);stop-opacity:0.9" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.78" />
+        </linearGradient>
+      </defs>
+      <!-- 메인 롱 헤어 -->
+      <path d="M 256 100 Q 105 105 92 270 L 92 325 Q 98 300 115 275 Q 125 220 256 150 Q 387 220 397 275 Q 414 300 420 325 L 420 270 Q 407 105 256 100 Z" 
+            fill="url(#hairGradient_long_straight)" filter="url(#hairShadow)"/>
+      <!-- 가르마 -->
+      <line x1="256" y1="105" x2="256" y2="160" 
+            stroke="rgba(0,0,0,0.15)" stroke-width="1.5"/>
+      <path d="M 246 110 Q 256 115 266 110" 
+            fill="rgba(0,0,0,0.08)"/>
+      <!-- 앞머리 레이어 -->
+      <path d="M 200 145 Q 228 130 256 135 Q 284 130 312 145 Q 295 158 256 160 Q 217 158 200 145 Z" 
+            fill="url(#hairGradient_long_straight)" opacity="0.85"/>
+      <!-- 하이라이트 -->
+      <path d="M 120 200 Q 180 155 256 162 Q 332 155 392 200" 
+            stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M 135 235 Q 190 195 256 200 Q 322 195 377 235" 
+            stroke="rgba(255,255,255,0.2)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- 옆머리 흐름 -->
+      <path d="M 108 250 Q 128 235 152 245" 
+            stroke="rgba(0,0,0,0.15)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M 404 250 Q 384 235 360 245" 
+            stroke="rgba(0,0,0,0.15)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 볼륨 하이라이트 -->
+      <ellipse cx="150" cy="195" rx="20" ry="14" fill="rgba(255,255,255,0.22)"/>
+      <ellipse cx="362" cy="195" rx="20" ry="14" fill="rgba(255,255,255,0.22)"/>
+    `,
+    bun_high: `
+      <defs>
+        <radialGradient id="bunHighGradient" cx="42%" cy="32%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.75" />
+        </radialGradient>
+      </defs>
+      <!-- 베이스 헤어 -->
+      <path d="M 256 130 Q 160 135 118 205 L 118 175 Q 122 120 256 108 Q 390 120 394 175 L 394 205 Q 352 135 256 130 Z" 
+            fill="url(#hairGradient_short_modern)" filter="url(#hairShadow)"/>
+      <!-- 묶은 부분 -->
+      <ellipse cx="256" cy="105" rx="48" ry="32" fill="var(--hair-color)" opacity="0.92" filter="url(#hairShadow)"/>
+      <path d="M 220 100 Q 256 95 292 100" 
+            stroke="rgba(0,0,0,0.2)" stroke-width="2" fill="none"/>
+      <!-- 상투 -->
+      <circle cx="256" cy="68" r="52" fill="url(#bunHighGradient)" filter="url(#hairShadow)"/>
+      <circle cx="256" cy="68" r="52" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+      <!-- 상투 하이라이트 -->
+      <ellipse cx="232" cy="58" rx="18" ry="14" fill="rgba(255,255,255,0.3)"/>
+      <ellipse cx="268" cy="72" rx="14" ry="10" fill="rgba(0,0,0,0.12)"/>
+      <!-- 상투 디테일 -->
+      <path d="M 222 72 Q 256 82 290 72" 
+            stroke="rgba(0,0,0,0.2)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 228 80 Q 256 88 284 80" 
+            stroke="rgba(255,255,255,0.18)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- 잔머리 -->
+      <path d="M 195 125 L 190 135 M 210 118 L 208 128" 
+            stroke="var(--hair-color)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <path d="M 317 125 L 322 135 M 302 118 L 304 128" 
+            stroke="var(--hair-color)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    `,
+    bob_modern: `
+      <defs>
+        <linearGradient id="bobModernGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.87" />
+        </linearGradient>
+      </defs>
+      <!-- 베이스 밥 -->
+      <path d="M 256 112 Q 162 118 120 198 Q 118 278 168 292 Q 210 305 256 282 Q 302 305 344 292 Q 394 278 394 198 Q 350 118 256 112 Z" 
+            fill="url(#bobModernGradient)" filter="url(#hairShadow)"/>
+      <!-- 앞머리 -->
+      <path d="M 190 140 Q 223 125 256 130 Q 289 125 322 140 Q 305 152 256 158 Q 207 152 190 140 Z" 
+            fill="url(#bobModernGradient)" opacity="0.95"/>
+      <!-- 옆머리 볼륨 -->
+      <ellipse cx="178" cy="225" rx="24" ry="42" fill="rgba(0,0,0,0.11)" opacity="0.9"/>
+      <ellipse cx="334" cy="225" rx="24" ry="42" fill="rgba(0,0,0,0.11)" opacity="0.9"/>
+      <!-- 하이라이트 -->
+      <path d="M 145 192 Q 192 142 256 148 Q 320 142 367 192" 
+            stroke="rgba(255,255,255,0.32)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- 옆머리 하이라이트 -->
+      <path d="M 168 250 Q 188 265 208 268" 
+            stroke="rgba(255,255,255,0.2)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M 344 250 Q 324 265 304 268" 
+            stroke="rgba(255,255,255,0.2)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 텍스처 -->
+      <path d="M 155 215 Q 170 205 185 215 M 357 215 Q 342 205 327 215" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="2" stroke-linecap="round"/>
+      <!-- 볼륨 하이라이트 -->
+      <ellipse cx="200" cy="165" rx="16" ry="12" fill="rgba(255,255,255,0.22)"/>
+      <ellipse cx="312" cy="165" rx="16" ry="12" fill="rgba(255,255,255,0.22)"/>
+    `,
+    wavy_long: `
+      <defs>
+        <linearGradient id="wavyLongGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="80%" style="stop-color:var(--hair-color);stop-opacity:0.9" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.78" />
+        </linearGradient>
+      </defs>
+      <!-- 웨이브 메인 -->
+      <path d="M 256 108 C 130 138, 88 272, 132 405 Q 182 295 256 218 Q 330 295 380 405 C 424 272, 382 138, 256 108 Z" 
+            fill="url(#wavyLongGradient)" filter="url(#hairShadow)"/>
+      <!-- 웨이브 레이어 1 -->
+      <path d="M 138 198 Q 195 132 256 142 Q 317 132 374 198" 
+            stroke="rgba(255,255,255,0.35)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+      <!-- 웨이브 레이어 2 -->
+      <path d="M 155 242 Q 208 195 256 205 Q 304 195 357 242" 
+            stroke="rgba(255,255,255,0.25)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <!-- 웨이브 레이어 3 -->
+      <path d="M 172 285 Q 217 252 256 260 Q 295 252 340 285" 
+            stroke="rgba(255,255,255,0.15)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 그림자 웨이브 -->
+      <path d="M 190 330 Q 228 305 256 310 Q 284 305 322 330" 
+            stroke="rgba(0,0,0,0.12)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- 볼륨 하이라이트 -->
+      <ellipse cx="165" cy="230" rx="17" ry="13" fill="rgba(255,255,255,0.25)"/>
+      <ellipse cx="347" cy="230" rx="17" ry="13" fill="rgba(255,255,255,0.25)"/>
+      <!-- 앞머리 -->
+      <path d="M 210 135 Q 233 120 256 125 Q 279 120 302 135" 
+            fill="url(#wavyLongGradient)" opacity="0.88"/>
+    `,
+    curly_natural: `
+      <defs>
+        <linearGradient id="curlyNaturalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.84" />
+        </linearGradient>
+        <radialGradient id="curlHighlight" cx="38%" cy="35%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:0.85" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.55" />
+        </radialGradient>
+      </defs>
+      <!-- 곱슬머리 베이스 -->
+      <path d="M 256 105 Q 120 112 98 225 Q 93 300 138 392 Q 195 285 256 228 Q 317 285 374 392 Q 419 300 417 225 Q 392 112 256 105 Z" 
+            fill="url(#curlyNaturalGradient)" filter="url(#hairShadow)"/>
+      <!-- 큰 컬 -->
+      <circle cx="152" cy="175" r="26" fill="url(#curlHighlight)"/>
+      <circle cx="360" cy="175" r="26" fill="url(#curlHighlight)"/>
+      <circle cx="182" cy="148" r="22" fill="url(#curlHighlight)"/>
+      <circle cx="330" cy="148" r="22" fill="url(#curlHighlight)"/>
+      <!-- 중간 컬 -->
+      <circle cx="212" cy="128" r="19" fill="url(#curlHighlight)"/>
+      <circle cx="300" cy="128" r="19" fill="url(#curlHighlight)"/>
+      <circle cx="256" cy="118" r="17" fill="url(#curlHighlight)"/>
+      <!-- 작은 컬 -->
+      <circle cx="235" cy="120" r="14" fill="url(#curlHighlight)"/>
+      <circle cx="277" cy="120" r="14" fill="url(#curlHighlight)"/>
+      <!-- 컬 하이라이트 -->
+      <ellipse cx="145" cy="220" rx="16" ry="22" fill="rgba(255,255,255,0.22)"/>
+      <ellipse cx="367" cy="220" rx="16" ry="22" fill="rgba(255,255,255,0.22)"/>
+      <!-- 컬 디테일 -->
+      <path d="M 160 200 Q 178 192 188 185" 
+            stroke="rgba(255,255,255,0.25)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M 352 200 Q 334 192 324 185" 
+            stroke="rgba(255,255,255,0.25)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- 텍스처 -->
+      <path d="M 170 240 Q 185 230 195 240 M 342 240 Q 327 230 317 240" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="2" stroke-linecap="round"/>
+    `,
+    ponytail_high: `
+      <defs>
+        <linearGradient id="ponytailHighGradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
           <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.88" />
         </linearGradient>
       </defs>
-      <path d="M 256 115 Q 135 118 105 185 Q 105 150 108 130 Q 113 100 256 90 Q 399 100 404 130 Q 407 150 407 185 Q 377 118 256 115 Z" 
-            fill="url(#hairGradient_short2)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <path d="M 160 125 Q 208 105 256 110 Q 304 105 352 125" 
+      <!-- 베이스 -->
+      <path d="M 256 132 Q 162 136 120 205 L 120 170 Q 124 118 256 105 Q 388 118 392 170 L 392 205 Q 350 136 256 132 Z" 
+            fill="url(#hairGradient_short_modern)" filter="url(#hairShadow)"/>
+      <!-- 묶은 부분 타원 -->
+      <ellipse cx="256" cy="105" rx="46" ry="30" fill="var(--hair-color)" opacity="0.95"/>
+      <!-- 머리끈 -->
+      <rect x="240" y="95" width="32" height="12" rx="6" fill="rgba(0,0,0,0.25)"/>
+      <rect x="242" y="96" width="28" height="10" rx="5" fill="#F4A7A9"/>
+      <ellipse cx="256" cy="101" rx="4" ry="3" fill="rgba(255,255,255,0.4)"/>
+      <!-- 포니테일 -->
+      <path d="M 256 90 Q 248 68 250 45 Q 251 30 252 20" 
+            stroke="var(--hair-color)" stroke-width="24" fill="none" stroke-linecap="round" opacity="0.95" filter="url(#hairShadow)"/>
+      <!-- 포니테일 끝 -->
+      <ellipse cx="252" cy="18" rx="15" ry="20" fill="url(#ponytailHighGradient)"/>
+      <!-- 포니테일 하이라이트 -->
+      <path d="M 246 50 Q 249 35 251 22" 
             stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <ellipse cx="185" cy="118" rx="18" ry="12" fill="rgba(255,255,255,0.18)"/>
-      <ellipse cx="327" cy="118" rx="18" ry="12" fill="rgba(255,255,255,0.18)"/>
-      <path d="M 175 135 Q 215 120 256 125 Q 297 120 337 135" 
-            stroke="rgba(0,0,0,0.1)" stroke-width="2" fill="none"/>
+      <ellipse cx="248" cy="60" rx="5" ry="8" fill="rgba(255,255,255,0.2)"/>
+      <!-- 잔머리 -->
+      <path d="M 200 128 L 195 138 M 215 122 L 212 132 M 312 128 L 317 138 M 297 122 L 300 132" 
+            stroke="var(--hair-color)" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
     `,
-    medium_01: `
+    pixie_cut: `
       <defs>
-        <linearGradient id="hairGradient_medium1" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="pixieGradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
-          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.82" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.9" />
         </linearGradient>
       </defs>
-      <path d="M 256 95 Q 115 98 95 205 L 95 240 Q 98 220 115 205 Q 118 148 256 130 Q 394 148 397 205 Q 414 220 417 240 L 417 205 Q 397 98 256 95 Z" 
-            fill="url(#hairGradient_medium1)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <path d="M 125 160 Q 185 130 256 135 Q 327 130 387 160" 
-            stroke="rgba(255,255,255,0.22)" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M 140 180 Q 195 155 256 158 Q 317 155 372 180" 
-            stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <ellipse cx="170" cy="145" rx="15" ry="10" fill="rgba(255,255,255,0.2)"/>
-      <ellipse cx="342" cy="145" rx="15" ry="10" fill="rgba(255,255,255,0.2)"/>
-      <path d="M 115 200 Q 125 210 138 218" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none"/>
-      <path d="M 397 200 Q 387 210 374 218" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none"/>
+      <!-- 짧은 픽시컷 베이스 -->
+      <path d="M 256 125 Q 155 128 115 200 Q 113 175 116 155 Q 122 115 256 105 Q 390 115 396 155 Q 399 175 399 200 Q 357 128 256 125 Z" 
+            fill="url(#pixieGradient)" filter="url(#hairShadow)"/>
+      <!-- 옆머리 레이어 -->
+      <path d="M 135 175 Q 145 165 158 170 L 152 190 Z" 
+            fill="url(#pixieGradient)" opacity="0.85"/>
+      <path d="M 377 175 Q 367 165 354 170 L 360 190 Z" 
+            fill="url(#pixieGradient)" opacity="0.85"/>
+      <!-- 앞머리 스파이크 -->
+      <path d="M 230 115 Q 243 105 256 108 Q 269 105 282 115" 
+            fill="url(#pixieGradient)" opacity="0.95"/>
+      <path d="M 256 105 L 254 95 M 245 108 L 242 98 M 267 108 L 270 98" 
+            stroke="var(--hair-color)" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+      <!-- 하이라이트 -->
+      <path d="M 170 145 Q 213 120 256 125 Q 299 120 342 145" 
+            stroke="rgba(255,255,255,0.4)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="195" cy="140" rx="14" ry="10" fill="rgba(255,255,255,0.28)"/>
+      <ellipse cx="317" cy="140" rx="14" ry="10" fill="rgba(255,255,255,0.28)"/>
+      <!-- 텍스처 -->
+      <path d="M 145 160 Q 160 150 175 160 M 367 160 Q 352 150 337 160" 
+            stroke="rgba(0,0,0,0.12)" stroke-width="2" stroke-linecap="round"/>
     `,
-    long_01: `
+    undercut_male: `
       <defs>
-        <linearGradient id="hairGradient_long1" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="undercutGradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
-          <stop offset="70%" style="stop-color:var(--hair-color);stop-opacity:0.88" />
-          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.75" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.88" />
         </linearGradient>
       </defs>
-      <path d="M 256 95 Q 95 98 85 265 L 85 320 Q 90 295 110 270 Q 118 215 256 145 Q 394 215 402 270 Q 422 295 427 320 L 427 265 Q 417 98 256 95 Z" 
-            fill="url(#hairGradient_long1)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <path d="M 115 195 Q 175 150 256 155 Q 337 150 397 195" 
-            stroke="rgba(255,255,255,0.2)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <path d="M 130 225 Q 185 185 256 188 Q 327 185 382 225" 
-            stroke="rgba(255,255,255,0.12)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M 102 245 Q 125 225 155 238" stroke="rgba(0,0,0,0.12)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M 410 245 Q 387 225 357 238" stroke="rgba(0,0,0,0.12)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="145" cy="185" rx="18" ry="12" fill="rgba(255,255,255,0.18)"/>
-      <ellipse cx="367" cy="185" rx="18" ry="12" fill="rgba(255,255,255,0.18)"/>
+      <!-- 짧은 옆머리 (페이드) -->
+      <path d="M 120 180 Q 125 190 130 200" 
+            stroke="var(--hair-color)" stroke-width="8" fill="none" opacity="0.4" stroke-linecap="round"/>
+      <path d="M 392 180 Q 387 190 382 200" 
+            stroke="var(--hair-color)" stroke-width="8" fill="none" opacity="0.4" stroke-linecap="round"/>
+      <!-- 윗머리 볼륨 -->
+      <path d="M 256 105 Q 155 110 125 175 Q 123 150 128 130 Q 138 105 256 95 Q 374 105 384 130 Q 389 150 389 175 Q 357 110 256 105 Z" 
+            fill="url(#undercutGradient)" filter="url(#hairShadow)"/>
+      <!-- 스타일링된 윗머리 -->
+      <path d="M 210 105 Q 233 85 256 90 Q 279 85 302 105 Q 285 115 256 120 Q 227 115 210 105 Z" 
+            fill="url(#undercutGradient)" opacity="0.95"/>
+      <!-- 뒤로 넘긴 스타일 -->
+      <path d="M 230 100 Q 243 90 256 95 Q 269 90 282 100" 
+            stroke="rgba(0,0,0,0.15)" stroke-width="2" fill="none"/>
+      <!-- 하이라이트 -->
+      <path d="M 175 125 Q 215 100 256 105 Q 297 100 337 125" 
+            stroke="rgba(255,255,255,0.4)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="220" cy="110" rx="15" ry="10" fill="rgba(255,255,255,0.3)"/>
+      <ellipse cx="292" cy="110" rx="15" ry="10" fill="rgba(255,255,255,0.3)"/>
+      <!-- 텍스처 -->
+      <path d="M 235 105 L 238 95 M 256 103 L 256 92 M 277 105 L 274 95" 
+            stroke="var(--hair-color)" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
     `,
-    bun: `
+    crew_cut: `
       <defs>
-        <radialGradient id="bunGradient" cx="45%" cy="35%">
+        <linearGradient id="crewcutGradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
-          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.78" />
-        </radialGradient>
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.92" />
+        </linearGradient>
       </defs>
-      <path d="M 256 135 Q 155 138 115 205 L 115 170 Q 118 110 256 100 Q 394 110 397 170 L 397 205 Q 357 138 256 135 Z" 
-            fill="url(#hairGradient_short1)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <circle cx="256" cy="72" r="48" fill="url(#bunGradient)" stroke="rgba(0,0,0,0.2)" stroke-width="1" filter="url(#hairShadow)"/>
-      <ellipse cx="235" cy="65" rx="15" ry="10" fill="rgba(255,255,255,0.25)"/>
-      <path d="M 225 78 Q 256 85 287 78" stroke="rgba(0,0,0,0.18)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M 230 85 Q 256 90 282 85" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="268" cy="58" rx="8" ry="6" fill="rgba(0,0,0,0.08)"/>
+      <!-- 매우 짧은 크루컷 베이스 -->
+      <path d="M 256 125 Q 160 128 120 195 Q 118 170 122 150 Q 130 115 256 108 Q 382 115 390 150 Q 394 170 394 195 Q 352 128 256 125 Z" 
+            fill="url(#crewcutGradient)" filter="url(#hairShadow)"/>
+      <!-- 짧은 옆머리 -->
+      <path d="M 125 170 Q 130 180 138 190 M 387 170 Q 382 180 374 190" 
+            stroke="var(--hair-color)" stroke-width="6" fill="none" opacity="0.5" stroke-linecap="round"/>
+      <!-- 짧은 앞머리 -->
+      <path d="M 220 118 Q 238 112 256 115 Q 274 112 292 118" 
+            fill="url(#crewcutGradient)" opacity="0.85"/>
+      <!-- 텍스처 디테일 -->
+      <path d="M 200 125 L 202 120 M 220 120 L 222 115 M 240 115 L 242 110 M 256 113 L 256 108" 
+            stroke="var(--hair-color)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <path d="M 272 115 L 270 110 M 292 120 L 290 115 M 312 125 L 310 120" 
+            stroke="var(--hair-color)" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+      <!-- 하이라이트 -->
+      <path d="M 185 135 Q 220 118 256 122 Q 292 118 327 135" 
+            stroke="rgba(255,255,255,0.35)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse cx="210" cy="128" rx="12" ry="8" fill="rgba(255,255,255,0.25)"/>
+      <ellipse cx="302" cy="128" rx="12" ry="8" fill="rgba(255,255,255,0.25)"/>
     `,
-    bob_ghibli: `
+    pompadour: `
       <defs>
-        <linearGradient id="bobGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="pompadourGradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
           <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.85" />
         </linearGradient>
       </defs>
-      <path d="M 256 108 Q 155 113 115 193 Q 112 273 165 287 Q 208 300 256 277 Q 304 300 347 287 Q 400 273 400 193 Q 357 113 256 108 Z" 
-            fill="url(#bobGradient)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <path d="M 140 185 Q 185 135 256 140 Q 327 135 372 185" 
+      <!-- 짧은 옆머리 -->
+      <path d="M 122 175 Q 128 185 135 195 M 390 175 Q 384 185 377 195" 
+            stroke="var(--hair-color)" stroke-width="7" fill="none" opacity="0.45" stroke-linecap="round"/>
+      <!-- 베이스 -->
+      <path d="M 256 110 Q 160 115 128 185 Q 125 160 130 140 Q 140 110 256 100 Q 372 110 382 140 Q 387 160 386 185 Q 352 115 256 110 Z" 
+            fill="url(#pompadourGradient)" filter="url(#hairShadow)"/>
+      <!-- 높은 포마드 볼륨 -->
+      <path d="M 220 95 Q 238 65 256 70 Q 274 65 292 95 Q 280 105 256 110 Q 232 105 220 95 Z" 
+            fill="url(#pompadourGradient)" opacity="0.95" filter="url(#hairShadow)"/>
+      <path d="M 235 85 Q 246 75 256 78 Q 266 75 277 85" 
+            fill="url(#pompadourGradient)" opacity="0.9"/>
+      <!-- 뒤로 넘긴 스타일 -->
+      <path d="M 230 95 Q 243 85 256 88 Q 269 85 282 95" 
+            stroke="rgba(0,0,0,0.2)" stroke-width="2.5" fill="none"/>
+      <!-- 윤기 하이라이트 -->
+      <path d="M 240 80 Q 248 75 256 78 Q 264 75 272 80" 
+            stroke="rgba(255,255,255,0.5)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <ellipse cx="245" cy="88" rx="14" ry="10" fill="rgba(255,255,255,0.4)"/>
+      <ellipse cx="267" cy="88" rx="14" ry="10" fill="rgba(255,255,255,0.4)"/>
+      <!-- 볼륨 디테일 -->
+      <path d="M 225 100 Q 240 90 256 95 Q 272 90 287 100" 
+            stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- 텍스처 -->
+      <path d="M 235 95 L 240 85 M 256 93 L 256 82 M 277 95 L 272 85" 
+            stroke="rgba(0,0,0,0.15)" stroke-width="2" stroke-linecap="round"/>
+    `,
+    slicked_back: `
+      <defs>
+        <linearGradient id="slickedGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.88" />
+        </linearGradient>
+      </defs>
+      <!-- 베이스 -->
+      <path d="M 256 108 Q 158 112 125 185 Q 122 160 127 140 Q 137 108 256 98 Q 375 108 385 140 Q 390 160 389 185 Q 354 112 256 108 Z" 
+            fill="url(#slickedGradient)" filter="url(#hairShadow)"/>
+      <!-- 가운데 가르마 -->
+      <line x1="256" y1="100" x2="256" y2="140" 
+            stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+      <path d="M 246 105 Q 256 108 266 105" 
+            fill="rgba(0,0,0,0.1)"/>
+      <!-- 뒤로 넘긴 헤어 -->
+      <path d="M 210 110 Q 233 105 256 108 Q 279 105 302 110" 
+            stroke="rgba(0,0,0,0.15)" stroke-width="3" fill="none"/>
+      <path d="M 220 125 Q 238 118 256 120 Q 274 118 292 125" 
+            stroke="rgba(0,0,0,0.12)" stroke-width="2.5" fill="none"/>
+      <!-- 윤기 하이라이트 -->
+      <path d="M 190 130 Q 223 110 256 115 Q 289 110 322 130" 
+            stroke="rgba(255,255,255,0.45)" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="220" cy="118" rx="18" ry="12" fill="rgba(255,255,255,0.35)"/>
+      <ellipse cx="292" cy="118" rx="18" ry="12" fill="rgba(255,255,255,0.35)"/>
+      <!-- 추가 윤기 -->
+      <path d="M 210 135 Q 233 125 256 128 Q 279 125 302 135" 
             stroke="rgba(255,255,255,0.28)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="175" cy="215" rx="22" ry="38" fill="rgba(0,0,0,0.09)"/>
-      <ellipse cx="337" cy="215" rx="22" ry="38" fill="rgba(0,0,0,0.09)"/>
-      <path d="M 165 245 Q 185 255 205 258" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M 347 245 Q 327 255 307 258" stroke="rgba(255,255,255,0.15)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- 옆머리 -->
+      <path d="M 130 170 Q 138 180 145 190 M 382 170 Q 374 180 367 190" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="2" fill="none" stroke-linecap="round"/>
     `,
-    wavy: `
+    buzz_cut: `
       <defs>
-        <linearGradient id="wavyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
-          <stop offset="80%" style="stop-color:var(--hair-color);stop-opacity:0.88" />
+        <radialGradient id="buzzGradient" cx="50%" cy="35%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:0.95" />
           <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.75" />
-        </linearGradient>
-      </defs>
-      <path d="M 256 105 C 125 135, 85 268, 128 400 Q 180 285 256 210 Q 332 285 384 400 C 427 268, 387 135, 256 105 Z" 
-            fill="url(#wavyGradient)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <path d="M 132 190 Q 187 120 256 130 Q 325 120 380 190" 
-            stroke="rgba(255,255,255,0.32)" stroke-width="4" fill="none" stroke-linecap="round"/>
-      <path d="M 152 235 Q 202 185 256 195 Q 310 185 360 235" 
-            stroke="rgba(255,255,255,0.22)" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M 172 280 Q 214 245 256 253 Q 298 245 340 280" 
-            stroke="rgba(0,0,0,0.1)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <ellipse cx="160" cy="220" rx="15" ry="10" fill="rgba(255,255,255,0.2)"/>
-      <ellipse cx="352" cy="220" rx="15" ry="10" fill="rgba(255,255,255,0.2)"/>
-    `,
-    curly: `
-      <defs>
-        <linearGradient id="curlyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
-          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.82" />
-        </linearGradient>
-        <radialGradient id="curlGradient" cx="40%" cy="40%">
-          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:0.8" />
-          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.5" />
         </radialGradient>
       </defs>
-      <path d="M 256 100 Q 115 105 95 220 Q 90 295 133 385 Q 192 275 256 220 Q 320 275 379 385 Q 422 295 420 220 Q 397 105 256 100 Z" 
-            fill="url(#curlyGradient)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <circle cx="147" cy="168" r="24" fill="url(#curlGradient)"/>
-      <circle cx="365" cy="168" r="24" fill="url(#curlGradient)"/>
-      <circle cx="175" cy="138" r="20" fill="url(#curlGradient)"/>
-      <circle cx="337" cy="138" r="20" fill="url(#curlGradient)"/>
-      <circle cx="205" cy="122" r="17" fill="url(#curlGradient)"/>
-      <circle cx="307" cy="122" r="17" fill="url(#curlGradient)"/>
-      <circle cx="256" cy="115" r="15" fill="url(#curlGradient)"/>
-      <ellipse cx="137" cy="208" rx="14" ry="20" fill="rgba(255,255,255,0.18)"/>
-      <ellipse cx="375" cy="208" rx="14" ry="20" fill="rgba(255,255,255,0.18)"/>
-      <path d="M 155 195 Q 175 185 185 175" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
-      <path d="M 357 195 Q 337 185 327 175" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- 매우 짧은 버즈컷 -->
+      <path d="M 256 128 Q 165 130 125 195 Q 123 172 127 152 Q 135 120 256 112 Q 377 120 385 152 Q 389 172 389 195 Q 347 130 256 128 Z" 
+            fill="url(#buzzGradient)" filter="url(#hairShadow)"/>
+      <!-- 텍스처 (매우 짧은 머리) -->
+      <ellipse cx="200" cy="135" rx="10" ry="7" fill="rgba(0,0,0,0.08)"/>
+      <ellipse cx="230" cy="128" rx="10" ry="7" fill="rgba(0,0,0,0.08)"/>
+      <ellipse cx="256" cy="125" rx="10" ry="7" fill="rgba(0,0,0,0.08)"/>
+      <ellipse cx="282" cy="128" rx="10" ry="7" fill="rgba(0,0,0,0.08)"/>
+      <ellipse cx="312" cy="135" rx="10" ry="7" fill="rgba(0,0,0,0.08)"/>
+      <!-- 하이라이트 -->
+      <path d="M 195 140 Q 225 125 256 128 Q 287 125 317 140" 
+            stroke="rgba(255,255,255,0.3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="220" cy="132" rx="8" ry="6" fill="rgba(255,255,255,0.2)"/>
+      <ellipse cx="292" cy="132" rx="8" ry="6" fill="rgba(255,255,255,0.2)"/>
+      <!-- 옆머리 페이드 -->
+      <ellipse cx="140" cy="175" rx="8" ry="12" fill="var(--hair-color)" opacity="0.35"/>
+      <ellipse cx="372" cy="175" rx="8" ry="12" fill="var(--hair-color)" opacity="0.35"/>
     `,
-    ponytail: `
+    quiff: `
       <defs>
-        <linearGradient id="ponytailGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient id="quiffGradient" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
-          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.85" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.86" />
         </linearGradient>
       </defs>
-      <path d="M 256 135 Q 155 138 115 205 L 115 165 Q 118 110 256 100 Q 394 110 397 165 L 397 205 Q 357 138 256 135 Z" 
-            fill="url(#hairGradient_short1)" stroke="rgba(0,0,0,0.15)" stroke-width="1" filter="url(#hairShadow)"/>
-      <ellipse cx="256" cy="100" rx="42" ry="28" fill="var(--hair-color)" opacity="0.9"/>
-      <path d="M 256 85 Q 245 60 248 35" stroke="var(--hair-color)" stroke-width="22" fill="none" stroke-linecap="round" opacity="0.95"/>
-      <ellipse cx="248" cy="32" rx="14" ry="18" fill="url(#ponytailGradient)" filter="url(#hairShadow)"/>
-      <path d="M 245 40 Q 248 28 250 20" stroke="rgba(255,255,255,0.25)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- 짧은 옆머리 -->
+      <path d="M 124 172 Q 130 182 138 192 M 388 172 Q 382 182 374 192" 
+            stroke="var(--hair-color)" stroke-width="7" fill="none" opacity="0.48" stroke-linecap="round"/>
+      <!-- 베이스 -->
+      <path d="M 256 112 Q 162 116 130 183 Q 127 158 132 138 Q 142 112 256 102 Q 370 112 380 138 Q 385 158 385 183 Q 350 116 256 112 Z" 
+            fill="url(#quiffGradient)" filter="url(#hairShadow)"/>
+      <!-- 앞으로 튀어나온 퀴프 -->
+      <path d="M 225 105 Q 240 80 256 85 Q 272 80 287 105 Q 275 112 256 118 Q 237 112 225 105 Z" 
+            fill="url(#quiffGradient)" opacity="0.96" filter="url(#hairShadow)"/>
+      <path d="M 240 95 Q 248 85 256 88 Q 264 85 272 95" 
+            fill="url(#quiffGradient)" opacity="0.92"/>
+      <!-- 스타일링 디테일 -->
+      <path d="M 235 100 Q 245 90 256 93 Q 267 90 277 100" 
+            stroke="rgba(0,0,0,0.18)" stroke-width="2.5" fill="none"/>
+      <!-- 하이라이트 -->
+      <path d="M 242 92 Q 249 86 256 88 Q 263 86 270 92" 
+            stroke="rgba(255,255,255,0.48)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="246" cy="95" rx="12" ry="9" fill="rgba(255,255,255,0.38)"/>
+      <ellipse cx="266" cy="95" rx="12" ry="9" fill="rgba(255,255,255,0.38)"/>
+      <!-- 볼륨 -->
+      <path d="M 230 108 Q 243 98 256 102 Q 269 98 282 108" 
+            stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- 텍스처 -->
+      <path d="M 238 102 L 242 92 M 256 100 L 256 88 M 274 102 L 270 92" 
+            stroke="rgba(0,0,0,0.15)" stroke-width="2" stroke-linecap="round"/>
+    `,
+    fringe_male: `
+      <defs>
+        <linearGradient id="fringeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" style="stop-color:var(--hair-color);stop-opacity:1" />
+          <stop offset="100%" style="stop-color:var(--hair-color);stop-opacity:0.87" />
+        </linearGradient>
+      </defs>
+      <!-- 베이스 -->
+      <path d="M 256 108 Q 155 112 118 188 Q 115 162 120 142 Q 130 110 256 100 Q 382 110 392 142 Q 397 162 396 188 Q 357 112 256 108 Z" 
+            fill="url(#fringeGradient)" filter="url(#hairShadow)"/>
+      <!-- 두꺼운 앞머리 -->
+      <path d="M 195 130 Q 225 115 256 120 Q 287 115 317 130 Q 300 145 256 150 Q 212 145 195 130 Z" 
+            fill="url(#fringeGradient)" opacity="0.95"/>
+      <path d="M 210 135 Q 233 122 256 126 Q 279 122 302 135 Q 288 145 256 148 Q 224 145 210 135 Z" 
+            fill="url(#fringeGradient)" opacity="0.92"/>
+      <!-- 하이라이트 -->
+      <path d="M 170 145 Q 213 122 256 128 Q 299 122 342 145" 
+            stroke="rgba(255,255,255,0.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M 200 138 Q 228 125 256 130 Q 284 125 312 138" 
+            stroke="rgba(255,255,255,0.25)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- 볼륨 하이라이트 -->
+      <ellipse cx="215" cy="132" rx="16" ry="11" fill="rgba(255,255,255,0.28)"/>
+      <ellipse cx="297" cy="132" rx="16" ry="11" fill="rgba(255,255,255,0.28)"/>
+      <!-- 텍스처 -->
+      <path d="M 220 135 L 225 125 M 240 128 L 243 120 M 256 126 L 256 118 M 272 128 L 269 120 M 292 135 L 287 125" 
+            stroke="var(--hair-color)" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+      <!-- 옆머리 -->
+      <path d="M 125 175 Q 133 185 142 195 M 387 175 Q 379 185 370 195" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="2" fill="none" stroke-linecap="round"/>
     `
   },
 
   hairBack: {
-    short_01: ``,
-    short_02: ``,
-    medium_01: `
-      <path d="M 105 255 Q 95 320 118 370" 
-            stroke="var(--hair-color)" stroke-width="26" fill="none" opacity="0.92" stroke-linecap="round"/>
-      <path d="M 407 255 Q 417 320 394 370" 
-            stroke="var(--hair-color)" stroke-width="26" fill="none" opacity="0.92" stroke-linecap="round"/>
-      <path d="M 110 270 Q 105 315 115 355" 
-            stroke="rgba(255,255,255,0.12)" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M 402 270 Q 407 315 397 355" 
-            stroke="rgba(255,255,255,0.12)" stroke-width="3" fill="none" stroke-linecap="round"/>
-    `,
-    long_01: `
-      <path d="M 95 300 Q 85 370 98 440" 
-            stroke="var(--hair-color)" stroke-width="30" fill="none" opacity="0.9" stroke-linecap="round"/>
-      <path d="M 417 300 Q 427 370 414 440" 
-            stroke="var(--hair-color)" stroke-width="30" fill="none" opacity="0.9" stroke-linecap="round"/>
-      <path d="M 103 315 Q 98 375 108 425" 
+    short_modern: ``,
+    short_messy: ``,
+    undercut_male: ``,
+    crew_cut: ``,
+    pompadour: ``,
+    slicked_back: ``,
+    buzz_cut: ``,
+    quiff: ``,
+    fringe_male: ``,
+    medium_side: `
+      <!-- 옆머리 뒷부분 -->
+      <path d="M 108 258 Q 98 325 120 375" 
+            stroke="var(--hair-color)" stroke-width="28" fill="none" opacity="0.94" stroke-linecap="round"/>
+      <path d="M 404 258 Q 414 325 392 375" 
+            stroke="var(--hair-color)" stroke-width="28" fill="none" opacity="0.94" stroke-linecap="round"/>
+      <!-- 하이라이트 -->
+      <path d="M 112 275 Q 105 320 117 360" 
             stroke="rgba(255,255,255,0.15)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <path d="M 409 315 Q 414 375 404 425" 
+      <path d="M 400 275 Q 407 320 395 360" 
             stroke="rgba(255,255,255,0.15)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-      <path d="M 92 340 Q 90 380 95 420" 
+      <!-- 그림자 -->
+      <path d="M 105 290 Q 100 330 110 365" 
             stroke="rgba(0,0,0,0.1)" stroke-width="2" fill="none"/>
-      <path d="M 420 340 Q 422 380 417 420" 
+      <path d="M 407 290 Q 412 330 402 365" 
             stroke="rgba(0,0,0,0.1)" stroke-width="2" fill="none"/>
     `,
-    bun: ``,
-    bob_ghibli: `
-      <path d="M 115 235 Q 112 340 165 360 Q 208 373 256 365 Q 304 373 347 360 Q 400 340 397 235" 
-            stroke="var(--hair-color)" stroke-width="24" fill="none" opacity="0.92" stroke-linecap="round"/>
-      <path d="M 120 250 Q 118 330 162 348" 
-            stroke="rgba(255,255,255,0.12)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-      <path d="M 392 250 Q 394 330 350 348" 
-            stroke="rgba(255,255,255,0.12)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    long_straight: `
+      <!-- 긴 생머리 뒷부분 -->
+      <path d="M 98 305 Q 88 375 100 445" 
+            stroke="var(--hair-color)" stroke-width="32" fill="none" opacity="0.92" stroke-linecap="round"/>
+      <path d="M 414 305 Q 424 375 412 445" 
+            stroke="var(--hair-color)" stroke-width="32" fill="none" opacity="0.92" stroke-linecap="round"/>
+      <!-- 머리카락 흐름 라인 -->
+      <path d="M 105 320 Q 100 380 108 430" 
+            stroke="rgba(255,255,255,0.18)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M 407 320 Q 412 380 404 430" 
+            stroke="rgba(255,255,255,0.18)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- 그림자 -->
+      <path d="M 95 345 Q 93 385 98 425" 
+            stroke="rgba(0,0,0,0.12)" stroke-width="2.5" fill="none"/>
+      <path d="M 417 345 Q 419 385 414 425" 
+            stroke="rgba(0,0,0,0.12)" stroke-width="2.5" fill="none"/>
+      <!-- 추가 레이어 -->
+      <path d="M 110 330 Q 108 375 112 420" 
+            stroke="var(--hair-color)" stroke-width="18" fill="none" opacity="0.7" stroke-linecap="round"/>
+      <path d="M 402 330 Q 404 375 400 420" 
+            stroke="var(--hair-color)" stroke-width="18" fill="none" opacity="0.7" stroke-linecap="round"/>
     `,
-    wavy: `
-      <path d="M 128 285 Q 118 355 138 415" 
-            stroke="var(--hair-color)" stroke-width="28" fill="none" opacity="0.88" stroke-linecap="round"/>
-      <path d="M 384 285 Q 394 355 374 415" 
-            stroke="var(--hair-color)" stroke-width="28" fill="none" opacity="0.88" stroke-linecap="round"/>
-      <path d="M 135 300 Q 128 350 142 400" 
+    bun_high: ``,
+    bob_modern: `
+      <!-- 밥 뒷머리 -->
+      <path d="M 118 240 Q 115 345 168 365 Q 210 378 256 370 Q 302 378 344 365 Q 397 345 394 240" 
+            stroke="var(--hair-color)" stroke-width="26" fill="none" opacity="0.94" stroke-linecap="round"/>
+      <!-- 하이라이트 -->
+      <path d="M 122 255 Q 120 335 165 353" 
             stroke="rgba(255,255,255,0.15)" stroke-width="3" fill="none" stroke-linecap="round"/>
-      <path d="M 377 300 Q 384 350 370 400" 
+      <path d="M 390 255 Q 392 335 347 353" 
             stroke="rgba(255,255,255,0.15)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <!-- 볼륨 -->
+      <path d="M 130 270 Q 128 320 160 348" 
+            stroke="var(--hair-color)" stroke-width="16" fill="none" opacity="0.75" stroke-linecap="round"/>
+      <path d="M 382 270 Q 384 320 352 348" 
+            stroke="var(--hair-color)" stroke-width="16" fill="none" opacity="0.75" stroke-linecap="round"/>
     `,
-    curly: `
-      <path d="M 133 275 Q 123 345 143 405" 
-            stroke="var(--hair-color)" stroke-width="32" fill="none" opacity="0.82" stroke-linecap="round"/>
-      <path d="M 379 275 Q 389 345 369 405" 
-            stroke="var(--hair-color)" stroke-width="32" fill="none" opacity="0.82" stroke-linecap="round"/>
-      <circle cx="127" cy="318" r="18" fill="var(--hair-color)" opacity="0.55"/>
-      <circle cx="385" cy="318" r="18" fill="var(--hair-color)" opacity="0.55"/>
-      <circle cx="135" cy="358" r="16" fill="var(--hair-color)" opacity="0.5"/>
-      <circle cx="377" cy="358" r="16" fill="var(--hair-color)" opacity="0.5"/>
+    wavy_long: `
+      <!-- 웨이브 긴 머리 뒷부분 -->
+      <path d="M 130 290 Q 120 360 140 420" 
+            stroke="var(--hair-color)" stroke-width="30" fill="none" opacity="0.9" stroke-linecap="round"/>
+      <path d="M 382 290 Q 392 360 372 420" 
+            stroke="var(--hair-color)" stroke-width="30" fill="none" opacity="0.9" stroke-linecap="round"/>
+      <!-- 웨이브 디테일 -->
+      <path d="M 137 310 Q 130 360 145 405" 
+            stroke="rgba(255,255,255,0.18)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M 375 310 Q 382 360 367 405" 
+            stroke="rgba(255,255,255,0.18)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <!-- 그림자 웨이브 -->
+      <path d="M 125 335 Q 122 375 135 410" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="2.5" fill="none"/>
+      <path d="M 387 335 Q 390 375 377 410" 
+            stroke="rgba(0,0,0,0.1)" stroke-width="2.5" fill="none"/>
     `,
-    ponytail: ``
+    curly_natural: `
+      <!-- 곱슬머리 뒷부분 -->
+      <path d="M 136 280 Q 126 350 146 410" 
+            stroke="var(--hair-color)" stroke-width="34" fill="none" opacity="0.85" stroke-linecap="round"/>
+      <path d="M 376 280 Q 386 350 366 410" 
+            stroke="var(--hair-color)" stroke-width="34" fill="none" opacity="0.85" stroke-linecap="round"/>
+      <!-- 뒷머리 컬 -->
+      <circle cx="130" cy="325" r="20" fill="var(--hair-color)" opacity="0.6"/>
+      <circle cx="382" cy="325" r="20" fill="var(--hair-color)" opacity="0.6"/>
+      <circle cx="138" cy="365" r="18" fill="var(--hair-color)" opacity="0.55"/>
+      <circle cx="374" cy="365" r="18" fill="var(--hair-color)" opacity="0.55"/>
+      <!-- 작은 컬 -->
+      <circle cx="145" cy="395" r="14" fill="var(--hair-color)" opacity="0.5"/>
+      <circle cx="367" cy="395" r="14" fill="var(--hair-color)" opacity="0.5"/>
+      <!-- 하이라이트 -->
+      <ellipse cx="134" cy="340" rx="8" ry="12" fill="rgba(255,255,255,0.2)"/>
+      <ellipse cx="378" cy="340" rx="8" ry="12" fill="rgba(255,255,255,0.2)"/>
+    `,
+    ponytail_high: ``,
+    pixie_cut: ``
   },
 
   eyes: {
