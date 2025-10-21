@@ -289,9 +289,10 @@ input[type="file"] {
   background-repeat: no-repeat;
   background-attachment: fixed;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 40px 20px;
+  overflow: visible;
 }
 
 .search-card {
@@ -303,7 +304,8 @@ input[type="file"] {
   width: 90%;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   position: relative;
-  z-index: 10;
+  z-index: 1;
+  overflow: visible;
 }
 
 .search-card h2 {
@@ -1535,12 +1537,13 @@ input[type="file"] {
 /* 프리미엄 레이아웃: 미리보기 고정, 옵션 스크롤 */
 .preview-sticky {
   position: sticky;
-  top: 24px;
+  top: 20px;
   align-self: flex-start;
+  z-index: 10;
 }
 
 .editor-scroll {
-  max-height: calc(100vh - 48px);
+  max-height: calc(100vh - 40px);
   overflow-y: auto;
   overflow-x: hidden;
   padding-right: 8px;
@@ -2184,26 +2187,13 @@ input[type="file"] {
 }
 
 /* 아바타 빌더 반응형 */
-@media (max-width: 1200px) {
-  .main-grid {
-    gap: 20px;
-  }
-  
-  .preview-sticky {
-    position: relative;
-    top: 0;
-  }
-  
-  .editor-scroll {
-    max-height: none;
-  }
-}
-
 @media (max-width: 1024px) {
   .main-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
+  /* 단일 컬럼에서는 미리보기를 맨 위로 */
   .preview-panel {
     order: 1;
   }
@@ -2211,9 +2201,29 @@ input[type="file"] {
   .editor-panel {
     order: 2;
   }
+  
+  /* 모바일/태블릿에서도 상단에 고정 */
+  .preview-sticky {
+    position: sticky;
+    top: 15px;
+  }
+  
+  .editor-scroll {
+    max-height: none;
+  }
 
   #avatarPreview {
     max-width: 350px;
+  }
+  
+  /* 미리보기 패널을 더 컴팩트하게 */
+  .preview-panel {
+    padding: clamp(15px, 3vw, 25px);
+  }
+  
+  .preview-panel h3 {
+    font-size: clamp(16px, 3vw, 20px);
+    margin-bottom: 15px;
   }
 }
 
@@ -2252,8 +2262,13 @@ input[type="file"] {
     max-width: none;
   }
   
+  /* 모바일에서 미리보기 크기 조정 */
   #avatarPreview {
     max-width: 300px;
+  }
+  
+  .preview-sticky {
+    top: 10px;
   }
   
   .color-palette {
@@ -2282,8 +2297,17 @@ input[type="file"] {
     gap: 15px;
   }
   
+  /* 작은 모바일에서도 미리보기 고정 유지 */
   #avatarPreview {
     max-width: 280px;
+  }
+  
+  .preview-sticky {
+    top: 10px;
+  }
+  
+  .preview-panel {
+    padding: 15px;
   }
   
   .options-grid {
@@ -2316,8 +2340,22 @@ input[type="file"] {
 }
 
 @media (max-width: 360px) {
+  /* 초소형 모바일에서도 미리보기 상단 고정 */
   #avatarPreview {
     max-width: 240px;
+  }
+  
+  .preview-sticky {
+    top: 8px;
+  }
+  
+  .preview-panel {
+    padding: 12px;
+  }
+  
+  .preview-panel h3 {
+    font-size: 14px;
+    margin-bottom: 10px;
   }
   
   .options-grid {
