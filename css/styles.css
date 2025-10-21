@@ -377,6 +377,85 @@ input[type="file"] {
   position: relative;
 }
 
+/* LINE 스타일 카드 */
+.line-card {
+  width: 90vw;
+  max-width: 300px;
+  height: 500px;
+  max-height: 83vh;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 30px 0 30px;
+  box-sizing: border-box;
+  text-align: left;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.line-logo {
+  color: #00c300;
+  font-weight: 700;
+  font-size: 40px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
+.line-info {
+  margin-top: -50px;
+}
+
+.line-info h2 {
+  font-size: 22px;
+  margin: 0;
+  color: #444;
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 500;
+}
+
+.line-team {
+  margin: 4px 0;
+  color: #888;
+  font-size: 14px;
+  font-family: 'Noto Serif KR', serif;
+}
+
+.line-bible-verse {
+  margin: 12px 0;
+  color: #555;
+  font-size: 15px;
+  line-height: 1.8;
+  font-weight: 400;
+  font-family: 'Noto Serif KR', serif;
+}
+
+.line-bible-reference {
+  display: block;
+  margin-top: 8px;
+  color: #aaa;
+  font-size: 11px;
+  font-style: italic;
+  text-align: right;
+}
+
+.line-character {
+  width: 100%;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.line-character img,
+.line-character svg {
+  width: 250px;
+  max-width: 83%;
+  height: auto;
+  margin-right: -30px;
+}
+
 .card-title {
   display: none;
   font-family: "flirt-script-regular", sans-serif;
@@ -1158,6 +1237,85 @@ input[type="file"] {
   
   .button-container {
     gap: 15px;
+  }
+}
+
+/* LINE 카드 모바일 반응형 */
+@media (max-width: 480px) {
+  .line-card {
+    width: 95vw;
+    padding: 30px 20px 0 20px;
+  }
+
+  .line-logo {
+    font-size: 32px;
+  }
+
+  .line-info {
+    margin-top: -20px;
+  }
+
+  .line-info h2 {
+    font-size: 18px;
+  }
+
+  .line-team {
+    font-size: 12px;
+  }
+
+  .line-bible-verse {
+    font-size: 13px;
+    margin: 10px 0;
+  }
+
+  .line-bible-reference {
+    font-size: 10px;
+  }
+
+  .line-character img,
+  .line-character svg {
+    width: 200px;
+    margin-right: -20px;
+  }
+}
+
+@media (max-height: 600px) {
+  .line-card {
+    height: 90vh;
+    padding: 30px 25px 0 25px;
+  }
+
+  .line-logo {
+    font-size: 32px;
+  }
+
+  .line-info {
+    margin-top: -15px;
+  }
+
+  .line-info h2 {
+    font-size: 18px;
+  }
+
+  .line-team {
+    font-size: 12px;
+  }
+
+  .line-bible-verse {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 8px 0;
+  }
+
+  .line-bible-reference {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+
+  .line-character img,
+  .line-character svg {
+    width: 180px;
+    margin-right: -25px;
   }
 }
 

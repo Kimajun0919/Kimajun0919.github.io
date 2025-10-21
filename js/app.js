@@ -302,6 +302,49 @@ window.showEmployeeResult = function(employee) {
   // 현재 직원 정보를 전역 변수에 저장 (다운로드용)
   window.currentEmployee = employee;
   
+  // 카드 내용 생성
+  const resultCard = document.getElementById('resultCard');
+  
+  // 아바타 SVG 생성
+  let avatarData;
+  if (employee.avatarData) {
+    try {
+      avatarData = typeof employee.avatarData === 'string' ? JSON.parse(employee.avatarData) : employee.avatarData;
+    } catch (e) {
+      console.error('Failed to parse avatar data:', e);
+    }
+  }
+  
+  const avatarSVG = generateAvatarSVG(avatarData);
+  
+  // 말씀 구절 (저장된 값 또는 랜덤)
+  let verseContent = employee.verseContent || '';
+  let verseReference = employee.verseReference || '';
+  
+  if (!verseContent && Array.isArray(window.verses) && window.verses.length > 0) {
+    const v = window.verses[Math.floor(Math.random() * window.verses.length)];
+    verseContent = v.content;
+    verseReference = v.reference;
+  }
+  
+  // LINE 카드 스타일로 HTML 구성 (카드만 생성, 버튼은 HTML에 있음)
+  resultCard.innerHTML = `
+    <div class="line-card">
+      <div class="line-logo">LINE</div>
+      <div class="line-info">
+        <h2>${employee.name || ''}</h2>
+        <p class="line-team">${employee.team || ''}</p>
+        <p class="line-bible-verse">
+          ${verseContent}
+          <span class="line-bible-reference">${verseReference}</span>
+        </p>
+      </div>
+      <div class="line-character">
+        ${avatarSVG}
+      </div>
+    </div>
+  `;
+  
   showPage('resultPage');
 };
 
