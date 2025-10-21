@@ -351,23 +351,23 @@ input[type="file"] {
 }
 
 .result-card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 40px 30px 0 30px;
+  width: 90vw;
   max-width: 300px;
-  width: 90%;
   height: 500px;
   max-height: 83vh;
+  background-color: #fff;
+  border-radius: 20px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  position: relative;
-  z-index: 10;
-  margin-bottom: 30px;
-  text-align: left;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 40px 30px 0 30px;
   box-sizing: border-box;
+  text-align: left;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 30px;
+  overflow: hidden;
 }
 
 /* HANEUL 로고 */
@@ -377,11 +377,9 @@ input[type="file"] {
 }
 
 .result-card .haneul-brand {
-  font-size: 40px;
-  font-weight: 700;
   color: #00c300;
-  letter-spacing: 0px;
-  text-align: left;
+  font-weight: 700;
+  font-size: 40px;
   margin: 0;
 }
 
@@ -408,20 +406,15 @@ input[type="file"] {
 
 .result-card .employee-name {
   font-size: 22px;
-  font-weight: 400;
+  margin: 0;
   color: #444;
-  margin: 0 0 4px 0;
-  letter-spacing: 0px;
-  line-height: 1;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .employee-team {
-  font-size: 14px;
+  margin: 4px 0;
   color: #888;
-  font-weight: 400;
-  letter-spacing: 0px;
-  margin: 0 0 12px 0;
+  font-size: 14px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -492,18 +485,18 @@ input[type="file"] {
 .result-container.saving-mode .result-card {
   width: 1040px;
   height: 1840px;
-  background: #ffffff;
+  background-color: #fff;
   border-radius: 50px;
-  box-shadow: 0 40px 120px rgba(0,0,0,0.3);
-  overflow: hidden;
-  margin: 0;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  position: relative;
   padding: 140px 100px 0 100px;
   box-sizing: border-box;
   text-align: left;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
 }
 
 /* HANEUL 헤더 */
@@ -526,11 +519,9 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .haneul-brand {
-  font-size: 140px;
-  font-weight: 700;
   color: #00c300;
-  letter-spacing: 0px;
-  text-align: left;
+  font-weight: 700;
+  font-size: 140px;
   margin: 0;
 }
 
@@ -597,7 +588,6 @@ input[type="file"] {
 
 /* 저장 모드: 캐릭터 */
 .result-container.saving-mode .employee-photo {
-  position: static;
   width: 100%;
   text-align: right;
   z-index: 3;
@@ -608,6 +598,7 @@ input[type="file"] {
   clip-path: none;
   margin: 0;
   height: auto;
+  position: static;
 }
 
 .result-container.saving-mode .employee-photo svg {
@@ -642,16 +633,9 @@ input[type="file"] {
 
 .result-container.saving-mode .employee-name {
   font-size: 66px;
+  margin: 0;
   color: #444;
-  font-weight: 400;
-  letter-spacing: 0px;
-  margin: 0 0 12px 0;
-  padding: 0;
-  text-align: left;
-  background: transparent;
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  border-radius: 0;
-  line-height: 1;
 }
 
 /* 팀 스타일 */
@@ -669,14 +653,9 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-team {
-  font-size: 42px;
+  margin: 12px 0;
   color: #888;
-  font-weight: 400;
-  letter-spacing: 0px;
-  margin: 0 0 36px 0;
-  padding: 0;
-  text-align: left;
-  background: transparent;
+  font-size: 42px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -726,31 +705,27 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-verse {
-  font-size: 45px;
-  color: #555;
-  line-height: 1.8;
   margin: 36px 0;
-  padding: 0;
-  text-align: left;
+  color: #555;
+  font-size: 45px;
+  line-height: 1.8;
   font-weight: 400;
-  letter-spacing: 0px;
-  background: transparent;
   font-family: 'Helvetica Neue', Arial, sans-serif;
-  border-radius: 0;
   position: static;
   z-index: 2;
   max-width: none;
+  padding: 0;
+  text-align: left;
 }
 
 .result-container.saving-mode .employee-verse .verse-reference {
-  font-size: 33px;
-  color: #aaa;
-  margin-top: 24px;
   display: block;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  font-weight: 400;
+  margin-top: 24px;
+  color: #aaa;
+  font-size: 33px;
   font-style: italic;
   text-align: right;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* 로고 스타일은 이제 card-header에 포함됨 */
