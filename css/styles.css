@@ -356,6 +356,7 @@ input[type="file"] {
   padding: 0;
   max-width: 380px;
   width: 90%;
+  min-height: 600px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.08);
   position: relative;
   z-index: 10;
@@ -366,38 +367,87 @@ input[type="file"] {
   flex-direction: column;
 }
 
-/* 일반 모드에서는 HANEUL 헤더 숨김 */
+/* 일반 모드에서도 HANEUL 헤더 표시 */
 .result-card .card-header {
-  display: none;
+  display: block;
+  padding: 30px 30px 0;
 }
 
-/* 일반 모드는 세로 레이아웃 */
+.result-card .haneul-brand {
+  font-size: 24px;
+  font-weight: 700;
+  color: #00C73C;
+  letter-spacing: 3px;
+  text-align: left;
+}
+
+/* 일반 모드 레이아웃 */
 .result-card .card-content {
   display: flex;
   flex-direction: column;
   padding: 0;
   gap: 0;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 }
 
 .result-card .employee-info {
   display: block;
-  order: 2;
+  text-align: center;
+  z-index: 2;
+  padding: 20px 0;
+}
+
+.result-card .employee-name {
+  font-size: clamp(32px, 6vw, 42px);
+  margin-bottom: 8px;
+}
+
+.result-card .employee-team {
+  font-size: clamp(14px, 3vw, 16px);
 }
 
 .result-card .employee-photo {
-  order: 1;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  width: 180px;
+  height: 280px;
+  z-index: 3;
+}
+
+.result-card .employee-photo svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: transparent;
 }
 
 .result-card .employee-verse {
   display: block;
-  order: 3;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  max-width: 200px;
+  font-size: 11px;
+  padding: 30px;
+  line-height: 1.6;
+}
+
+.result-card .employee-verse .verse-reference {
+  font-size: 9px;
+  margin-top: 8px;
 }
 
 /* ==================== 저장 모드 (사원증) ==================== */
 .result-container.saving-mode {
   width: 1080px;
   height: 1920px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
   padding: 0;
   margin: 0 auto;
   display: flex;
@@ -413,7 +463,7 @@ input[type="file"] {
   background: #ffffff;
   border-radius: 40px;
   box-shadow: 0 40px 120px rgba(0,0,0,0.3);
-  overflow: visible;
+  overflow: hidden;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -428,7 +478,7 @@ input[type="file"] {
 
 .result-container.saving-mode .card-header {
   display: block;
-  padding: 90px 90px 60px;
+  padding: 80px 80px 0;
 }
 
 .haneul-brand {
@@ -440,10 +490,11 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .haneul-brand {
-  font-size: 90px;
+  font-size: 70px;
   font-weight: 700;
   color: #00C73C;
-  letter-spacing: 6px;
+  letter-spacing: 8px;
+  text-align: left;
 }
 
 /* 카드 콘텐츠 영역 */
@@ -457,9 +508,11 @@ input[type="file"] {
 .result-container.saving-mode .card-content {
   display: flex;
   flex-direction: column;
-  padding: 0 90px 90px;
+  padding: 0;
   gap: 0;
   flex: 1;
+  justify-content: center;
+  align-items: center;
 }
 
 /* 직원 정보 (이름, 팀) */
@@ -470,8 +523,10 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-info {
-  padding: 0 0 60px 0;
+  padding: 0;
   display: block;
+  text-align: center;
+  z-index: 2;
 }
 
 /* 기본 모드 사진 */
@@ -501,37 +556,38 @@ input[type="file"] {
   );
 }
 
-/* 저장 모드: 하단 영역 (말씀 + 캐릭터) */
-.result-container.saving-mode .card-content::after {
-  content: '';
-  display: block;
-  flex: 1;
-}
-
+/* 저장 모드: 사진 위치 (오른쪽 하단) - PNG 느낌으로 배경 없음 */
 .result-container.saving-mode .employee-photo {
   position: absolute;
-  right: 40px;
-  bottom: 40px;
-  width: 480px;
-  height: 850px;
+  right: 60px;
+  bottom: 60px;
+  width: 500px;
+  height: 800px;
   margin: 0;
-  box-shadow: none;
+  box-shadow: none !important;
   border-radius: 0;
   display: flex;
   align-items: flex-end;
   justify-content: center;
   overflow: visible;
-  background: transparent;
+  background: transparent !important;
   flex-shrink: 0;
-  clip-path: none;
-  border: none;
+  clip-path: none !important;
+  border: none !important;
+  z-index: 3;
 }
 
 .result-container.saving-mode .employee-photo svg {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transform: scale(1.1);
+  background: transparent;
+}
+
+/* SVG 내부 배경도 투명하게 */
+.result-container.saving-mode .employee-photo svg rect,
+.result-container.saving-mode .employee-photo svg circle {
+  fill: transparent;
 }
 
 /* 이름 스타일 */
@@ -550,13 +606,13 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-name {
-  font-size: 80px;
+  font-size: 120px;
   color: #1d1d1f;
   font-weight: 700;
-  letter-spacing: -2px;
-  margin: 0 0 15px 0;
+  letter-spacing: -3px;
+  margin: 0 0 20px 0;
   padding: 0;
-  text-align: left;
+  text-align: center;
   background: transparent;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   border-radius: 0;
@@ -578,13 +634,13 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-team {
-  font-size: 38px;
+  font-size: 42px;
   color: #8e8e93;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  margin: 0 0 0 0;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin: 0;
   padding: 0;
-  text-align: left;
+  text-align: center;
   background: transparent;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
 }
@@ -639,19 +695,19 @@ input[type="file"] {
   color: #636366;
   line-height: 1.8;
   margin: 0;
-  padding: 0;
-  padding-right: 480px;
+  padding: 80px;
   text-align: left;
   font-weight: 400;
   letter-spacing: 0.3px;
   background: transparent;
   font-family: 'Noto Serif KR', serif;
   border-radius: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  max-width: 520px;
 }
 
 .result-container.saving-mode .employee-verse .verse-reference {
