@@ -548,11 +548,11 @@ input[type="file"] {
   }
 }
 
-/* ==================== 저장 모드 (사원증) ==================== */
+/* ==================== 저장 모드 (LINE 스타일) ==================== */
 .result-container.saving-mode {
   width: 1080px;
   height: 1920px;
-  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+  background: #f8f8f8;
   padding: 0;
   margin: 0 auto;
   display: flex;
@@ -563,15 +563,15 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .result-card {
-  width: 1040px;
-  height: 1840px;
+  width: 1000px;
+  height: 1666px;
   background-color: #fff;
-  border-radius: 50px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 66px;
+  box-shadow: 0 26px 53px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 140px 100px 0 100px;
+  padding: 133px 100px 0 100px;
   box-sizing: border-box;
   text-align: left;
   position: relative;
@@ -583,33 +583,33 @@ input[type="file"] {
 .result-container.saving-mode .logo {
   color: #00c300;
   font-weight: 700;
-  font-size: 140px;
+  font-size: 133px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .info {
-  margin-top: -100px;
+  margin-top: -166px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .info h2 {
-  font-size: 66px;
+  font-size: 73px;
   margin: 0;
   color: #444;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .info p {
-  margin: 12px 0;
+  margin: 13px 0;
   color: #888;
-  font-size: 42px;
+  font-size: 46px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .bible-verse {
-  margin: 36px 0;
+  margin: 40px 0;
   color: #555;
-  font-size: 45px;
+  font-size: 50px;
   line-height: 1.8;
   font-weight: 400;
   font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -617,9 +617,9 @@ input[type="file"] {
 
 .result-container.saving-mode .bible-reference {
   display: block;
-  margin-top: 24px;
+  margin-top: 26px;
   color: #aaa;
-  font-size: 33px;
+  font-size: 36px;
   font-style: italic;
   text-align: right;
   font-family: 'Helvetica Neue', Arial, sans-serif;
@@ -631,213 +631,10 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .character svg {
-  width: 750px;
+  width: 833px;
   max-width: 83%;
   height: auto;
-  margin-right: -90px;
-}
-
-/* 카드 콘텐츠 영역 */
-.card-content {
-  display: flex;
-  flex: 1;
-  padding: 0;
-  gap: 0;
-}
-
-.result-container.saving-mode .card-content {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  margin-top: -100px;
-  gap: 0;
-  flex: 1;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-/* 직원 정보 (이름, 팀) - .info 클래스처럼 하나로 묶기 */
-.employee-info {
-  flex: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.result-container.saving-mode .employee-info {
-  padding: 0;
-  display: block;
-  text-align: left;
-  z-index: 2;
-  margin: 0;
-}
-
-/* 기본 모드 사진 */
-.employee-photo {
-  width: calc(100% - 32px);
-  height: 320px;
-  object-fit: cover;
-  margin: 16px 16px 0 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  border: none;
-  display: block;
-  border-radius: 16px 16px 0 0;
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 85%,
-    90% 88%,
-    80% 90%,
-    70% 91%,
-    60% 90%,
-    50% 88%,
-    40% 90%,
-    30% 91%,
-    20% 90%,
-    10% 88%,
-    0 85%
-  );
-}
-
-/* 저장 모드: 캐릭터 */
-.result-container.saving-mode .employee-photo {
-  width: 100%;
-  text-align: right;
-  z-index: 3;
-  overflow: visible;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  clip-path: none;
-  margin: 0;
-  height: auto;
-  position: static;
-}
-
-.result-container.saving-mode .employee-photo svg {
-  width: 750px;
-  max-width: 83%;
-  height: auto;
-  margin-right: -90px;
-  object-fit: contain;
-  background: transparent;
-}
-
-/* SVG 내부 배경도 투명하게 */
-.result-container.saving-mode .employee-photo svg rect[fill="#ffffff"],
-.result-container.saving-mode .employee-photo svg rect[fill="white"] {
-  fill: transparent !important;
-}
-
-/* 이름 스타일 */
-.employee-name {
-  font-size: clamp(22px, 4vw, 28px);
-  color: #1d1d1f;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  margin: -50px 0 0 0;
-  padding: 60px 28px 8px 28px;
-  text-align: left;
-  background: #fff;
-  border-radius: 28px 28px 0 0;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-}
-
-.result-container.saving-mode .employee-name {
-  font-size: 66px;
-  margin: 0;
-  color: #444;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-/* 팀 스타일 */
-.employee-team {
-  font-size: clamp(13px, 2.5vw, 15px);
-  color: #86868b;
-  font-weight: 500;
-  letter-spacing: 0;
-  margin: 0;
-  padding: 0 28px 12px 28px;
-  text-align: left;
-  background: #fff;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-}
-
-.result-container.saving-mode .employee-team {
-  margin: 12px 0;
-  color: #888;
-  font-size: 42px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.employee-id {
-  font-size: clamp(10px, 2vw, 12px);
-  color: #a1a1a6;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0 28px 28px 28px;
-  text-align: left;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-  background: #fff;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  border-radius: 0 0 12px 12px;
-}
-
-/* 말씀 스타일 */
-.employee-verse {
-  font-size: clamp(10px, 2vw, 12px);
-  color: #a1a1a6;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-  background: #fff;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  border-radius: 0 0 12px 12px;
-}
-
-.employee-id .verse-reference {
-  font-size: 10px;
-  color: #999;
-  margin-top: 5px;
-  display: block;
-}
-
-.employee-verse .verse-reference {
-  font-size: 10px;
-  color: #999;
-  margin-top: 5px;
-  display: block;
-}
-
-.result-container.saving-mode .employee-verse {
-  margin: 36px 0;
-  color: #555;
-  font-size: 45px;
-  line-height: 1.8;
-  font-weight: 400;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  position: static;
-  z-index: 2;
-  max-width: none;
-  padding: 0;
-  text-align: left;
-}
-
-.result-container.saving-mode .employee-verse .verse-reference {
-  display: block;
-  margin-top: 24px;
-  color: #aaa;
-  font-size: 33px;
-  font-style: italic;
-  text-align: right;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  margin-right: -100px;
 }
 
 /* 로고 스타일은 이제 card-header에 포함됨 */
@@ -2170,127 +1967,6 @@ input[type="file"] {
   box-shadow: 0 6px 16px rgba(220, 53, 69, 0.25);
 }
 
-/* 결과 페이지 스타일 */
-.result-container {
-  min-height: 100vh;
-  background-image: url('../assets/images/back.jpg');
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  position: relative;
-}
-
-.result-card {
-  background: #f8f8f8;
-  border-radius: 24px;
-  padding: 0;
-  max-width: 380px;
-  width: 90%;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  position: relative;
-  z-index: 10;
-  margin-bottom: 30px;
-  text-align: center;
-  overflow: visible;
-}
-
-.employee-photo {
-  width: calc(100% - 32px);
-  height: 320px;
-  object-fit: cover;
-  margin: 16px 16px 0 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px 16px 0 0;
-  background: #f0f0f0;
-}
-
-.employee-photo svg {
-  width: 100%;
-  height: 100%;
-}
-
-.employee-name {
-  font-size: 24px;
-  color: #1d1d1f;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  margin: -50px 0 0 0;
-  padding: 60px 28px 8px 28px;
-  text-align: left;
-  background: #fff;
-  border-radius: 28px 28px 0 0;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-}
-
-.employee-team {
-  font-size: 15px;
-  color: #86868b;
-  font-weight: 500;
-  letter-spacing: 0;
-  margin: 0;
-  padding: 0 28px 12px 28px;
-  text-align: left;
-  background: #fff;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-}
-
-.employee-id {
-  font-size: 12px;
-  color: #a1a1a6;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0 28px 28px 28px;
-  text-align: left;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-  background: #fff;
-  position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-  border-radius: 0 0 12px 12px;
-}
-
-.button-container {
-  display: flex;
-  gap: 20px;
-  max-width: 500px;
-  width: 90%;
-  z-index: 10;
-}
-
-.result-button {
-  flex: 1;
-  padding: 18px 30px;
-  background: rgba(255,255,255,0.3);
-  border: 2px solid rgba(12, 68, 59, 0.4);
-  color: rgba(12, 68, 59, 1);
-  font-size: 16px;
-  border-radius: 50px;
-  cursor: pointer;
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-  font-family: 'Noto Serif KR', serif;
-  font-weight: 300;
-  letter-spacing: 1px;
-}
-
-.result-button:hover {
-  background: rgba(12, 68, 59, 0.12);
-  border-color: rgba(12, 68, 59, 0.6);
-  color: rgba(12, 68, 59, 1);
-  transform: translateY(-2px);
-}
 
 /* 버튼 기본 스타일 */
 .btn {

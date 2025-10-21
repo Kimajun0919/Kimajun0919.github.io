@@ -303,9 +303,10 @@ window.showEmployeeResult = function(employee) {
   const resultPhoto = document.getElementById('resultPhoto');
   const resultName = document.getElementById('resultName');
   const resultTeam = document.getElementById('resultTeam');
-  const resultId = document.getElementById('resultId');
+  const resultVerse = document.getElementById('resultVerse');
+  const resultReference = document.getElementById('resultReference');
   
-  if (resultPhoto && resultName && resultTeam && resultId) {
+  if (resultPhoto && resultName && resultTeam && resultVerse && resultReference) {
     // 아바타 표시: avatarData로 생성
     let avatarHTML = '';
     if (employee.avatarData) {
@@ -326,17 +327,21 @@ window.showEmployeeResult = function(employee) {
 
     // 저장된 말씀이 있으면 사용, 아니면 랜덤
     if (employee.verseContent && employee.verseReference) {
-      resultId.innerHTML = `${employee.verseContent}<br><span class="verse-reference" style="display:block;margin-top:6px;opacity:0.75;">${employee.verseReference}</span>`;
+      resultVerse.textContent = employee.verseContent;
+      resultReference.textContent = employee.verseReference;
     } else {
       try {
         if (Array.isArray(window.verses) && window.verses.length > 0) {
           const v = window.verses[Math.floor(Math.random() * window.verses.length)];
-          resultId.innerHTML = `${v.content}<br><span class="verse-reference" style="display:block;margin-top:6px;opacity:0.75;">${v.reference}</span>`;
+          resultVerse.textContent = v.content;
+          resultReference.textContent = v.reference;
         } else {
-          resultId.textContent = `ID: ${employee.employeeId}`;
+          resultVerse.textContent = '선한 사람의 걸음을 여호와께서 정하시니 그분은 그 길을 기뻐하십니다.';
+          resultReference.textContent = '시편 37편 23절';
         }
       } catch (e) {
-        resultId.textContent = `ID: ${employee.employeeId}`;
+        resultVerse.textContent = '선한 사람의 걸음을 여호와께서 정하시니 그분은 그 길을 기뻐하십니다.';
+        resultReference.textContent = '시편 37편 23절';
       }
     }
     
@@ -411,7 +416,7 @@ window.saveAsImage = async function() {
   }
   
   try {
-    // 3. 아바타 데이터로 PNG URL 생성 (저장용)
+    // 3. 아바타 데이터로 PNG URL 생성 (저장용 - html2canvas는 SVG를 제대로 렌더링하지 못함)
     let avatarPngUrl = null;
     
     // 아바타 데이터 파싱
@@ -447,7 +452,7 @@ window.saveAsImage = async function() {
     // 4. html2canvas 로드
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
-    // 5. 오프스크린에 고정 크기 컨테이너 생성 (9:16 비율)
+    // 5. 오프스크린에 고정 크기 컨테이너 생성 (LINE 스타일, 9:16 비율)
     const offscreenContainer = document.createElement('div');
     offscreenContainer.className = 'result-container saving-mode';
     offscreenContainer.style.cssText = `
@@ -456,10 +461,7 @@ window.saveAsImage = async function() {
       top: 0;
       width: 1080px !important;
       height: 1920px !important;
-      background-image: url('assets/images/back.jpg');
-      background-position: center center;
-      background-size: cover;
-      background-repeat: no-repeat;
+      background: #f8f8f8;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -471,151 +473,105 @@ window.saveAsImage = async function() {
     // 6. 카드 복제 (deep clone)
     const clonedCard = originalCard.cloneNode(true);
     
-    // 복제된 카드의 아바타 이미지를 PNG URL로 교체
+    // SVG를 PNG 이미지로 교체 (html2canvas용)
     if (avatarPngUrl) {
-      const clonedPhotoImg = clonedCard.querySelector('.employee-photo img');
-      if (clonedPhotoImg) {
-        clonedPhotoImg.src = avatarPngUrl;
-        clonedPhotoImg.crossOrigin = 'anonymous';
-        console.log('복제된 아바타에 PNG URL 적용');
+      const clonedCharacter = clonedCard.querySelector('.character');
+      if (clonedCharacter) {
+        // 기존 SVG 제거하고 img 태그로 교체
+        clonedCharacter.innerHTML = `<img src="${avatarPngUrl}" crossorigin="anonymous" style="width: 833px; max-width: 83%; height: auto; margin-right: -100px;" />`;
       }
     }
+    
     clonedCard.style.cssText = `
-      width: 920px !important;
-      background: #f8f8f8;
-      border-radius: 48px;
-      box-shadow: 0 16px 64px rgba(0,0,0,0.12);
+      width: 1000px !important;
+      height: 1666px !important;
+      background: #fff;
+      border-radius: 66px;
+      box-shadow: 0 26px 53px rgba(0,0,0,0.1);
       overflow: hidden;
       margin: 0;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      padding: 133px 100px 0 100px;
+      box-sizing: border-box;
+      text-align: left;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
     `;
     
-    // 7. 카드 내부 요소들에 saving-mode 스타일 강제 적용 (9:16 비율)
-    const clonedPhoto = clonedCard.querySelector('.employee-photo');
-    if (clonedPhoto) {
-      clonedPhoto.style.cssText = `
-        width: 872px !important;
-        height: 1000px !important;
-        margin: 24px 24px 0 24px !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-        border-radius: 32px 32px 0 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        background: #fff;
-        clip-path: polygon(
-          0 0, 100% 0, 100% 85%,
-          90% 88%, 80% 90%, 70% 91%, 60% 90%, 50% 88%,
-          40% 90%, 30% 91%, 20% 90%, 10% 88%, 0 85%
-        );
+    // 7. 카드 내부 요소들에 LINE 스타일 강제 적용
+    const clonedLogo = clonedCard.querySelector('.logo');
+    if (clonedLogo) {
+      clonedLogo.style.cssText = `
+        color: #00c300 !important;
+        font-weight: 700 !important;
+        font-size: 133px !important;
+        font-family: 'Helvetica Neue', Arial, sans-serif !important;
+      `;
+    }
+    
+    const clonedInfo = clonedCard.querySelector('.info');
+    if (clonedInfo) {
+      clonedInfo.style.cssText = `
+        margin-top: -166px !important;
+        font-family: 'Helvetica Neue', Arial, sans-serif !important;
       `;
       
-      // 아바타 이미지 스타일 적용
-      const clonedPhotoImg = clonedPhoto.querySelector('img');
-      if (clonedPhotoImg) {
-        clonedPhotoImg.style.cssText = `
-          width: 100% !important;
-          height: 100% !important;
-          object-fit: contain !important;
-          display: block !important;
+      const clonedName = clonedInfo.querySelector('h2');
+      if (clonedName) {
+        clonedName.style.cssText = `
+          font-size: 73px !important;
+          margin: 0 !important;
+          color: #444 !important;
+          font-family: 'Helvetica Neue', Arial, sans-serif !important;
         `;
+      }
+      
+      const clonedTeam = clonedInfo.querySelector('p:not(.bible-verse)');
+      if (clonedTeam) {
+        clonedTeam.style.cssText = `
+          margin: 13px 0 !important;
+          color: #888 !important;
+          font-size: 46px !important;
+          font-family: 'Helvetica Neue', Arial, sans-serif !important;
+        `;
+      }
+      
+      const clonedVerse = clonedInfo.querySelector('.bible-verse');
+      if (clonedVerse) {
+        clonedVerse.style.cssText = `
+          margin: 40px 0 !important;
+          color: #555 !important;
+          font-size: 50px !important;
+          line-height: 1.8 !important;
+          font-weight: 400 !important;
+          font-family: 'Helvetica Neue', Arial, sans-serif !important;
+        `;
+        
+        const verseRef = clonedVerse.querySelector('.bible-reference');
+        if (verseRef) {
+          verseRef.style.cssText = `
+            display: block !important;
+            margin-top: 26px !important;
+            color: #aaa !important;
+            font-size: 36px !important;
+            font-style: italic !important;
+            text-align: right !important;
+            font-family: 'Helvetica Neue', Arial, sans-serif !important;
+          `;
+        }
       }
     }
     
-    const clonedName = clonedCard.querySelector('.employee-name');
-    if (clonedName) {
-      clonedName.style.cssText = `
-        font-size: 72px !important;
-        color: #1d1d1f;
-        font-weight: 600;
-        letter-spacing: -1px;
-        margin: -150px 0 0 0 !important;
-        padding: 170px 68px 16px 68px !important;
-        text-align: left;
-        background: #fff;
-        border-radius: 56px 56px 0 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-      `;
-    }
-    
-    const clonedTeam = clonedCard.querySelector('.employee-team');
-    if (clonedTeam) {
-      clonedTeam.style.cssText = `
-        font-size: 36px !important;
-        color: #86868b;
-        font-weight: 500;
-        letter-spacing: 0;
-        margin: 0 !important;
-        padding: 0 68px 24px 68px !important;
-        text-align: left;
-        background: #fff;
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-      `;
-    }
-    
-    const clonedId = clonedCard.querySelector('.employee-id');
-    if (clonedId) {
-      clonedId.style.cssText = `
-        font-size: 28px !important;
-        color: #a1a1a6;
-        line-height: 1.8;
-        margin: 0 !important;
-        padding: 0 68px 32px 68px !important;
-        text-align: left;
-        font-weight: 400;
-        letter-spacing: 0.2px;
-        background: #fff;
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
-        border-radius: 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-      `;
-    }
-    
-    // verse-reference 스타일도 적용
-    const verseRef = clonedCard.querySelector('.verse-reference');
-    if (verseRef) {
-      verseRef.style.cssText = `
-        font-size: 24px !important;
-        color: #999;
-        margin-top: 8px;
-        display: block;
-        opacity: 0.75;
+    const clonedCharacter = clonedCard.querySelector('.character');
+    if (clonedCharacter) {
+      clonedCharacter.style.cssText = `
+        width: 100% !important;
+        text-align: right !important;
       `;
     }
     
     offscreenContainer.appendChild(clonedCard);
-    
-    // 배경 하단에 로고 추가
-    const logoContainer = document.createElement('div');
-    logoContainer.className = 'result-logo';
-    logoContainer.style.cssText = `
-      display: flex !important;
-      align-items: center;
-      justify-content: center;
-      position: absolute;
-      bottom: 60px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 20;
-    `;
-    
-    const logoImg = document.createElement('img');
-    logoImg.src = 'assets/images/HaneulLogo.png';
-    logoImg.alt = 'Haneul Logo';
-    logoImg.className = 'haneul-logo';
-    logoImg.style.cssText = `
-      width: 180px !important;
-      height: auto !important;
-      opacity: 0.6;
-    `;
-    
-    logoContainer.appendChild(logoImg);
-    offscreenContainer.appendChild(logoContainer);
     
     document.body.appendChild(offscreenContainer);
     
@@ -626,32 +582,34 @@ window.saveAsImage = async function() {
       await document.fonts.ready;
     }
     
-    // PNG 이미지 로드 대기 (Dicebear API에서 다운로드)
-    const pngImg = offscreenContainer.querySelector('.employee-photo img');
-    if (pngImg && avatarPngUrl) {
-      await new Promise((resolve) => {
-        if (pngImg.complete) {
-          resolve();
-        } else {
-          pngImg.onload = resolve;
-          pngImg.onerror = resolve;
-          setTimeout(resolve, 3000); // 3초 타임아웃
-        }
-      });
-      console.log('PNG 이미지 로드 완료');
+    // PNG 이미지 로드 대기
+    if (avatarPngUrl) {
+      const pngImg = clonedCard.querySelector('.character img');
+      if (pngImg) {
+        await new Promise((resolve) => {
+          if (pngImg.complete) {
+            resolve();
+          } else {
+            pngImg.onload = resolve;
+            pngImg.onerror = resolve;
+            setTimeout(resolve, 5000); // 5초 타임아웃
+          }
+        });
+        console.log('PNG 이미지 로드 완료');
+      }
     }
     
     await new Promise(resolve => setTimeout(resolve, 500));
     
     console.log('캡처 시작...');
     
-    // 9. 고정 크기로 초고화질 캡처 (9:16 비율 - Instagram Story/Reels)
+    // 9. 고정 크기로 고화질 캡처 (9:16 비율)
     const canvas = await html2canvas.default(offscreenContainer, {
-      backgroundColor: null,
+      backgroundColor: '#f8f8f8',
       useCORS: true,
       allowTaint: true,
       logging: false,
-      scale: 3, // 초고해상도 (실제 출력: 3240x5760px, 9:16 비율)
+      scale: 2, // 고해상도 (실제 출력: 2160x3840px, 9:16 비율)
       width: 1080,
       height: 1920,
       windowWidth: 1080,
