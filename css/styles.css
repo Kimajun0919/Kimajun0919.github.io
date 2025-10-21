@@ -368,28 +368,33 @@ input[type="file"] {
   z-index: 10;
   margin-bottom: 30px;
   overflow: hidden;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .logo {
   color: #00c300;
   font-weight: 700;
   font-size: 40px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .info {
   margin-top: -50px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .info h2 {
   font-size: 22px;
   margin: 0;
   color: #444;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .info p {
   margin: 4px 0;
   color: #888;
   font-size: 14px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .bible-verse {
@@ -398,6 +403,7 @@ input[type="file"] {
   font-size: 15px;
   line-height: 1.8;
   font-weight: 400;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .bible-reference {
@@ -407,6 +413,7 @@ input[type="file"] {
   font-size: 11px;
   font-style: italic;
   text-align: right;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-card .character {
@@ -419,6 +426,83 @@ input[type="file"] {
   max-width: 83%;
   height: auto;
   margin-right: -30px;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 480px) {
+  .result-card {
+    width: 95vw;
+    padding: 30px 20px 0 20px;
+  }
+
+  .result-card .logo {
+    font-size: 32px;
+  }
+
+  .result-card .info {
+    margin-top: -20px;
+  }
+
+  .result-card .info h2 {
+    font-size: 18px;
+  }
+
+  .result-card .info p {
+    font-size: 12px;
+  }
+
+  .result-card .bible-verse {
+    font-size: 13px;
+    margin: 10px 0;
+  }
+
+  .result-card .bible-reference {
+    font-size: 10px;
+  }
+
+  .result-card .character svg {
+    width: 200px;
+    margin-right: -20px;
+  }
+}
+
+@media (max-height: 600px) {
+  .result-card {
+    height: 90vh;
+    padding: 30px 25px 0 25px;
+  }
+
+  .result-card .logo {
+    font-size: 32px;
+  }
+
+  .result-card .info {
+    margin-top: -15px;
+  }
+
+  .result-card .info h2 {
+    font-size: 18px;
+  }
+
+  .result-card .info p {
+    font-size: 12px;
+  }
+
+  .result-card .bible-verse {
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 8px 0;
+  }
+
+  .result-card .bible-reference {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+
+  .result-card .character svg {
+    width: 180px;
+    margin-right: -25px;
+  }
 }
 
 /* ==================== 저장 모드 (사원증) ==================== */
@@ -450,28 +534,33 @@ input[type="file"] {
   position: relative;
   overflow: hidden;
   margin: 0;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .logo {
   color: #00c300;
   font-weight: 700;
   font-size: 140px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .info {
   margin-top: -100px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .info h2 {
   font-size: 66px;
   margin: 0;
   color: #444;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .info p {
   margin: 12px 0;
   color: #888;
   font-size: 42px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .bible-verse {
@@ -480,6 +569,7 @@ input[type="file"] {
   font-size: 45px;
   line-height: 1.8;
   font-weight: 400;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .bible-reference {
@@ -489,6 +579,7 @@ input[type="file"] {
   font-size: 33px;
   font-style: italic;
   text-align: right;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .result-container.saving-mode .character {
