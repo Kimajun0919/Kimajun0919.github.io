@@ -58,13 +58,6 @@ body {
   overflow: hidden;
 }
 
-.main-content {
-  text-align: center;
-  z-index: 10;
-  position: relative;
-  padding: 40px 20px;
-}
-
 .main-title {
     font-family: "flirt-script-regular", sans-serif;
     font-size: clamp(36px, 8vw, 72px);
@@ -78,7 +71,7 @@ body {
 }
 
 .main-subtitle {
-    font-family: "grandiflora-one", "Noto Serif KR", serif;
+    font-family: 'GungnipClassic', serif;    
     font-size: clamp(30px, 3vw, 42px);
     color: rgba(12, 68, 59, 1);
     font-weight: 300;
@@ -86,24 +79,25 @@ body {
     margin-top: 30px;
 }
 
+
 .bible-verse {
-    font-size: clamp(12px, 2vw, 18px); /* 반응형: 화면에 따라 유동 */
-    font-weight: 400;
-    color: #444;
-    margin-top: 14px;
-    line-height: 1.6;
-    text-align: center;    /* 가운데 정렬 */
-    white-space: pre-line; /* 줄바꿈 반영 */
-    word-break: keep-all;
+  font-size: clamp(12px, 2vw, 18px); /* 반응형: 화면에 따라 유동 */
+  font-weight: 400;
+  color: #444;
+  margin-top: 14px;
+  line-height: 1.6;
+  text-align: center;    /* 가운데 정렬 */
+  white-space: pre-line; /* 줄바꿈 반영 */
+  word-break: keep-all;
 }
 
 .bible-reference {
-    display: block;
-    font-size: clamp(10px, 1.8vw, 16px); /* 더 작게 */
-    margin-top: 0px;
-    color: #666;
-    text-align: center;
-    letter-spacing: 1px;
+  display: block;
+  font-size: clamp(10px, 1.8vw, 16px); /* 더 작게 */
+  margin-top: 0px;
+  color: #666;
+  text-align: center;
+  letter-spacing: 1px;
 }
 
 .menu-buttons {
