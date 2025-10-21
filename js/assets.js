@@ -72,9 +72,15 @@ function createDicebearAvatar(options = {}) {
   const seed = options.seed || Date.now().toString();
   const dicebearOptions = options.dicebearOptions || {};
   
+  console.log('createDicebearAvatar called with:', { style, seed, dicebearOptions });
+  
   try {
     // API URL 생성
     let apiUrl = `https://api.dicebear.com/9.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
+    
+    // scale 옵션 추가 (기본값: 100)
+    const scale = dicebearOptions.scale || 100;
+    apiUrl += `&scale=${scale}`;
     
     // 옵션 추가
     if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
@@ -108,11 +114,14 @@ function createDicebearAvatar(options = {}) {
       apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
     }
     
-    // SVG를 img 태그로 반환
-    return `<img src="${apiUrl}" alt="Avatar" style="width: 100%; height: 100%; display: block;" />`;
+    console.log('Generated Dicebear API URL:', apiUrl);
+    
+    // SVG를 img 태그로 반환 (object-fit: contain으로 비율 유지)
+    const imgHtml = `<img src="${apiUrl}" alt="Avatar" style="width: 100%; height: 100%; display: block; object-fit: contain;" crossorigin="anonymous" onload="console.log('Avatar image loaded successfully')" onerror="console.error('Avatar image failed to load:', this.src)" />`;
+    return imgHtml;
   } catch (error) {
     console.error('Error creating Dicebear avatar:', error);
-    return '';
+    return '<div style="padding: 20px; text-align: center; color: red;">아바타 생성 오류</div>';
   }
 }
 

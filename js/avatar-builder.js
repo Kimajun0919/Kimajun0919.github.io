@@ -375,10 +375,15 @@ function updateActiveButton(container, activeBtn) {
 // 렌더링
 function renderBuilderAvatar(state) {
   const preview = document.getElementById('avatarPreview');
-  if (!preview) return;
+  if (!preview) {
+    console.error('avatarPreview 요소를 찾을 수 없습니다!');
+    return;
+  }
 
   // 전역 상태 동기화 (렌더링할 때마다)
   window.builderState = builderState;
+
+  console.log('renderBuilderAvatar - state:', state);
 
   // Dicebear 옵션 구성
   const dicebearOptions = {
@@ -398,6 +403,8 @@ function renderBuilderAvatar(state) {
   if (state.freckles && state.freckles !== '') dicebearOptions.freckles = [state.freckles];
   if (state.hairAccessories && state.hairAccessories !== '') dicebearOptions.hairAccessories = [state.hairAccessories];
 
+  console.log('dicebearOptions:', dicebearOptions);
+
   // 아바타 생성
   const svg = createDicebearAvatar({
     style: state.style,
@@ -405,8 +412,12 @@ function renderBuilderAvatar(state) {
     dicebearOptions: dicebearOptions
   });
 
+  console.log('Generated avatar HTML:', svg);
+
   // SVG 렌더링
   preview.innerHTML = svg;
+  
+  console.log('Preview innerHTML set:', preview.innerHTML);
 }
 
 // 옵션 적용
