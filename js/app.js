@@ -330,7 +330,7 @@ window.showEmployeeResult = function(employee) {
   // LINE 카드 스타일로 HTML 구성 (카드만 생성, 버튼은 HTML에 있음)
   resultCard.innerHTML = `
     <div class="line-card">
-      <div class="line-logo">LINE</div>
+      <div class="line-logo">HANEUL</div>
       <div class="line-info">
         <h2>${employee.name || ''}</h2>
         <p class="line-team">${employee.team || ''}</p>
