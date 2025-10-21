@@ -1924,29 +1924,40 @@ input[type="file"] {
 .employee-card {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+  gap: 24px;
+  padding: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(12, 68, 59, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
 }
 
 .employee-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(12, 68, 59, 0.18);
 }
 
 .employee-avatar {
   width: 120px;
   height: 120px;
-  border-radius: 12px;
+  border-radius: 18px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 248, 248, 0.95));
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(12, 68, 59, 0.08);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+.employee-card:hover .employee-avatar {
+  box-shadow: 0 6px 20px rgba(12, 68, 59, 0.15);
+  transform: scale(1.02);
 }
 
 .employee-avatar img {
@@ -1971,50 +1982,71 @@ input[type="file"] {
 }
 
 .employee-info h3 {
-  margin: 0 0 8px 0;
-  font-size: 18px;
-  color: #333;
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(12, 68, 59, 1);
+  font-family: 'Noto Serif KR', serif;
+  letter-spacing: 0.5px;
 }
 
 .employee-info p {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #666;
+  margin: 6px 0;
+  font-size: 15px;
+  color: rgba(12, 68, 59, 0.7);
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 300;
+  line-height: 1.6;
 }
 
 .employee-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.btn-primary {
-  background: #007aff;
+.employee-actions .btn-primary {
+  background: rgba(12, 68, 59, 1);
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 12px 28px;
+  border-radius: 50px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s;
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(12, 68, 59, 0.2);
 }
 
-.btn-primary:hover {
-  background: #0051d5;
+.employee-actions .btn-primary:hover {
+  background: rgba(12, 68, 59, 0.85);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(12, 68, 59, 0.3);
 }
 
-.btn-danger {
-  background: #ff3b30;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+.employee-actions .btn-danger {
+  background: rgba(255, 255, 255, 0.95);
+  color: rgba(220, 53, 69, 1);
+  border: 2px solid rgba(220, 53, 69, 0.4);
+  padding: 10px 28px;
+  border-radius: 50px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s;
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
 }
 
-.btn-danger:hover {
-  background: #d70015;
+.employee-actions .btn-danger:hover {
+  background: rgba(220, 53, 69, 0.1);
+  border-color: rgba(220, 53, 69, 0.6);
+  color: rgba(200, 35, 51, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 53, 69, 0.25);
 }
 
 /* 결과 페이지 스타일 */

@@ -285,8 +285,6 @@ function displaySearchResults(employees) {
       <div class="employee-info">
         <h3>${employee.name}</h3>
         <p>팀: ${employee.team}</p>
-        <p>${verseHTML}</p>
-        <p>등록일: ${new Date(employee.createdAt).toLocaleDateString()}</p>
       </div>
       <div class="employee-actions">
         <button onclick="showEmployeeResult(${JSON.stringify(employee).replace(/"/g, '&quot;')})" class="btn-primary">상세보기</button>
