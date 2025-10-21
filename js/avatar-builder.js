@@ -53,7 +53,7 @@ function createLoreleiOptions() {
     hairContainer.innerHTML = '';
     LORELEI_OPTIONS.hair.forEach((variant) => {
       const btn = document.createElement('button');
-      btn.className = 'option-btn';
+      btn.className = 'option-btn option-btn-with-preview';
       btn.title = variant; // 호버시 variant ID 표시
       
       // 미리보기 이미지 추가
@@ -94,24 +94,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.eyes.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=eyes${index}&eyes=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = `${index + 1}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.eyes = variant;
         renderBuilderAvatar(builderState);
@@ -133,24 +116,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.eyebrows.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=eyebrows${index}&eyebrows=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = `${index + 1}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.eyebrows = variant;
         renderBuilderAvatar(builderState);
@@ -172,24 +138,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.mouth.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=mouth${index}&mouth=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = variant.startsWith('happy') ? `😊${variant.slice(5)}` : `😢${variant.slice(3)}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = variant.startsWith('happy') ? `😊${variant.slice(5)}` : `😢${variant.slice(3)}`;
       btn.onclick = () => {
         builderState.mouth = variant;
         renderBuilderAvatar(builderState);
@@ -211,24 +160,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.nose.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=nose${index}&nose=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = `${index + 1}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.nose = variant;
         renderBuilderAvatar(builderState);
@@ -268,24 +200,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.glasses.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=glasses${index}&glasses=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = `${index + 1}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.glasses = variant;
         renderBuilderAvatar(builderState);
@@ -325,24 +240,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.earrings.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=earrings${index}&earrings=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = `${index + 1}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.earrings = variant;
         renderBuilderAvatar(builderState);
@@ -382,24 +280,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.freckles.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=freckles${index}&freckles=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = `${index + 1}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.freckles = variant;
         renderBuilderAvatar(builderState);
@@ -439,24 +320,7 @@ function createLoreleiOptions() {
     LORELEI_OPTIONS.hairAccessories.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      
-      // 미리보기 이미지 추가
-      const previewImg = document.createElement('img');
-      const previewUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=hairAccessories${index}&hairAccessories=${variant}&size=60`;
-      previewImg.src = previewUrl;
-      previewImg.style.width = '100%';
-      previewImg.style.height = '40px';
-      previewImg.style.objectFit = 'contain';
-      previewImg.style.marginBottom = '4px';
-      btn.appendChild(previewImg);
-      
-      // 텍스트 라벨 추가
-      const label = document.createElement('span');
-      label.textContent = variant === 'flowers' ? '🌸' : `${index + 1}`;
-      label.style.fontSize = '10px';
-      label.style.display = 'block';
-      btn.appendChild(label);
-      
+      btn.textContent = variant === 'flowers' ? '🌸' : `${index + 1}`;
       btn.onclick = () => {
         builderState.hairAccessories = variant;
         renderBuilderAvatar(builderState);

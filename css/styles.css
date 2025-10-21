@@ -2057,7 +2057,7 @@ input[type="file"] {
 }
 
 .option-btn {
-  min-height: 80px;
+  aspect-ratio: 1;
   border: 2px solid rgba(12, 68, 59, 0.2);
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.8);
@@ -2065,7 +2065,6 @@ input[type="file"] {
   transition: all 0.3s ease;
   padding: 8px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: clamp(10px, 1.5vw, 12px);
@@ -2073,6 +2072,12 @@ input[type="file"] {
   color: rgba(12, 68, 59, 0.7);
   font-family: 'Noto Serif KR', serif;
   font-weight: 300;
+}
+
+.option-btn-with-preview {
+  min-height: 80px;
+  aspect-ratio: auto;
+  flex-direction: column;
   overflow: hidden;
 }
 
