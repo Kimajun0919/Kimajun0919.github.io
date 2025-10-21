@@ -47,6 +47,7 @@ window.saveAvatar = async function() {
   try {
     // 현재 아바타 상태 가져오기
     const currentAvatarState = getCurrentAvatarState();
+    console.log('Saving avatar state:', currentAvatarState); // 디버깅용
     
     // 고유 ID 생성
     const employeeId = String(Date.now()).slice(-6);
@@ -264,11 +265,15 @@ function displaySearchResults(employees) {
     if (employee.avatarData) {
       try {
         const avatarData = typeof employee.avatarData === 'string' ? JSON.parse(employee.avatarData) : employee.avatarData;
+        console.log('Loaded avatar data:', avatarData); // 디버깅용
         avatarHTML = generateAvatarSVG(avatarData);
+        console.log('Generated avatar HTML:', avatarHTML); // 디버깅용
       } catch (e) {
+        console.error('Avatar data parsing error:', e);
         avatarHTML = '<div class="no-avatar">아바타 없음</div>';
       }
     } else {
+      console.log('No avatar data found for employee:', employee);
       avatarHTML = '<div class="no-avatar">아바타 없음</div>';
     }
     
