@@ -166,6 +166,51 @@ function generateAvatarSVG(avatarData) {
   return createBasicAvatarSVG(avatarData);
 }
 
+// 아바타 PNG 생성 함수 (이미지 저장용)
+function generateAvatarPNG(avatarData) {
+  if (!avatarData) {
+    avatarData = getCurrentAvatarState();
+  }
+  
+  // Dicebear API로 PNG 아바타 생성
+  if (typeof window.createDicebearAvatarPNG === 'function') {
+    try {
+      const style = avatarData.style || 'lorelei';
+      const seed = avatarData.seed || Date.now().toString();
+      
+      // Dicebear 옵션 구성
+      const dicebearOptions = {
+        seed: seed,
+        scale: 100
+      };
+
+      // lorelei 스타일 옵션 (빈 문자열은 제외)
+      if (avatarData.hair) dicebearOptions.hair = [avatarData.hair];
+      if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
+      if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
+      if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
+      if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
+      if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
+      if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
+      if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
+      if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
+
+      const png = window.createDicebearAvatarPNG({
+        style: style,
+        seed: seed,
+        dicebearOptions: dicebearOptions
+      });
+
+      if (png) return png;
+    } catch (error) {
+      console.error('Error generating Dicebear avatar PNG:', error);
+    }
+  }
+  
+  // 폴백: SVG 생성
+  return generateAvatarSVG(avatarData);
+}
+
 // 기본 아바타 SVG 생성 (폴백용)
 function createBasicAvatarSVG(avatarData) {
   return `
@@ -305,7 +350,7 @@ window.showEmployeeResult = function(employee) {
   // 카드 내용 생성
   const resultCard = document.getElementById('resultCard');
   
-  // 아바타 SVG 생성
+  // 아바타 SVG 생성 (화면 표시용)
   let avatarData;
   if (employee.avatarData) {
     try {
@@ -401,13 +446,33 @@ window.saveAsImage = async function() {
   }
   
   try {
-    // html2canvas 로드
-    const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
-    
     // 버튼 임시로 숨기기
     const buttonContainer = document.querySelector('.button-container');
     const originalDisplay = buttonContainer.style.display;
     buttonContainer.style.display = 'none';
+    
+    // 아바타를 SVG에서 PNG로 임시 교체
+    const characterDiv = resultCard.querySelector('.line-character');
+    const originalHTML = characterDiv.innerHTML;
+    
+    // 현재 직원의 아바타 데이터로 PNG 생성
+    if (window.currentEmployee && window.currentEmployee.avatarData) {
+      try {
+        const avatarData = typeof window.currentEmployee.avatarData === 'string' 
+          ? JSON.parse(window.currentEmployee.avatarData) 
+          : window.currentEmployee.avatarData;
+        const avatarPNG = generateAvatarPNG(avatarData);
+        characterDiv.innerHTML = avatarPNG;
+        
+        // 이미지 로딩 대기
+        await new Promise(resolve => setTimeout(resolve, 300));
+      } catch (e) {
+        console.error('Failed to convert to PNG:', e);
+      }
+    }
+    
+    // html2canvas 로드
+    const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
     // 현재 화면 그대로 캡처
     const canvas = await html2canvas.default(resultCard, {
@@ -419,6 +484,9 @@ window.saveAsImage = async function() {
       width: window.innerWidth,
       height: window.innerHeight
     });
+    
+    // 아바타를 원래 SVG로 복원
+    characterDiv.innerHTML = originalHTML;
     
     // 버튼 다시 표시
     buttonContainer.style.display = originalDisplay;

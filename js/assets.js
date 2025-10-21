@@ -115,6 +115,58 @@ function createDicebearAvatar(options = {}) {
   }
 }
 
+// PNG 형식으로 아바타 생성 (이미지 저장용)
+function createDicebearAvatarPNG(options = {}) {
+  const style = options.style || 'lorelei';
+  const seed = options.seed || Date.now().toString();
+  const dicebearOptions = options.dicebearOptions || {};
+  
+  try {
+    // API URL 생성 (PNG 형식)
+    let apiUrl = `https://api.dicebear.com/9.x/${style}/png?seed=${encodeURIComponent(seed)}`;
+    
+    // scale 옵션 추가 (기본값: 100)
+    const scale = dicebearOptions.scale || 100;
+    apiUrl += `&scale=${scale}`;
+    
+    // 옵션 추가
+    if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
+      apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
+    }
+    if (dicebearOptions.eyes && dicebearOptions.eyes.length > 0) {
+      apiUrl += `&eyes=${encodeURIComponent(dicebearOptions.eyes.join(','))}`;
+    }
+    if (dicebearOptions.eyebrows && dicebearOptions.eyebrows.length > 0) {
+      apiUrl += `&eyebrows=${encodeURIComponent(dicebearOptions.eyebrows.join(','))}`;
+    }
+    if (dicebearOptions.mouth && dicebearOptions.mouth.length > 0) {
+      apiUrl += `&mouth=${encodeURIComponent(dicebearOptions.mouth.join(','))}`;
+    }
+    if (dicebearOptions.nose && dicebearOptions.nose.length > 0) {
+      apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
+    }
+    if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
+      apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+    }
+    if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
+      apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
+    }
+    if (dicebearOptions.freckles && dicebearOptions.freckles.length > 0) {
+      apiUrl += `&freckles=${encodeURIComponent(dicebearOptions.freckles.join(','))}`;
+    }
+    if (dicebearOptions.hairAccessories && dicebearOptions.hairAccessories.length > 0) {
+      apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
+    }
+    
+    // PNG를 img 태그로 반환
+    const imgHtml = `<img src="${apiUrl}" alt="Avatar" style="width: 100%; height: 100%; display: block; object-fit: contain;" crossorigin="anonymous" />`;
+    return imgHtml;
+  } catch (error) {
+    console.error('Error creating Dicebear avatar PNG:', error);
+    return '<div style="padding: 20px; text-align: center; color: red;">아바타 생성 오류</div>';
+  }
+}
+
 // 색상 팔레트 (배경색은 파스텔톤으로 변경)
 const AVATAR_COLORS = {
   skin: [
@@ -151,3 +203,4 @@ window.HAIR_LABELS = HAIR_LABELS;
 window.LORELEI_OPTIONS = LORELEI_OPTIONS;
 window.AVATAR_COLORS = AVATAR_COLORS;
 window.createDicebearAvatar = createDicebearAvatar;
+window.createDicebearAvatarPNG = createDicebearAvatarPNG;
