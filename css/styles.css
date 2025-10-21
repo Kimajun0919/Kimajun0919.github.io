@@ -367,17 +367,17 @@ input[type="file"] {
   flex-direction: column;
 }
 
-/* 일반 모드에서도 HANEUL 헤더 표시 */
+/* 일반 모드 - HANEUL 헤더 */
 .result-card .card-header {
   display: block;
-  padding: 30px 30px 0;
+  padding: 30px 30px 20px;
 }
 
 .result-card .haneul-brand {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
   color: #00C73C;
-  letter-spacing: 3px;
+  letter-spacing: 0px;
   text-align: left;
 }
 
@@ -388,40 +388,57 @@ input[type="file"] {
   padding: 0;
   gap: 0;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   position: relative;
+  padding-top: 50px;
 }
 
 .result-card .employee-info {
   display: block;
   text-align: center;
   z-index: 2;
-  padding: 20px 0;
+  padding: 0 20px;
+  margin-bottom: auto;
 }
 
 .result-card .employee-name {
-  font-size: clamp(32px, 6vw, 42px);
-  margin-bottom: 8px;
+  font-size: clamp(48px, 9vw, 60px);
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 12px;
+  letter-spacing: -2px;
+  line-height: 1;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
 }
 
 .result-card .employee-team {
-  font-size: clamp(14px, 3vw, 16px);
+  font-size: clamp(16px, 3.5vw, 20px);
+  color: #8e8e93;
+  font-weight: 400;
+  letter-spacing: 0px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
 
 .result-card .employee-photo {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  width: 180px;
-  height: 280px;
+  right: 0;
+  bottom: 0;
+  width: 220px;
+  height: 400px;
   z-index: 3;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  clip-path: none;
 }
 
 .result-card .employee-photo svg {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: bottom right;
   background: transparent;
 }
 
@@ -430,17 +447,22 @@ input[type="file"] {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
   z-index: 2;
-  max-width: 200px;
-  font-size: 11px;
-  padding: 30px;
-  line-height: 1.6;
+  max-width: 160px;
+  font-size: 9px;
+  padding: 0 0 25px 25px;
+  line-height: 1.8;
+  color: #636366;
+  font-family: 'Noto Serif KR', serif;
+  text-align: left;
 }
 
 .result-card .employee-verse .verse-reference {
-  font-size: 9px;
+  font-size: 7px;
+  color: #8e8e93;
   margin-top: 8px;
+  display: block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
 }
 
 /* ==================== 저장 모드 (사원증) ==================== */
@@ -458,10 +480,10 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .result-card {
-  width: 920px;
-  height: 1720px;
+  width: 1040px;
+  height: 1840px;
   background: #ffffff;
-  border-radius: 40px;
+  border-radius: 50px;
   box-shadow: 0 40px 120px rgba(0,0,0,0.3);
   overflow: hidden;
   margin: 0;
@@ -478,22 +500,22 @@ input[type="file"] {
 
 .result-container.saving-mode .card-header {
   display: block;
-  padding: 80px 80px 0;
+  padding: 80px 80px 50px;
 }
 
 .haneul-brand {
   font-size: 48px;
   font-weight: 700;
   color: #00C73C;
-  letter-spacing: 4px;
+  letter-spacing: 0px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
 }
 
 .result-container.saving-mode .haneul-brand {
-  font-size: 70px;
+  font-size: 75px;
   font-weight: 700;
   color: #00C73C;
-  letter-spacing: 8px;
+  letter-spacing: 0px;
   text-align: left;
 }
 
@@ -509,9 +531,10 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   padding: 0;
+  padding-top: 120px;
   gap: 0;
   flex: 1;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -523,10 +546,11 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-info {
-  padding: 0;
+  padding: 0 60px;
   display: block;
   text-align: center;
   z-index: 2;
+  margin-bottom: auto;
 }
 
 /* 기본 모드 사진 */
@@ -559,16 +583,16 @@ input[type="file"] {
 /* 저장 모드: 사진 위치 (오른쪽 하단) - PNG 느낌으로 배경 없음 */
 .result-container.saving-mode .employee-photo {
   position: absolute;
-  right: 60px;
-  bottom: 60px;
-  width: 500px;
-  height: 800px;
+  right: 0;
+  bottom: 0;
+  width: 550px;
+  height: 950px;
   margin: 0;
   box-shadow: none !important;
   border-radius: 0;
   display: flex;
   align-items: flex-end;
-  justify-content: center;
+  justify-content: flex-end;
   overflow: visible;
   background: transparent !important;
   flex-shrink: 0;
@@ -581,13 +605,14 @@ input[type="file"] {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  object-position: bottom right;
   background: transparent;
 }
 
 /* SVG 내부 배경도 투명하게 */
-.result-container.saving-mode .employee-photo svg rect,
-.result-container.saving-mode .employee-photo svg circle {
-  fill: transparent;
+.result-container.saving-mode .employee-photo svg rect[fill="#ffffff"],
+.result-container.saving-mode .employee-photo svg rect[fill="white"] {
+  fill: transparent !important;
 }
 
 /* 이름 스타일 */
@@ -606,11 +631,11 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-name {
-  font-size: 120px;
+  font-size: 140px;
   color: #1d1d1f;
   font-weight: 700;
-  letter-spacing: -3px;
-  margin: 0 0 20px 0;
+  letter-spacing: -5px;
+  margin: 0 0 25px 0;
   padding: 0;
   text-align: center;
   background: transparent;
@@ -634,10 +659,10 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-team {
-  font-size: 42px;
+  font-size: 48px;
   color: #8e8e93;
   font-weight: 400;
-  letter-spacing: 1px;
+  letter-spacing: 0px;
   margin: 0;
   padding: 0;
   text-align: center;
@@ -691,11 +716,11 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-verse {
-  font-size: 30px;
+  font-size: 32px;
   color: #636366;
   line-height: 1.8;
   margin: 0;
-  padding: 80px;
+  padding: 0 0 80px 80px;
   text-align: left;
   font-weight: 400;
   letter-spacing: 0.3px;
@@ -705,13 +730,12 @@ input[type="file"] {
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
   z-index: 2;
-  max-width: 520px;
+  max-width: 450px;
 }
 
 .result-container.saving-mode .employee-verse .verse-reference {
-  font-size: 24px;
+  font-size: 26px;
   color: #8e8e93;
   margin-top: 20px;
   display: block;
