@@ -5,11 +5,11 @@
 let builderState = {
   faceShape: { id: 'oval' },
   skinTone: { id: 'tone1', color: AVATAR_COLORS.skin[0] },
-  hair: { id: 'short_01', color: AVATAR_COLORS.hair[0] },
-  eyes: { id: 'normal', color: AVATAR_COLORS.eyes[0] },
-  eyebrows: { id: 'normal', color: AVATAR_COLORS.eyebrows[0] },
-  nose: { id: 'normal' },
-  mouth: { id: 'smile', color: AVATAR_COLORS.mouth[0] },
+  hair: { id: 'variant01', color: AVATAR_COLORS.hair[0] },
+  eyes: { id: 'variant01', color: AVATAR_COLORS.eyes[0] },
+  eyebrows: { id: 'variant01', color: AVATAR_COLORS.eyebrows[0] },
+  nose: { id: 'variant01', color: AVATAR_COLORS.nose?.[0] || '#D4A791' },
+  mouth: { id: 'happy01', color: AVATAR_COLORS.mouth[0] },
   ears: { id: 'normal' },
   top: { id: 'tshirt', color: AVATAR_COLORS.top[0] }
 };
@@ -159,17 +159,50 @@ function renderBuilderAvatar(state) {
   svg.style.setProperty('--line-color', state.eyebrows.color || '#2C1B18');
   svg.style.setProperty('--mouth-color', state.mouth.color || AVATAR_COLORS.mouth[0]);
   svg.style.setProperty('--top-color', state.top.color || AVATAR_COLORS.top[0]);
+  svg.style.setProperty('--nose-color', state.nose.color || AVATAR_COLORS.nose?.[0] || '#D4A791');
+  svg.style.setProperty('--glasses-color', state.glasses?.color || AVATAR_COLORS.glasses?.[0] || '#000000');
+  svg.style.setProperty('--earrings-color', state.earrings?.color || AVATAR_COLORS.earrings?.[0] || '#FFD700');
+  svg.style.setProperty('--freckles-color', state.freckles?.color || AVATAR_COLORS.freckles?.[0] || '#D4A791');
+  svg.style.setProperty('--hairAccessories-color', state.hairAccessories?.color || AVATAR_COLORS.hairAccessories?.[0] || '#FF1744');
 
-  // 각 파트 렌더링
-  renderBuilderPart('faceShape', AVATAR_ASSETS.faceShape[state.faceShape.id]);
-  renderBuilderPart('ears', AVATAR_ASSETS.ears[state.ears.id]);
-  renderBuilderPart('hairBack', AVATAR_ASSETS.hairBack[state.hair.id] || '');
-  renderBuilderPart('hair', AVATAR_ASSETS.hair[state.hair.id]);
-  renderBuilderPart('eyes', AVATAR_ASSETS.eyes[state.eyes.id]);
-  renderBuilderPart('eyebrows', AVATAR_ASSETS.eyebrows[state.eyebrows.id]);
-  renderBuilderPart('nose', AVATAR_ASSETS.nose[state.nose.id]);
-  renderBuilderPart('mouth', AVATAR_ASSETS.mouth[state.mouth.id]);
-  renderBuilderPart('top', AVATAR_ASSETS.top[state.top.id]);
+  // Dicebear 컴포넌트용 colors 객체 생성
+  const colors = {
+    skin: state.skinTone.color,
+    hair: state.hair.color || AVATAR_COLORS.hair[0],
+    eyes: state.eyes.color || AVATAR_COLORS.eyes[0],
+    eyebrows: state.eyebrows.color || AVATAR_COLORS.eyebrows[0],
+    mouth: state.mouth.color || AVATAR_COLORS.mouth[0],
+    nose: state.nose?.color || AVATAR_COLORS.nose?.[0] || '#D4A791',
+    glasses: state.glasses?.color || AVATAR_COLORS.glasses?.[0] || '#000000',
+    earrings: state.earrings?.color || AVATAR_COLORS.earrings?.[0] || '#FFD700',
+    freckles: state.freckles?.color || AVATAR_COLORS.freckles?.[0] || '#D4A791',
+    hairAccessories: state.hairAccessories?.color || AVATAR_COLORS.hairAccessories?.[0] || '#FF1744'
+  };
+
+  // 각 파트 렌더링 (함수인 경우 호출, 문자열인 경우 그대로 사용)
+  renderBuilderPart('faceShape', getAssetContent(AVATAR_ASSETS.faceShape, state.faceShape.id, {}, colors));
+  renderBuilderPart('ears', getAssetContent(AVATAR_ASSETS.ears, state.ears.id, {}, colors));
+  renderBuilderPart('hairBack', getAssetContent(AVATAR_ASSETS.hairBack, state.hair.id, {}, colors) || '');
+  renderBuilderPart('hair', getAssetContent(AVATAR_ASSETS.hair, state.hair.id, {}, colors));
+  renderBuilderPart('eyes', getAssetContent(AVATAR_ASSETS.eyes, state.eyes.id, {}, colors));
+  renderBuilderPart('eyebrows', getAssetContent(AVATAR_ASSETS.eyebrows, state.eyebrows.id, {}, colors));
+  renderBuilderPart('nose', getAssetContent(AVATAR_ASSETS.nose, state.nose.id, {}, colors));
+  renderBuilderPart('mouth', getAssetContent(AVATAR_ASSETS.mouth, state.mouth.id, {}, colors));
+  renderBuilderPart('top', getAssetContent(AVATAR_ASSETS.top, state.top.id, {}, colors));
+}
+
+// 에셋 컨텐츠 가져오기 (함수 또는 문자열 지원)
+function getAssetContent(assetGroup, assetId, components, colors) {
+  if (!assetGroup || !assetId) return '';
+  
+  const asset = assetGroup[assetId];
+  if (!asset) return '';
+  
+  // 함수인 경우 호출, 문자열인 경우 그대로 반환
+  if (typeof asset === 'function') {
+    return asset(components, colors);
+  }
+  return asset;
 }
 
 // 전역 함수로 노출
