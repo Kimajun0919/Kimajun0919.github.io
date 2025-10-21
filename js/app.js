@@ -618,26 +618,26 @@ window.saveAsImage = async function() {
   // 캡처
   console.log('html2canvas 캡처 시작');
   try {
-    const canvas = await html2canvas.default(wrapper, {
-      width: 2160,
-      height: 3840,
-      windowWidth: 2160,
-      windowHeight: 3840,
-      backgroundColor: null,
-      useCORS: true,
-      allowTaint: true,
+  const canvas = await html2canvas.default(wrapper, {
+    width: 2160,
+    height: 3840,
+    windowWidth: 2160,
+    windowHeight: 3840,
+    backgroundColor: null,
+    useCORS: true,
+    allowTaint: true,
       logging: true, // 로깅 활성화
-      removeContainer: false
-    });
+    removeContainer: false
+  });
     console.log('html2canvas 캡처 완료', canvas);
 
-    // 다운로드
+  // 다운로드
     console.log('다운로드 시작');
     const dataURL = canvas.toDataURL('image/png', 0.95);
     console.log('데이터 URL 생성됨:', dataURL.substring(0, 100) + '...');
     
     // 다운로드 링크 생성
-    const a = document.createElement('a');
+  const a = document.createElement('a');
     a.href = dataURL;
     a.download = `${baseName}_card.png`; // 파일명 단순화
     a.style.display = 'none';
@@ -645,7 +645,7 @@ window.saveAsImage = async function() {
     
     // 다운로드 실행
     console.log('다운로드 링크 클릭');
-    a.click();
+  a.click();
     
     // 정리
     setTimeout(() => {
@@ -659,19 +659,32 @@ window.saveAsImage = async function() {
     alert('이미지 다운로드가 시작되었습니다. 브라우저의 다운로드 폴더를 확인해주세요.');
     
     // 대안: 새 탭에서 이미지 열기 (수동 저장용)
-    const newTab = window.open();
-    newTab.document.write(`
-      <html>
-        <head><title>${baseName} 카드 이미지</title></head>
-        <body style="margin:0;padding:20px;background:#f0f0f0;text-align:center;">
-          <h2>${baseName} 카드 이미지</h2>
-          <p>이미지를 우클릭하여 "다른 이름으로 저장"을 선택하세요.</p>
-          <img src="${dataURL}" style="max-width:100%;height:auto;border:2px solid #ccc;border-radius:10px;" alt="${baseName} 카드">
-          <br><br>
-          <button onclick="window.close()" style="padding:10px 20px;font-size:16px;background:#007aff;color:white;border:none;border-radius:5px;cursor:pointer;">창 닫기</button>
-        </body>
-      </html>
-    `);
+    try {
+      const newTab = window.open('', '_blank');
+      if (newTab) {
+        newTab.document.write(`
+          <html>
+            <head><title>${baseName} 카드 이미지</title></head>
+            <body style="margin:0;padding:20px;background:#f0f0f0;text-align:center;">
+              <h2>${baseName} 카드 이미지</h2>
+              <p>이미지를 우클릭하여 "다른 이름으로 저장"을 선택하세요.</p>
+              <img src="${dataURL}" style="max-width:100%;height:auto;border:2px solid #ccc;border-radius:10px;" alt="${baseName} 카드">
+              <br><br>
+              <button onclick="window.close()" style="padding:10px 20px;font-size:16px;background:#007aff;color:white;border:none;border-radius:5px;cursor:pointer;">창 닫기</button>
+            </body>
+          </html>
+        `);
+        newTab.document.close();
+      } else {
+        console.log('팝업이 차단되었습니다. 직접 이미지를 표시합니다.');
+        // 팝업이 차단된 경우 현재 페이지에 이미지 표시
+        showImageInCurrentPage(dataURL, baseName);
+      }
+    } catch (error) {
+      console.error('새 탭 열기 오류:', error);
+      // 오류 발생 시 현재 페이지에 이미지 표시
+      showImageInCurrentPage(dataURL, baseName);
+    }
   } catch (error) {
     console.error('html2canvas 오류:', error);
     alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
@@ -680,6 +693,64 @@ window.saveAsImage = async function() {
   // 정리
   wrapper.remove();
 };
+
+// 현재 페이지에 이미지 표시 함수
+function showImageInCurrentPage(dataURL, baseName) {
+  // 기존 이미지 표시 요소가 있으면 제거
+  const existingDisplay = document.getElementById('imageDisplay');
+  if (existingDisplay) {
+    existingDisplay.remove();
+  }
+  
+  // 이미지 표시 컨테이너 생성
+  const container = document.createElement('div');
+  container.id = 'imageDisplay';
+  container.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+  `;
+  
+  const content = document.createElement('div');
+  content.style.cssText = `
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 90%;
+    max-height: 90%;
+    overflow: auto;
+  `;
+  
+  content.innerHTML = `
+    <h2>${baseName} 카드 이미지</h2>
+    <p>이미지를 우클릭하여 "다른 이름으로 저장"을 선택하세요.</p>
+    <img src="${dataURL}" style="max-width:100%;height:auto;border:2px solid #ccc;border-radius:10px;" alt="${baseName} 카드">
+    <br><br>
+    <button onclick="document.getElementById('imageDisplay').remove()" style="padding:10px 20px;font-size:16px;background:#007aff;color:white;border:none;border-radius:5px;cursor:pointer;">닫기</button>
+  `;
+  
+  container.appendChild(content);
+  document.body.appendChild(container);
+  
+  // ESC 키로 닫기
+  const handleEsc = (e) => {
+    if (e.key === 'Escape') {
+      container.remove();
+      document.removeEventListener('keydown', handleEsc);
+    }
+  };
+  document.addEventListener('keydown', handleEsc);
+}
 
 // 카드 이미지 데이터URL 생성 유틸 (DB 저장용)
 async function generateCardImageDataURL(name, team, verseContent, verseReference, avatarData) {
