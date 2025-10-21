@@ -438,25 +438,24 @@ window.downloadAvatar = function(name, employeeId) {
 
 // 이미지로 저장 함수
 window.saveAsImage = async function() {
+  const resultContainer = document.querySelector('.result-container');
   const resultCard = document.getElementById('resultCard');
   
-  if (!resultCard) {
-    alert('결과 카드를 찾을 수 없습니다.');
+  if (!resultContainer || !resultCard) {
+    alert('결과 화면을 찾을 수 없습니다.');
     return;
   }
   
   try {
-    // 버튼 임시로 숨기기
-    const buttonContainer = document.querySelector('.button-container');
-    const originalDisplay = buttonContainer.style.display;
-    buttonContainer.style.display = 'none';
+    // 저장 모드 활성화 (배경 + 로고 포함)
+    resultContainer.classList.add('saving-mode');
     
     // 아바타를 SVG에서 PNG로 임시 교체
     const characterDiv = resultCard.querySelector('.line-character');
-    const originalHTML = characterDiv.innerHTML;
+    const originalHTML = characterDiv ? characterDiv.innerHTML : '';
     
     // 현재 직원의 아바타 데이터로 PNG 생성
-    if (window.currentEmployee && window.currentEmployee.avatarData) {
+    if (characterDiv && window.currentEmployee && window.currentEmployee.avatarData) {
       try {
         const avatarData = typeof window.currentEmployee.avatarData === 'string' 
           ? JSON.parse(window.currentEmployee.avatarData) 
@@ -465,7 +464,7 @@ window.saveAsImage = async function() {
         characterDiv.innerHTML = avatarPNG;
         
         // 이미지 로딩 대기
-        await new Promise(resolve => setTimeout(resolve, 300));
+        await new Promise(resolve => setTimeout(resolve, 500));
       } catch (e) {
         console.error('Failed to convert to PNG:', e);
       }
@@ -474,27 +473,32 @@ window.saveAsImage = async function() {
     // html2canvas 로드
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
-    // 현재 화면 그대로 캡처
-    const canvas = await html2canvas.default(resultCard, {
+    // 전체 컨테이너 캡처 (배경 + 로고 포함)
+    const canvas = await html2canvas.default(resultContainer, {
       backgroundColor: null,
       useCORS: true,
       allowTaint: true,
       logging: false,
       scale: 2,
-      width: window.innerWidth,
-      height: window.innerHeight
+      width: 1080,
+      height: 1920,
+      windowWidth: 1080,
+      windowHeight: 1920
     });
     
     // 아바타를 원래 SVG로 복원
-    characterDiv.innerHTML = originalHTML;
+    if (characterDiv) {
+      characterDiv.innerHTML = originalHTML;
+    }
     
-    // 버튼 다시 표시
-    buttonContainer.style.display = originalDisplay;
+    // 저장 모드 비활성화
+    resultContainer.classList.remove('saving-mode');
     
     // 다운로드
     const dataURL = canvas.toDataURL('image/png', 1.0);
     const link = document.createElement('a');
-    link.download = `HANEUL_카드.png`;
+    const employeeName = window.currentEmployee ? window.currentEmployee.name : 'HANEUL';
+    link.download = `${employeeName}_카드.png`;
     link.href = dataURL;
     link.click();
     
@@ -502,9 +506,15 @@ window.saveAsImage = async function() {
   } catch (error) {
     console.error('캡처 오류:', error);
     alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
-    // 오류 시 버튼 다시 표시
-    const buttonContainer = document.querySelector('.button-container');
-    if (buttonContainer) buttonContainer.style.display = '';
+    
+    // 오류 시 저장 모드 비활성화
+    resultContainer.classList.remove('saving-mode');
+    
+    // 아바타 복원
+    const characterDiv = resultCard.querySelector('.line-character');
+    if (characterDiv && originalHTML) {
+      characterDiv.innerHTML = originalHTML;
+    }
   }
 };
 
