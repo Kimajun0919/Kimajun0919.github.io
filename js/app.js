@@ -467,17 +467,19 @@ window.saveAsImage = async function() {
     overflow: hidden;
   `;
   
-  // 7. 아바타 SVG 생성 및 이미지로 변환
-  const avatarSVG = window.createDicebearAvatar(avatarData);
-  console.log('아바타 SVG 생성:', avatarSVG.substring(0, 200));
+  // 7. 아바타 이미지 생성 및 삽입
+  const avatarImgHtml = window.createDicebearAvatar(avatarData);
+  console.log('아바타 HTML 생성:', avatarImgHtml.substring(0, 200));
   
-  // SVG를 Data URL로 변환 (html2canvas 호환성 향상)
-  const svgBlob = new Blob([avatarSVG], { type: 'image/svg+xml;charset=utf-8' });
-  let svgUrl = URL.createObjectURL(svgBlob);
+  // img 태그 HTML에서 src 추출
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = avatarImgHtml;
+  const tempImg = tempDiv.querySelector('img');
   
-  // img 태그로 SVG 로드
+  // 새로운 img 요소 생성 (html2canvas 호환성 향상)
   const avatarImg = document.createElement('img');
-  avatarImg.src = svgUrl;
+  avatarImg.src = tempImg.src;
+  avatarImg.crossOrigin = 'anonymous';
   avatarImg.style.cssText = `
     width: 100%;
     height: 100%;
@@ -490,7 +492,10 @@ window.saveAsImage = async function() {
       console.log('아바타 이미지 로드 완료');
       resolve();
     };
-    avatarImg.onerror = reject;
+    avatarImg.onerror = (error) => {
+      console.error('아바타 이미지 로드 실패:', error);
+      resolve(); // 에러여도 계속 진행
+    };
   });
   
   photoArea.appendChild(avatarImg);
@@ -586,9 +591,6 @@ window.saveAsImage = async function() {
   }
   
   // 16. 정리
-  if (svgUrl) {
-    URL.revokeObjectURL(svgUrl);
-  }
   wrapper.remove();
   console.log('=== 이미지 저장 완료 ===');
 };
@@ -608,13 +610,15 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   photo.className = 'employee-photo';
   photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
 
-  // 아바타 SVG를 이미지로 변환 (html2canvas 호환성 향상)
-  const svgString = generateAvatarSVG(avatarData);
-  const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-  let svgUrl = URL.createObjectURL(svgBlob);
+  // 아바타 이미지 생성 (html2canvas 호환성 향상)
+  const avatarImgHtml = generateAvatarSVG(avatarData);
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = avatarImgHtml;
+  const tempImg = tempDiv.querySelector('img');
   
   const avatarImg = document.createElement('img');
-  avatarImg.src = svgUrl;
+  avatarImg.src = tempImg.src;
+  avatarImg.crossOrigin = 'anonymous';
   avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
   
   // 이미지 로드 대기
@@ -664,9 +668,6 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   const dataURL = canvas.toDataURL('image/png', 0.9);
   
   // 정리
-  if (svgUrl) {
-    URL.revokeObjectURL(svgUrl);
-  }
   wrapper.remove();
   return dataURL;
 }
