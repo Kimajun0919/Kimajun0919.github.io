@@ -517,26 +517,29 @@ input[type="file"] {
   overflow: hidden;
 }
 
-/* 저장 모드에서 카드 - 원래 비율 완벽 고정 */
+/* 저장 모드에서 카드 - 화면과 동일한 비율로 고정 */
 .result-container.saving-mode .line-card {
-  width: 540px; /* 원래 비율 유지 */
-  height: 900px; /* 원래 비율 유지 */
+  width: 600px; /* 화면 300px의 2배 */
+  height: 1000px; /* 화면 500px의 2배 */
   max-width: none;
   max-height: none;
-  border-radius: 40px;
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
-  padding: 80px 60px 0 60px;
+  border-radius: 40px; /* 화면 20px의 2배 */
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15); /* 화면의 2배 */
+  padding: 80px 60px 0 60px; /* 화면 40px 30px의 2배 */
   margin: 0;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-/* 저장 모드에서 카드 내부 요소들 - 원래 비율 완벽 고정 */
+/* 저장 모드에서 카드 내부 요소들 - 화면과 동일한 2배 비율 */
 .result-container.saving-mode .line-logo {
-  font-size: 80px;
+  font-size: 80px; /* 화면 40px의 2배 */
   margin-bottom: 0;
   position: absolute;
   top: -40px;
@@ -545,53 +548,46 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .line-info {
-  margin-top: 0;
-  position: absolute;
-  top: 80px;
-  left: 60px;
-  right: 60px;
-  z-index: 5;
+  margin-top: -60px; /* 화면 -30px의 2배 */
 }
 
 .result-container.saving-mode .line-info h2 {
-  font-size: 44px;
+  font-size: 44px; /* 화면 22px의 2배 */
   margin-bottom: 8px;
   font-weight: 700;
   line-height: 1.2;
 }
 
 .result-container.saving-mode .line-team {
-  font-size: 28px;
-  margin-bottom: 24px;
+  font-size: 28px; /* 화면 14px의 2배 */
+  margin-bottom: 8px;
   line-height: 1.2;
 }
 
 .result-container.saving-mode .line-bible-verse {
-  font-size: 30px;
+  font-size: 30px; /* 화면 15px의 2배 */
   line-height: 1.6;
   margin-bottom: 24px;
 }
 
 .result-container.saving-mode .line-bible-reference {
-  font-size: 22px;
+  font-size: 22px; /* 화면 11px의 2배 */
   margin-top: 16px;
 }
 
 .result-container.saving-mode .line-character {
-  position: absolute;
-  bottom: 80px;
-  right: 60px;
-  width: 300px;
-  height: 300px;
-  z-index: 5;
+  width: 100%;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 .result-container.saving-mode .line-character img,
 .result-container.saving-mode .line-character svg {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  object-fit: contain;
+  width: 500px; /* 화면 250px의 2배 */
+  height: auto;
+  margin-right: -60px; /* 화면 -30px의 2배 */
 }
 
 .result-container.saving-mode .haneul-logo {
