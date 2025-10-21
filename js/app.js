@@ -500,9 +500,11 @@ window.saveAsImage = async function() {
 
   // 아바타 데이터로 SVG 생성 (저장된 avatarData 사용)
   let avatarData = employee.avatarData;
+  console.log('원본 avatarData:', avatarData);
   if (typeof avatarData === 'string') {
     try {
       avatarData = JSON.parse(avatarData);
+      console.log('파싱된 avatarData:', avatarData);
     } catch (e) {
       console.error('아바타 데이터 파싱 오류:', e);
       avatarData = getCurrentAvatarState();
@@ -525,6 +527,7 @@ window.saveAsImage = async function() {
   if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
 
   // API URL 생성
+  console.log('dicebearOptions:', dicebearOptions);
   let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
   if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
     // backgroundColor에서 # 제거 (Dicebear API는 hex 코드만 받음)
@@ -549,6 +552,8 @@ window.saveAsImage = async function() {
   if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
     apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
   }
+  
+  console.log('생성된 API URL:', apiUrl);
 
   // img 태그로 아바타 삽입
   const avatarImg = document.createElement('img');
@@ -556,6 +561,15 @@ window.saveAsImage = async function() {
   avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
   avatarImg.crossOrigin = "anonymous"; // CORS 설정
   photo.appendChild(avatarImg);
+  
+  // 이미지 로드 확인
+  avatarImg.addEventListener('load', () => {
+    console.log('저장용 아바타 이미지 로드 성공');
+  });
+  avatarImg.addEventListener('error', (e) => {
+    console.error('저장용 아바타 이미지 로드 실패:', e);
+    console.log('실패한 URL:', apiUrl);
+  });
 
   // 이름
   const nameEl = document.createElement('div');
@@ -619,11 +633,45 @@ window.saveAsImage = async function() {
 
     // 다운로드
     console.log('다운로드 시작');
+    const dataURL = canvas.toDataURL('image/png', 0.95);
+    console.log('데이터 URL 생성됨:', dataURL.substring(0, 100) + '...');
+    
+    // 다운로드 링크 생성
     const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png', 0.95);
-    a.download = `${baseName}_2160x3840.png`;
+    a.href = dataURL;
+    a.download = `${baseName}_card.png`; // 파일명 단순화
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    
+    // 다운로드 실행
+    console.log('다운로드 링크 클릭');
     a.click();
+    
+    // 정리
+    setTimeout(() => {
+      document.body.removeChild(a);
+      console.log('다운로드 링크 정리 완료');
+    }, 100);
+    
     console.log('다운로드 완료');
+    
+    // 사용자에게 알림
+    alert('이미지 다운로드가 시작되었습니다. 브라우저의 다운로드 폴더를 확인해주세요.');
+    
+    // 대안: 새 탭에서 이미지 열기 (수동 저장용)
+    const newTab = window.open();
+    newTab.document.write(`
+      <html>
+        <head><title>${baseName} 카드 이미지</title></head>
+        <body style="margin:0;padding:20px;background:#f0f0f0;text-align:center;">
+          <h2>${baseName} 카드 이미지</h2>
+          <p>이미지를 우클릭하여 "다른 이름으로 저장"을 선택하세요.</p>
+          <img src="${dataURL}" style="max-width:100%;height:auto;border:2px solid #ccc;border-radius:10px;" alt="${baseName} 카드">
+          <br><br>
+          <button onclick="window.close()" style="padding:10px 20px;font-size:16px;background:#007aff;color:white;border:none;border-radius:5px;cursor:pointer;">창 닫기</button>
+        </body>
+      </html>
+    `);
   } catch (error) {
     console.error('html2canvas 오류:', error);
     alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
