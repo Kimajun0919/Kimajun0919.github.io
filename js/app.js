@@ -93,55 +93,65 @@ window.saveAvatar = async function() {
 
 // 현재 아바타 상태 가져오기
 function getCurrentAvatarState() {
-  if (typeof builderState !== 'undefined') {
-    return builderState;
+  if (typeof window.builderState !== 'undefined') {
+    return window.builderState;
   }
-  // 기본 상태 반환
+  // 기본 상태 반환 (Dicebear API 형식)
   return {
-    faceShape: { id: 'oval' },
-    skinTone: { id: 'tone1', color: '#FFDFC4' },
-    hair: { id: 'short_01', color: '#2C1B18' },
-    eyes: { id: 'normal', color: '#2C1B18' },
-    eyebrows: { id: 'normal', color: '#2C1B18' },
-    nose: { id: 'normal' },
-    mouth: { id: 'smile', color: '#D4686B' },
-    ears: { id: 'normal' },
-    top: { id: 'tshirt', color: '#FF6B6B' }
+    style: 'lorelei',
+    seed: Date.now().toString(),
+    eyes: 'variant01',
+    eyebrows: 'variant01',
+    mouth: 'happy01',
+    nose: 'variant01',
+    glasses: null,
+    earrings: null,
+    freckles: null,
+    hairAccessories: null,
+    backgroundColor: []
   };
 }
 
-// 아바타 SVG 생성 함수 (새로운 아바타 빌더 시스템 사용)
+// 아바타 SVG 생성 함수 (Dicebear API 사용)
 function generateAvatarSVG(avatarData) {
   if (!avatarData) {
     avatarData = getCurrentAvatarState();
   }
   
-  // 아바타 빌더의 렌더링 함수 사용
-  if (typeof window.renderBuilderAvatar === 'function') {
-    // 임시로 builderState 설정
-    const originalState = typeof window.builderState !== 'undefined' ? window.builderState : null;
-    window.builderState = avatarData;
-    
-    // 아바타 렌더링
-    window.renderBuilderAvatar(avatarData);
-    
-    // SVG 생성
-    const svg = document.getElementById('avatarPreview');
-    if (svg) {
-      const svgData = new XMLSerializer().serializeToString(svg);
+  // Dicebear API로 아바타 생성
+  if (typeof window.createDicebearAvatar === 'function') {
+    try {
+      const style = avatarData.style || 'lorelei';
+      const seed = avatarData.seed || Date.now().toString();
       
-      // 원래 상태 복원
-      if (originalState) {
-        window.builderState = originalState;
-        window.renderBuilderAvatar(originalState);
+      // Dicebear 옵션 구성
+      const dicebearOptions = {
+        seed: seed,
+        backgroundColor: avatarData.backgroundColor || [],
+        scale: 100
+      };
+
+      // lorelei 스타일 특정 옵션
+      if (style === 'lorelei') {
+        if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
+        if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
+        if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
+        if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
+        if (avatarData.glasses) dicebearOptions.glasses = [avatarData.glasses];
+        if (avatarData.earrings) dicebearOptions.earrings = [avatarData.earrings];
+        if (avatarData.freckles) dicebearOptions.freckles = [avatarData.freckles];
+        if (avatarData.hairAccessories) dicebearOptions.hairAccessories = [avatarData.hairAccessories];
       }
-      
-      return svgData;
-    }
-    
-    // 원래 상태 복원
-    if (originalState) {
-      window.builderState = originalState;
+
+      const svg = window.createDicebearAvatar({
+        style: style,
+        seed: seed,
+        dicebearOptions: dicebearOptions
+      });
+
+      if (svg) return svg;
+    } catch (error) {
+      console.error('Error generating Dicebear avatar:', error);
     }
   }
   
@@ -151,32 +161,28 @@ function generateAvatarSVG(avatarData) {
 
 // 기본 아바타 SVG 생성 (폴백용)
 function createBasicAvatarSVG(avatarData) {
-  const skinColor = avatarData.skinTone?.color || '#FFDFC4';
-  const hairColor = avatarData.hair?.color || '#2C1B18';
-  const eyeColor = avatarData.eyes?.color || '#2C1B18';
-  const mouthColor = avatarData.mouth?.color || '#D4686B';
-  const topColor = avatarData.top?.color || '#FF6B6B';
+  const bgColor = avatarData.backgroundColor && avatarData.backgroundColor[0] ? avatarData.backgroundColor[0] : '#f0f0f0';
   
   return `
-    <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
       <!-- 배경 -->
-      <circle cx="100" cy="100" r="100" fill="#f0f0f0"/>
+      <rect width="512" height="512" fill="${bgColor}"/>
       
-      <!-- 피부 (얼굴) -->
-      <circle cx="100" cy="100" r="80" fill="${skinColor}"/>
+      <!-- 기본 얼굴 -->
+      <circle cx="256" cy="256" r="180" fill="#FFE0D4"/>
       
       <!-- 머리 -->
-      <circle cx="100" cy="60" r="60" fill="${hairColor}"/>
+      <circle cx="256" cy="180" r="150" fill="#2C1B18"/>
       
       <!-- 눈 -->
-      <circle cx="80" cy="90" r="8" fill="${eyeColor}"/>
-      <circle cx="120" cy="90" r="8" fill="${eyeColor}"/>
+      <circle cx="216" cy="240" r="20" fill="#1C1C1C"/>
+      <circle cx="296" cy="240" r="20" fill="#1C1C1C"/>
       
       <!-- 입 -->
-      <path d="M 90 130 Q 100 140 110 130" stroke="${mouthColor}" stroke-width="3" fill="none"/>
+      <path d="M 226 300 Q 256 320 286 300" stroke="#C45B5D" stroke-width="6" fill="none" stroke-linecap="round"/>
       
-      <!-- 상의 -->
-      <rect x="60" y="160" width="80" height="40" fill="${topColor}"/>
+      <!-- 텍스트 (로딩 실패 표시) -->
+      <text x="256" y="450" text-anchor="middle" font-size="24" fill="#666">Avatar Loading...</text>
     </svg>
   `;
 }

@@ -181,14 +181,18 @@
     </div>
   </div>
 
-  <!-- Dicebear CDN -->
+  <!-- JavaScript -->
+  <script src="js/data.js"></script>
+  
+  <!-- Dicebear CDN (반드시 먼저 로드) -->
   <script src="https://cdn.jsdelivr.net/npm/@dicebear/core@7/dist/core.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@dicebear/collection@7/dist/index.umd.js"></script>
   
-  <!-- JavaScript -->
-  <script src="js/data.js"></script>
+  <!-- Avatar System -->
   <script src="js/assets.js"></script>
   <script src="js/avatar-builder.js"></script>
-  <script src="js/app.js"></script>
+  
+  <!-- Firebase App (모듈로 로드) -->
+  <script type="module" src="js/app.js"></script>
 </body>
 </html>

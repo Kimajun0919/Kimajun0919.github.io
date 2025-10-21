@@ -175,10 +175,10 @@ function createColorOptions() {
   if (skinContainer) {
     skinContainer.innerHTML = '';
     AVATAR_COLORS.skin.forEach(color => {
-      const btn = document.createElement('button');
-      btn.className = 'color-btn';
+    const btn = document.createElement('button');
+    btn.className = 'color-btn';
       btn.style.backgroundColor = color;
-      btn.onclick = () => {
+    btn.onclick = () => {
         builderState.backgroundColor = [color];
         renderBuilderAvatar(builderState);
         updateActiveButton(skinContainer, btn);
@@ -300,7 +300,7 @@ function saveBuilderToLocalStorage() {
 function loadBuilderFromLocalStorage() {
   try {
     const saved = localStorage.getItem('avatarBuilderState');
-    if (saved) {
+  if (saved) {
       const parsed = JSON.parse(saved);
       builderState = { ...builderState, ...parsed };
     }
@@ -352,7 +352,7 @@ function exportAvatarAsPNG() {
       URL.revokeObjectURL(url);
     });
   };
-  
+
   img.src = url;
 }
 
@@ -418,15 +418,41 @@ window.exportAvatarAsPNG = exportAvatarAsPNG;
 window.undoAvatar = undoAvatar;
 window.redoAvatar = redoAvatar;
 
+// Dicebear 라이브러리 로드 대기 후 초기화
+function waitForDicebear() {
+  return new Promise((resolve) => {
+    if (window.dicebear && window.dicebear.core && window.dicebear.collection) {
+      resolve();
+      } else {
+      const checkInterval = setInterval(() => {
+        if (window.dicebear && window.dicebear.core && window.dicebear.collection) {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 100);
+      
+      // 10초 타임아웃
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        console.error('Dicebear library failed to load');
+        resolve(); // 어쨌든 계속 진행
+      }, 10000);
+    }
+  });
+}
+
 // DOMContentLoaded 이벤트에서 초기화
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', async () => {
     if (document.getElementById('avatarPreview')) {
+      await waitForDicebear();
       initAvatarBuilder();
     }
   });
 } else {
   if (document.getElementById('avatarPreview')) {
-    initAvatarBuilder();
+    waitForDicebear().then(() => {
+      initAvatarBuilder();
+    });
   }
 }
