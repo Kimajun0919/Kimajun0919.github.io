@@ -1,17 +1,18 @@
 // ===== Dicebear API 기반 아바타 빌더 =====
 
-// 상태 관리
+// 상태 관리 (lorelei 스타일 고정)
 let builderState = {
-  style: 'lorelei',
+  style: 'lorelei', // 고정
   seed: '',
+  hair: 'variant01',
   eyes: 'variant01',
   eyebrows: 'variant01',
   mouth: 'happy01',
   nose: 'variant01',
-  glasses: null,
-  earrings: null,
-  freckles: null,
-  hairAccessories: null,
+  glasses: '',
+  earrings: '',
+  freckles: '',
+  hairAccessories: '',
   backgroundColor: []
 };
 
@@ -35,50 +36,39 @@ function generateRandomSeed() {
   return Math.random().toString(36).substring(2, 15);
 }
 
-// UI 설정
+// UI 설정 (lorelei 전용)
 function setupBuilderUI() {
-  // 스타일 선택
-  createStyleOptions();
+  // lorelei 옵션만 설정
+  createLoreleiOptions();
   
-  // 옵션 설정 (lorelei 기준)
-  createDicebearOptions();
-  
-  // 색상 옵션
+  // 배경색 옵션
   createColorOptions();
 }
 
-// 스타일 옵션 생성
-function createStyleOptions() {
-  const container = document.getElementById('faceShapeOptions');
-  if (!container) return;
-  
-  container.innerHTML = '<h4>아바타 스타일</h4>';
-  
-  Object.keys(DICEBEAR_STYLES).forEach(styleKey => {
-    const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.textContent = STYLE_LABELS[styleKey] || styleKey;
-    btn.onclick = () => {
-      builderState.style = styleKey;
-      renderBuilderAvatar(builderState);
-      updateActiveButton(container, btn);
-      saveBuilderToHistory();
-      saveBuilderToLocalStorage();
-      
-      // 스타일 변경 시 옵션 재생성
-      createDicebearOptions();
-    };
-    
-    if (builderState.style === styleKey) {
-      btn.classList.add('active');
-    }
-    
-    container.appendChild(btn);
-  });
-}
+// Lorelei 전용 옵션 생성
+function createLoreleiOptions() {
+  // 머리 옵션
+  const hairContainer = document.getElementById('hairOptions');
+  if (hairContainer && LORELEI_OPTIONS.hair) {
+    hairContainer.innerHTML = '';
+    LORELEI_OPTIONS.hair.forEach((variant, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = `${index + 1}`;
+      btn.onclick = () => {
+        builderState.hair = variant;
+        renderBuilderAvatar(builderState);
+        updateActiveButton(hairContainer, btn);
+        saveBuilderToHistory();
+        saveBuilderToLocalStorage();
+      };
+      if (builderState.hair === variant) {
+        btn.classList.add('active');
+      }
+      hairContainer.appendChild(btn);
+    });
+  }
 
-// Dicebear 옵션 생성
-function createDicebearOptions() {
   // 눈 옵션
   const eyesContainer = document.getElementById('eyesOptions');
   if (eyesContainer && LORELEI_OPTIONS.eyes) {
@@ -86,7 +76,7 @@ function createDicebearOptions() {
     LORELEI_OPTIONS.eyes.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.textContent = `눈 ${index + 1}`;
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.eyes = variant;
         renderBuilderAvatar(builderState);
@@ -108,7 +98,7 @@ function createDicebearOptions() {
     LORELEI_OPTIONS.eyebrows.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.textContent = `눈썹 ${index + 1}`;
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.eyebrows = variant;
         renderBuilderAvatar(builderState);
@@ -130,7 +120,7 @@ function createDicebearOptions() {
     LORELEI_OPTIONS.mouth.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.textContent = variant.startsWith('happy') ? `웃음 ${variant.slice(5)}` : `슬픔 ${variant.slice(3)}`;
+      btn.textContent = variant.startsWith('happy') ? `😊${variant.slice(5)}` : `😢${variant.slice(3)}`;
       btn.onclick = () => {
         builderState.mouth = variant;
         renderBuilderAvatar(builderState);
@@ -152,7 +142,7 @@ function createDicebearOptions() {
     LORELEI_OPTIONS.nose.forEach((variant, index) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.textContent = `코 ${index + 1}`;
+      btn.textContent = `${index + 1}`;
       btn.onclick = () => {
         builderState.nose = variant;
         renderBuilderAvatar(builderState);
@@ -164,6 +154,166 @@ function createDicebearOptions() {
         btn.classList.add('active');
       }
       noseContainer.appendChild(btn);
+    });
+  }
+
+  // 안경 옵션
+  const glassesContainer = document.getElementById('glassesOptions');
+  if (glassesContainer && LORELEI_OPTIONS.glasses) {
+    glassesContainer.innerHTML = '';
+    
+    // "없음" 버튼
+    const noneBtn = document.createElement('button');
+    noneBtn.className = 'option-btn';
+    noneBtn.textContent = '없음';
+    noneBtn.onclick = () => {
+      builderState.glasses = '';
+      renderBuilderAvatar(builderState);
+      updateActiveButton(glassesContainer, noneBtn);
+      saveBuilderToHistory();
+      saveBuilderToLocalStorage();
+    };
+    if (!builderState.glasses) {
+      noneBtn.classList.add('active');
+    }
+    glassesContainer.appendChild(noneBtn);
+    
+    // 안경 옵션들
+    LORELEI_OPTIONS.glasses.forEach((variant, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = `${index + 1}`;
+      btn.onclick = () => {
+        builderState.glasses = variant;
+        renderBuilderAvatar(builderState);
+        updateActiveButton(glassesContainer, btn);
+        saveBuilderToHistory();
+        saveBuilderToLocalStorage();
+      };
+      if (builderState.glasses === variant) {
+        btn.classList.add('active');
+      }
+      glassesContainer.appendChild(btn);
+    });
+  }
+
+  // 귀걸이 옵션
+  const earringsContainer = document.getElementById('earringsOptions');
+  if (earringsContainer && LORELEI_OPTIONS.earrings) {
+    earringsContainer.innerHTML = '';
+    
+    // "없음" 버튼
+    const noneBtn = document.createElement('button');
+    noneBtn.className = 'option-btn';
+    noneBtn.textContent = '없음';
+    noneBtn.onclick = () => {
+      builderState.earrings = '';
+      renderBuilderAvatar(builderState);
+      updateActiveButton(earringsContainer, noneBtn);
+      saveBuilderToHistory();
+      saveBuilderToLocalStorage();
+    };
+    if (!builderState.earrings) {
+      noneBtn.classList.add('active');
+    }
+    earringsContainer.appendChild(noneBtn);
+    
+    // 귀걸이 옵션들
+    LORELEI_OPTIONS.earrings.forEach((variant, index) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+      btn.textContent = `${index + 1}`;
+    btn.onclick = () => {
+        builderState.earrings = variant;
+        renderBuilderAvatar(builderState);
+        updateActiveButton(earringsContainer, btn);
+        saveBuilderToHistory();
+        saveBuilderToLocalStorage();
+      };
+      if (builderState.earrings === variant) {
+        btn.classList.add('active');
+      }
+      earringsContainer.appendChild(btn);
+    });
+  }
+
+  // 주근깨 옵션
+  const frecklesContainer = document.getElementById('frecklesOptions');
+  if (frecklesContainer && LORELEI_OPTIONS.freckles) {
+    frecklesContainer.innerHTML = '';
+    
+    // "없음" 버튼
+    const noneBtn = document.createElement('button');
+    noneBtn.className = 'option-btn';
+    noneBtn.textContent = '없음';
+    noneBtn.onclick = () => {
+      builderState.freckles = '';
+      renderBuilderAvatar(builderState);
+      updateActiveButton(frecklesContainer, noneBtn);
+      saveBuilderToHistory();
+      saveBuilderToLocalStorage();
+    };
+    if (!builderState.freckles) {
+      noneBtn.classList.add('active');
+    }
+    frecklesContainer.appendChild(noneBtn);
+    
+    // 주근깨 옵션
+    LORELEI_OPTIONS.freckles.forEach((variant, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = `${index + 1}`;
+      btn.onclick = () => {
+        builderState.freckles = variant;
+        renderBuilderAvatar(builderState);
+        updateActiveButton(frecklesContainer, btn);
+        saveBuilderToHistory();
+        saveBuilderToLocalStorage();
+      };
+      if (builderState.freckles === variant) {
+        btn.classList.add('active');
+      }
+      frecklesContainer.appendChild(btn);
+    });
+  }
+
+  // 머리 악세서리 옵션
+  const hairAccessoriesContainer = document.getElementById('hairAccessoriesOptions');
+  if (hairAccessoriesContainer && LORELEI_OPTIONS.hairAccessories) {
+    hairAccessoriesContainer.innerHTML = '';
+    
+    // "없음" 버튼
+    const noneBtn = document.createElement('button');
+    noneBtn.className = 'option-btn';
+    noneBtn.textContent = '없음';
+    noneBtn.onclick = () => {
+      builderState.hairAccessories = '';
+      renderBuilderAvatar(builderState);
+      updateActiveButton(hairAccessoriesContainer, noneBtn);
+      saveBuilderToHistory();
+      saveBuilderToLocalStorage();
+    };
+    if (!builderState.hairAccessories) {
+      noneBtn.classList.add('active');
+    }
+    hairAccessoriesContainer.appendChild(noneBtn);
+    
+    // 머리 악세서리 옵션들
+    LORELEI_OPTIONS.hairAccessories.forEach((variant, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = variant === 'flowers' ? '🌸' : `${index + 1}`;
+      btn.onclick = () => {
+        builderState.hairAccessories = variant;
+        renderBuilderAvatar(builderState);
+        updateActiveButton(hairAccessoriesContainer, btn);
+        saveBuilderToHistory();
+        saveBuilderToLocalStorage();
+      };
+      if (builderState.hairAccessories === variant) {
+        btn.classList.add('active');
+      }
+      hairAccessoriesContainer.appendChild(btn);
     });
   }
 }
@@ -210,17 +360,16 @@ function renderBuilderAvatar(state) {
     scale: 100
   };
 
-  // lorelei 스타일 특정 옵션
-  if (state.style === 'lorelei') {
-    if (state.eyes) dicebearOptions.eyes = [state.eyes];
-    if (state.eyebrows) dicebearOptions.eyebrows = [state.eyebrows];
-    if (state.mouth) dicebearOptions.mouth = [state.mouth];
-    if (state.nose) dicebearOptions.nose = [state.nose];
-    if (state.glasses) dicebearOptions.glasses = [state.glasses];
-    if (state.earrings) dicebearOptions.earrings = [state.earrings];
-    if (state.freckles) dicebearOptions.freckles = [state.freckles];
-    if (state.hairAccessories) dicebearOptions.hairAccessories = [state.hairAccessories];
-  }
+  // lorelei 스타일 옵션 (빈 문자열은 제외)
+  if (state.hair) dicebearOptions.hair = [state.hair];
+  if (state.eyes) dicebearOptions.eyes = [state.eyes];
+  if (state.eyebrows) dicebearOptions.eyebrows = [state.eyebrows];
+  if (state.mouth) dicebearOptions.mouth = [state.mouth];
+  if (state.nose) dicebearOptions.nose = [state.nose];
+  if (state.glasses && state.glasses !== '') dicebearOptions.glasses = [state.glasses];
+  if (state.earrings && state.earrings !== '') dicebearOptions.earrings = [state.earrings];
+  if (state.freckles && state.freckles !== '') dicebearOptions.freckles = [state.freckles];
+  if (state.hairAccessories && state.hairAccessories !== '') dicebearOptions.hairAccessories = [state.hairAccessories];
 
   // 아바타 생성
   const svg = createDicebearAvatar({
@@ -245,15 +394,26 @@ function applyBuilderOption(part, value) {
 function randomizePart(part) {
   if (part === 'all') {
     builderState.seed = generateRandomSeed();
+    builderState.hair = LORELEI_OPTIONS.hair[Math.floor(Math.random() * LORELEI_OPTIONS.hair.length)];
     builderState.eyes = LORELEI_OPTIONS.eyes[Math.floor(Math.random() * LORELEI_OPTIONS.eyes.length)];
     builderState.eyebrows = LORELEI_OPTIONS.eyebrows[Math.floor(Math.random() * LORELEI_OPTIONS.eyebrows.length)];
     builderState.mouth = LORELEI_OPTIONS.mouth[Math.floor(Math.random() * LORELEI_OPTIONS.mouth.length)];
     builderState.nose = LORELEI_OPTIONS.nose[Math.floor(Math.random() * LORELEI_OPTIONS.nose.length)];
+    
+    // 선택적 옵션들 (확률로 랜덤 추가)
+    builderState.glasses = Math.random() > 0.7 ? LORELEI_OPTIONS.glasses[Math.floor(Math.random() * LORELEI_OPTIONS.glasses.length)] : '';
+    builderState.earrings = Math.random() > 0.7 ? LORELEI_OPTIONS.earrings[Math.floor(Math.random() * LORELEI_OPTIONS.earrings.length)] : '';
+    builderState.freckles = Math.random() > 0.8 ? LORELEI_OPTIONS.freckles[0] : '';
+    builderState.hairAccessories = Math.random() > 0.8 ? LORELEI_OPTIONS.hairAccessories[0] : '';
+    
+    // 배경색도 랜덤
+    builderState.backgroundColor = Math.random() > 0.5 ? [AVATAR_COLORS.skin[Math.floor(Math.random() * AVATAR_COLORS.skin.length)]] : [];
   } else if (part === 'hair') {
     builderState.seed = generateRandomSeed();
   }
   
   renderBuilderAvatar(builderState);
+  setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
   saveBuilderToHistory();
   saveBuilderToLocalStorage();
 }
@@ -422,11 +582,11 @@ window.redoAvatar = redoAvatar;
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('avatarPreview')) {
-      initAvatarBuilder();
-    }
+          initAvatarBuilder();
+        }
   });
 } else {
   if (document.getElementById('avatarPreview')) {
-    initAvatarBuilder();
+      initAvatarBuilder();
+    }
   }
-}

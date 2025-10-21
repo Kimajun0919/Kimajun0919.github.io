@@ -1,52 +1,9 @@
-// ===== Dicebear API 기반 아바타 에셋 =====
-// Dicebear CDN이 로드되면 window.dicebear에서 사용 가능
+// ===== Dicebear HTTP API 기반 아바타 에셋 =====
+// lorelei 스타일로 고정
 
-// Dicebear 스타일 옵션
-const DICEBEAR_STYLES = {
-  lorelei: 'lorelei',
-  adventurer: 'adventurer',
-  avataaars: 'avataaars',
-  bigEars: 'bigEars',
-  bigSmile: 'bigSmile',
-  bottts: 'bottts',
-  croodles: 'croodles',
-  funEmoji: 'funEmoji',
-  icons: 'icons',
-  identicon: 'identicon',
-  initials: 'initials',
-  micah: 'micah',
-  miniavs: 'miniavs',
-  openPeeps: 'openPeeps',
-  personas: 'personas',
-  pixelArt: 'pixelArt',
-  shapes: 'shapes',
-  thumbs: 'thumbs'
-};
-
-// 한국어 레이블 매핑
-const STYLE_LABELS = {
-  lorelei: '로렐라이 (여성)',
-  adventurer: '모험가',
-  avataaars: '아바타스',
-  bigEars: '큰 귀',
-  bigSmile: '큰 미소',
-  bottts: '로봇',
-  croodles: '크룻들',
-  funEmoji: '펀 이모지',
-  icons: '아이콘',
-  identicon: '아이덴티콘',
-  initials: '이니셜',
-  micah: '미카 (남성)',
-  miniavs: '미니 아바타',
-  openPeeps: '오픈 핍스',
-  personas: '퍼소나',
-  pixelArt: '픽셀 아트',
-  shapes: '도형',
-  thumbs: '엄지'
-};
-
-// 각 스타일별 옵션 (lorelei 스타일 예시)
+// lorelei 스타일 옵션
 const LORELEI_OPTIONS = {
+  hair: ['variant01', 'variant02', 'variant03', 'variant04', 'variant05', 'variant06', 'variant07', 'variant08', 'variant09', 'variant10', 'variant11', 'variant12', 'variant13', 'variant14', 'variant15', 'variant16', 'variant17', 'variant18', 'variant19', 'variant20', 'variant21', 'variant22', 'variant23', 'variant24', 'variant25', 'variant26', 'variant27', 'variant28', 'variant29', 'variant30', 'variant31', 'variant32', 'variant33', 'variant34', 'variant35', 'variant36', 'variant37', 'variant38', 'variant39', 'variant40', 'variant41', 'variant42', 'variant43', 'variant44', 'variant45', 'variant46', 'variant47', 'variant48'],
   eyes: ['variant01', 'variant02', 'variant03', 'variant04', 'variant05', 'variant06', 'variant07', 'variant08', 'variant09', 'variant10', 'variant11', 'variant12', 'variant13', 'variant14', 'variant15', 'variant16', 'variant17', 'variant18', 'variant19', 'variant20', 'variant21', 'variant22', 'variant23', 'variant24'],
   eyebrows: ['variant01', 'variant02', 'variant03', 'variant04', 'variant05', 'variant06', 'variant07', 'variant08', 'variant09', 'variant10', 'variant11', 'variant12', 'variant13'],
   mouth: ['happy01', 'happy02', 'happy03', 'happy04', 'happy05', 'happy06', 'happy07', 'happy08', 'happy09', 'happy10', 'happy11', 'happy12', 'happy13', 'happy14', 'happy15', 'happy16', 'happy17', 'happy18', 'sad01', 'sad02', 'sad03', 'sad04', 'sad05', 'sad06', 'sad07', 'sad08', 'sad09'],
@@ -70,6 +27,9 @@ function createDicebearAvatar(options = {}) {
     // 옵션 추가
     if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
       apiUrl += `&backgroundColor=${encodeURIComponent(dicebearOptions.backgroundColor.join(','))}`;
+    }
+    if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
+      apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
     }
     if (dicebearOptions.eyes && dicebearOptions.eyes.length > 0) {
       apiUrl += `&eyes=${encodeURIComponent(dicebearOptions.eyes.join(','))}`;
@@ -120,8 +80,6 @@ const AVATAR_COLORS = {
 };
 
 // 전역 변수로 노출
-window.DICEBEAR_STYLES = DICEBEAR_STYLES;
-window.STYLE_LABELS = STYLE_LABELS;
 window.LORELEI_OPTIONS = LORELEI_OPTIONS;
 window.AVATAR_COLORS = AVATAR_COLORS;
 window.createDicebearAvatar = createDicebearAvatar;

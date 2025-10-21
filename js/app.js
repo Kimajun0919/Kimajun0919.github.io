@@ -96,18 +96,19 @@ function getCurrentAvatarState() {
   if (typeof window.builderState !== 'undefined') {
     return window.builderState;
   }
-  // 기본 상태 반환 (Dicebear API 형식)
+  // 기본 상태 반환 (lorelei 스타일 고정)
   return {
     style: 'lorelei',
     seed: Date.now().toString(),
+    hair: 'variant01',
     eyes: 'variant01',
     eyebrows: 'variant01',
     mouth: 'happy01',
     nose: 'variant01',
-    glasses: null,
-    earrings: null,
-    freckles: null,
-    hairAccessories: null,
+    glasses: '',
+    earrings: '',
+    freckles: '',
+    hairAccessories: '',
     backgroundColor: []
   };
 }
@@ -131,17 +132,16 @@ function generateAvatarSVG(avatarData) {
         scale: 100
       };
 
-      // lorelei 스타일 특정 옵션
-      if (style === 'lorelei') {
-        if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
-        if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
-        if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
-        if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
-        if (avatarData.glasses) dicebearOptions.glasses = [avatarData.glasses];
-        if (avatarData.earrings) dicebearOptions.earrings = [avatarData.earrings];
-        if (avatarData.freckles) dicebearOptions.freckles = [avatarData.freckles];
-        if (avatarData.hairAccessories) dicebearOptions.hairAccessories = [avatarData.hairAccessories];
-      }
+      // lorelei 스타일 옵션 (빈 문자열은 제외)
+      if (avatarData.hair) dicebearOptions.hair = [avatarData.hair];
+      if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
+      if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
+      if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
+      if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
+      if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
+      if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
+      if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
+      if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
 
       const svg = window.createDicebearAvatar({
         style: style,
