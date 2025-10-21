@@ -356,6 +356,7 @@ input[type="file"] {
   padding: 0;
   max-width: 380px;
   width: 90%;
+  aspect-ratio: 1040 / 1840;
   min-height: 600px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.08);
   position: relative;
