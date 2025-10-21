@@ -433,7 +433,7 @@ window.saveAsImage = async function() {
     top: 0;
     width: 2160px;
     height: 3840px;
-    background: url('assets/back.jpg') center/cover no-repeat;
+    background: url('assets/images/back.jpg') center/cover no-repeat;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -595,7 +595,7 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
 
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = "position:fixed;left:-99999px;top:0;width:2160px;height:3840px;background:url('assets/back.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:0;margin:0;box-sizing:border-box;";
+  wrapper.style.cssText = "position:fixed;left:-99999px;top:0;width:2160px;height:3840px;background:url('assets/images/back.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:0;margin:0;box-sizing:border-box;";
 
   const card = document.createElement('div');
   card.style.cssText = "background:#f8f8f8;border-radius:64px;padding:0;width:1840px;height:3200px;box-shadow:0 24px 96px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;";
