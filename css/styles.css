@@ -394,167 +394,8 @@ input[type="file"] {
 }
 
 .result-card {
-  width: 90vw;
-  max-width: 300px;
-  height: 500px;
-  max-height: 83vh;
-  background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 40px 30px 0 30px;
-  box-sizing: border-box;
-  text-align: left;
-  position: relative;
-  z-index: 10;
-  margin-bottom: 30px;
-  overflow: hidden;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-card .logo {
-  color: #00c300;
-  font-weight: 700;
-  font-size: 40px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-card .info {
-  margin-top: -50px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-card .info h2 {
-  font-size: 22px;
-  margin: 0;
-  color: #444;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-card .info p {
-  margin: 4px 0;
-  color: #888;
-  font-size: 14px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-card .bible-verse {
-  margin: 12px 0;
-  color: #555;
-  font-size: 15px;
-  line-height: 1.8;
-  font-weight: 400;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-card .bible-reference {
-  display: block;
-  margin-top: 8px;
-  color: #aaa;
-  font-size: 11px;
-  font-style: italic;
-  text-align: right;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-card .character {
   width: 100%;
-  text-align: right;
-}
-
-.result-card .character svg {
-  width: 250px;
-  max-width: 83%;
-  height: auto;
-  margin-right: -30px;
-}
-
-/* 모바일 반응형 */
-@media (max-width: 480px) {
-  .result-card {
-    width: 95vw;
-    padding: 30px 20px 0 20px;
-  }
-
-  .result-card .logo {
-    font-size: 32px;
-  }
-
-  .result-card .info {
-    margin-top: -20px;
-  }
-
-  .result-card .info h2 {
-    font-size: 18px;
-  }
-
-  .result-card .info p {
-    font-size: 12px;
-  }
-
-  .result-card .bible-verse {
-    font-size: 13px;
-    margin: 10px 0;
-  }
-
-  .result-card .bible-reference {
-    font-size: 10px;
-  }
-
-  .result-card .character svg {
-    width: 200px;
-    margin-right: -20px;
-  }
-}
-
-@media (max-height: 600px) {
-  .result-card {
-    height: 90vh;
-    padding: 30px 25px 0 25px;
-  }
-
-  .result-card .logo {
-    font-size: 32px;
-  }
-
-  .result-card .info {
-    margin-top: -15px;
-  }
-
-  .result-card .info h2 {
-    font-size: 18px;
-  }
-
-  .result-card .info p {
-    font-size: 12px;
-  }
-
-  .result-card .bible-verse {
-    font-size: 13px;
-    line-height: 1.6;
-    margin: 8px 0;
-  }
-
-  .result-card .bible-reference {
-    font-size: 10px;
-    margin-top: 6px;
-  }
-
-  .result-card .character svg {
-    width: 180px;
-    margin-right: -25px;
-  }
-}
-
-/* ==================== 저장 모드 (LINE 스타일) ==================== */
-.result-container.saving-mode {
-  width: 1080px;
-  height: 1920px;
-  background: #f8f8f8;
-  padding: 0;
-  margin: 0 auto;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -562,84 +403,22 @@ input[type="file"] {
   position: relative;
 }
 
-.result-container.saving-mode .result-card {
-  width: 1000px;
-  height: 1666px;
-  background-color: #fff;
-  border-radius: 66px;
-  box-shadow: 0 26px 53px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 133px 100px 0 100px;
-  box-sizing: border-box;
-  text-align: left;
-  position: relative;
-  overflow: hidden;
-  margin: 0;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .logo {
-  color: #00c300;
-  font-weight: 700;
-  font-size: 133px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .info {
-  margin-top: -166px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .info h2 {
-  font-size: 73px;
-  margin: 0;
-  color: #444;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .info p {
-  margin: 13px 0;
-  color: #888;
-  font-size: 46px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .bible-verse {
-  margin: 40px 0;
-  color: #555;
-  font-size: 50px;
-  line-height: 1.8;
-  font-weight: 400;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .bible-reference {
-  display: block;
-  margin-top: 26px;
-  color: #aaa;
-  font-size: 36px;
-  font-style: italic;
-  text-align: right;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .character {
-  width: 100%;
-  text-align: right;
-}
-
-.result-container.saving-mode .character svg {
-  width: 833px;
-  max-width: 83%;
-  height: auto;
-  margin-right: -100px;
-}
-
-/* 로고 스타일은 이제 card-header에 포함됨 */
+/* 로고 스타일 */
 .result-logo {
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+.haneul-logo {
+  width: 180px;
+  height: auto;
+  opacity: 0.6;
 }
 
 

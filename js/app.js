@@ -299,56 +299,9 @@ function displaySearchResults(employees) {
 
 // 직원 상세 결과 표시 (HTML에서 호출)
 window.showEmployeeResult = function(employee) {
-  // 결과 페이지의 요소들에 데이터 설정
-  const resultPhoto = document.getElementById('resultPhoto');
-  const resultName = document.getElementById('resultName');
-  const resultTeam = document.getElementById('resultTeam');
-  const resultVerse = document.getElementById('resultVerse');
-  const resultReference = document.getElementById('resultReference');
+  // 현재 직원 정보를 전역 변수에 저장 (다운로드용)
+  window.currentEmployee = employee;
   
-  if (resultPhoto && resultName && resultTeam && resultVerse && resultReference) {
-    // 아바타 표시: avatarData로 생성
-    let avatarHTML = '';
-    if (employee.avatarData) {
-      try {
-        const avatarData = typeof employee.avatarData === 'string' ? JSON.parse(employee.avatarData) : employee.avatarData;
-        avatarHTML = generateAvatarSVG(avatarData);
-      } catch (e) {
-        console.error('아바타 데이터 파싱 오류:', e);
-        avatarHTML = '<div class="no-avatar">아바타 없음</div>';
-      }
-    } else {
-      avatarHTML = '<div class="no-avatar">아바타 없음</div>';
-    }
-    
-    resultPhoto.innerHTML = avatarHTML;
-    resultName.textContent = employee.name;
-    resultTeam.textContent = employee.team;
-
-    // 저장된 말씀이 있으면 사용, 아니면 랜덤
-    if (employee.verseContent && employee.verseReference) {
-      resultVerse.textContent = employee.verseContent;
-      resultReference.textContent = employee.verseReference;
-    } else {
-      try {
-        if (Array.isArray(window.verses) && window.verses.length > 0) {
-          const v = window.verses[Math.floor(Math.random() * window.verses.length)];
-          resultVerse.textContent = v.content;
-          resultReference.textContent = v.reference;
-        } else {
-          resultVerse.textContent = '선한 사람의 걸음을 여호와께서 정하시니 그분은 그 길을 기뻐하십니다.';
-          resultReference.textContent = '시편 37편 23절';
-        }
-      } catch (e) {
-        resultVerse.textContent = '선한 사람의 걸음을 여호와께서 정하시니 그분은 그 길을 기뻐하십니다.';
-        resultReference.textContent = '시편 37편 23절';
-      }
-    }
-    
-    // 현재 직원 정보를 전역 변수에 저장 (다운로드용)
-    window.currentEmployee = employee;
-  }
-
   showPage('resultPage');
 };
 
@@ -395,251 +348,53 @@ window.downloadAvatar = function(name, employeeId) {
   img.src = 'data:image/svg+xml;base64,' + btoa(svg);
 };
 
-// 이미지로 저장 함수 (오프스크린 고정 비율 캡처)
+// 이미지로 저장 함수
 window.saveAsImage = async function() {
-  console.log('=== 이미지 저장 시작 (고정 비율) ===');
+  const resultCard = document.getElementById('resultCard');
   
-  // 1. 현재 직원 정보 확인
-  if (!window.currentEmployee) {
-    alert('저장할 직원 정보가 없습니다.');
-    return;
-  }
-  
-  const employee = window.currentEmployee;
-  console.log('직원 정보:', employee.name);
-  
-  // 2. 원본 result-card 가져오기
-  const originalCard = document.getElementById('resultCard');
-  if (!originalCard) {
+  if (!resultCard) {
     alert('결과 카드를 찾을 수 없습니다.');
     return;
   }
   
   try {
-    // 3. 아바타 데이터로 PNG URL 생성 (저장용 - html2canvas는 SVG를 제대로 렌더링하지 못함)
-    let avatarPngUrl = null;
-    
-    // 아바타 데이터 파싱
-    let avatarData = employee.avatarData;
-    if (typeof avatarData === 'string') {
-      try {
-        avatarData = JSON.parse(avatarData);
-      } catch (e) {
-        console.error('아바타 데이터 파싱 실패:', e);
-      }
-    }
-    
-    // Dicebear PNG URL 생성 (고해상도)
-    if (avatarData) {
-      const style = avatarData.style || 'lorelei';
-      const seed = avatarData.seed || Date.now().toString();
-      avatarPngUrl = `https://api.dicebear.com/9.x/${style}/png?seed=${encodeURIComponent(seed)}&size=2048`;
-      
-      // 아바타 옵션 추가
-      if (avatarData.hair) avatarPngUrl += `&hair=${encodeURIComponent(avatarData.hair)}`;
-      if (avatarData.eyes) avatarPngUrl += `&eyes=${encodeURIComponent(avatarData.eyes)}`;
-      if (avatarData.eyebrows) avatarPngUrl += `&eyebrows=${encodeURIComponent(avatarData.eyebrows)}`;
-      if (avatarData.mouth) avatarPngUrl += `&mouth=${encodeURIComponent(avatarData.mouth)}`;
-      if (avatarData.nose) avatarPngUrl += `&nose=${encodeURIComponent(avatarData.nose)}`;
-      if (avatarData.glasses && avatarData.glasses !== '') avatarPngUrl += `&glasses=${encodeURIComponent(avatarData.glasses)}`;
-      if (avatarData.earrings && avatarData.earrings !== '') avatarPngUrl += `&earrings=${encodeURIComponent(avatarData.earrings)}`;
-      if (avatarData.freckles && avatarData.freckles !== '') avatarPngUrl += `&freckles=${encodeURIComponent(avatarData.freckles)}`;
-      if (avatarData.hairAccessories && avatarData.hairAccessories !== '') avatarPngUrl += `&hairAccessories=${encodeURIComponent(avatarData.hairAccessories)}`;
-      
-      console.log('PNG URL 생성:', avatarPngUrl);
-    }
-    
-    // 4. html2canvas 로드
+    // html2canvas 로드
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
-    // 5. 오프스크린에 고정 크기 컨테이너 생성 (LINE 스타일, 9:16 비율)
-    const offscreenContainer = document.createElement('div');
-    offscreenContainer.className = 'result-container saving-mode';
-    offscreenContainer.style.cssText = `
-      position: fixed;
-      left: -9999px;
-      top: 0;
-      width: 1080px !important;
-      height: 1920px !important;
-      background: #f8f8f8;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      margin: 0;
-    `;
+    // 버튼 임시로 숨기기
+    const buttonContainer = document.querySelector('.button-container');
+    const originalDisplay = buttonContainer.style.display;
+    buttonContainer.style.display = 'none';
     
-    // 6. 카드 복제 (deep clone)
-    const clonedCard = originalCard.cloneNode(true);
-    
-    // SVG를 PNG 이미지로 교체 (html2canvas용)
-    if (avatarPngUrl) {
-      const clonedCharacter = clonedCard.querySelector('.character');
-      if (clonedCharacter) {
-        // 기존 SVG 제거하고 img 태그로 교체
-        clonedCharacter.innerHTML = `<img src="${avatarPngUrl}" crossorigin="anonymous" style="width: 833px; max-width: 83%; height: auto; margin-right: -100px;" />`;
-      }
-    }
-    
-    clonedCard.style.cssText = `
-      width: 1000px !important;
-      height: 1666px !important;
-      background: #fff;
-      border-radius: 66px;
-      box-shadow: 0 26px 53px rgba(0,0,0,0.1);
-      overflow: hidden;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 133px 100px 0 100px;
-      box-sizing: border-box;
-      text-align: left;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-    `;
-    
-    // 7. 카드 내부 요소들에 LINE 스타일 강제 적용
-    const clonedLogo = clonedCard.querySelector('.logo');
-    if (clonedLogo) {
-      clonedLogo.style.cssText = `
-        color: #00c300 !important;
-        font-weight: 700 !important;
-        font-size: 133px !important;
-        font-family: 'Helvetica Neue', Arial, sans-serif !important;
-      `;
-    }
-    
-    const clonedInfo = clonedCard.querySelector('.info');
-    if (clonedInfo) {
-      clonedInfo.style.cssText = `
-        margin-top: -166px !important;
-        font-family: 'Helvetica Neue', Arial, sans-serif !important;
-      `;
-      
-      const clonedName = clonedInfo.querySelector('h2');
-      if (clonedName) {
-        clonedName.style.cssText = `
-          font-size: 73px !important;
-          margin: 0 !important;
-          color: #444 !important;
-          font-family: 'Helvetica Neue', Arial, sans-serif !important;
-        `;
-      }
-      
-      const clonedTeam = clonedInfo.querySelector('p:not(.bible-verse)');
-      if (clonedTeam) {
-        clonedTeam.style.cssText = `
-          margin: 13px 0 !important;
-          color: #888 !important;
-          font-size: 46px !important;
-          font-family: 'Helvetica Neue', Arial, sans-serif !important;
-        `;
-      }
-      
-      const clonedVerse = clonedInfo.querySelector('.bible-verse');
-      if (clonedVerse) {
-        clonedVerse.style.cssText = `
-          margin: 40px 0 !important;
-          color: #555 !important;
-          font-size: 50px !important;
-          line-height: 1.8 !important;
-          font-weight: 400 !important;
-          font-family: 'Helvetica Neue', Arial, sans-serif !important;
-        `;
-        
-        const verseRef = clonedVerse.querySelector('.bible-reference');
-        if (verseRef) {
-          verseRef.style.cssText = `
-            display: block !important;
-            margin-top: 26px !important;
-            color: #aaa !important;
-            font-size: 36px !important;
-            font-style: italic !important;
-            text-align: right !important;
-            font-family: 'Helvetica Neue', Arial, sans-serif !important;
-          `;
-        }
-      }
-    }
-    
-    const clonedCharacter = clonedCard.querySelector('.character');
-    if (clonedCharacter) {
-      clonedCharacter.style.cssText = `
-        width: 100% !important;
-        text-align: right !important;
-      `;
-    }
-    
-    offscreenContainer.appendChild(clonedCard);
-    
-    document.body.appendChild(offscreenContainer);
-    
-    console.log('오프스크린 컨테이너 생성 완료');
-    
-    // 8. 폰트 및 PNG 이미지 로드 대기
-    if (document.fonts && document.fonts.ready) {
-      await document.fonts.ready;
-    }
-    
-    // PNG 이미지 로드 대기
-    if (avatarPngUrl) {
-      const pngImg = clonedCard.querySelector('.character img');
-      if (pngImg) {
-        await new Promise((resolve) => {
-          if (pngImg.complete) {
-            resolve();
-          } else {
-            pngImg.onload = resolve;
-            pngImg.onerror = resolve;
-            setTimeout(resolve, 5000); // 5초 타임아웃
-          }
-        });
-        console.log('PNG 이미지 로드 완료');
-      }
-    }
-    
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    console.log('캡처 시작...');
-    
-    // 9. 고정 크기로 고화질 캡처 (9:16 비율)
-    const canvas = await html2canvas.default(offscreenContainer, {
-      backgroundColor: '#f8f8f8',
+    // 현재 화면 그대로 캡처
+    const canvas = await html2canvas.default(resultCard, {
+      backgroundColor: null,
       useCORS: true,
       allowTaint: true,
       logging: false,
-      scale: 2, // 고해상도 (실제 출력: 2160x3840px, 9:16 비율)
-      width: 1080,
-      height: 1920,
-      windowWidth: 1080,
-      windowHeight: 1920
+      scale: 2,
+      width: window.innerWidth,
+      height: window.innerHeight
     });
     
-    console.log('캡처 완료:', canvas.width, 'x', canvas.height);
+    // 버튼 다시 표시
+    buttonContainer.style.display = originalDisplay;
     
-    // 10. 최고 품질로 다운로드
+    // 다운로드
     const dataURL = canvas.toDataURL('image/png', 1.0);
     const link = document.createElement('a');
-    link.download = `${employee.name}_카드.png`;
+    link.download = `HANEUL_카드.png`;
     link.href = dataURL;
     link.click();
     
-    console.log('다운로드 완료');
     alert('이미지가 저장되었습니다!');
-    
-    // 11. 오프스크린 컨테이너 제거
-    offscreenContainer.remove();
-    
   } catch (error) {
     console.error('캡처 오류:', error);
     alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
-    // 오류 시에도 오프스크린 컨테이너 제거
-    const offscreen = document.querySelector('.result-container.saving-mode');
-    if (offscreen) offscreen.remove();
+    // 오류 시 버튼 다시 표시
+    const buttonContainer = document.querySelector('.button-container');
+    if (buttonContainer) buttonContainer.style.display = '';
   }
-  
-  console.log('=== 이미지 저장 완료 ===');
 };
 
 // 카드 이미지 데이터URL 생성 유틸 (DB 저장용)
