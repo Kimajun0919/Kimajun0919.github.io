@@ -27,15 +27,6 @@ window.showPage = function(pageId) {
       }
     }, 100);
   }
-  
-  // 검색 페이지로 이동할 때 검색 폼 리셋
-  if (pageId === 'searchPage') {
-    setTimeout(() => {
-      if (typeof resetSearchForm === 'function') {
-        resetSearchForm();
-      }
-    }, 100);
-  }
 };
 
 // 아바타 저장 함수 (새로운 아바타 빌더 시스템 사용)
@@ -56,7 +47,6 @@ window.saveAvatar = async function() {
   try {
     // 현재 아바타 상태 가져오기
     const currentAvatarState = getCurrentAvatarState();
-    console.log('Saving avatar state:', currentAvatarState); // 디버깅용
     
     // 고유 ID 생성
     const employeeId = String(Date.now()).slice(-6);
@@ -83,7 +73,7 @@ window.saveAvatar = async function() {
 
     status.innerHTML = `✅ 아바타 저장 완료!`;
     status.style.color = "#27ae60";
-      
+    
     // 입력 필드 초기화
     document.getElementById('avatarName').value = '';
     document.getElementById('avatarTeam').value = '';
@@ -112,14 +102,9 @@ window.saveAvatar = async function() {
 
 // 현재 아바타 상태 가져오기
 function getCurrentAvatarState() {
-  if (typeof window.builderState !== 'undefined' && window.builderState !== null) {
-    // builderState가 초기화된 상태인지 확인 (seed가 있는지)
-    if (window.builderState.seed && window.builderState.seed !== '') {
-      // 깊은 복사로 반환 (참조 문제 방지)
-      return JSON.parse(JSON.stringify(window.builderState));
-    }
+  if (typeof window.builderState !== 'undefined') {
+    return window.builderState;
   }
-  
   // 기본 상태 반환 (lorelei 스타일 고정)
   return {
     style: 'lorelei',
@@ -130,6 +115,9 @@ function getCurrentAvatarState() {
     mouth: 'happy01',
     nose: 'variant01',
     glasses: '',
+    earrings: '',
+    freckles: '',
+    hairAccessories: '',
     backgroundColor: []
   };
 }
@@ -160,6 +148,9 @@ function generateAvatarSVG(avatarData) {
       if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
       if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
       if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
+      if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
+      if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
+      if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
 
       const svg = window.createDicebearAvatar({
         style: style,
@@ -263,13 +254,6 @@ window.searchEmployee = async function() {
 // 검색 결과 표시
 function displaySearchResults(employees) {
   const resultsContainer = document.getElementById('searchResults');
-  const searchForm = document.querySelector('.search-form');
-  const backButton = document.querySelector('.back-button');
-  
-  // 검색 폼 숨기기
-  searchForm.style.display = 'none';
-  
-  // 검색 결과 표시
   resultsContainer.innerHTML = '';
 
   employees.forEach(employee => {
@@ -281,15 +265,11 @@ function displaySearchResults(employees) {
     if (employee.avatarData) {
       try {
         const avatarData = typeof employee.avatarData === 'string' ? JSON.parse(employee.avatarData) : employee.avatarData;
-        console.log('Loaded avatar data:', avatarData); // 디버깅용
         avatarHTML = generateAvatarSVG(avatarData);
-        console.log('Generated avatar HTML:', avatarHTML); // 디버깅용
       } catch (e) {
-        console.error('Avatar data parsing error:', e);
         avatarHTML = '<div class="no-avatar">아바타 없음</div>';
       }
     } else {
-      console.log('No avatar data found for employee:', employee);
       avatarHTML = '<div class="no-avatar">아바타 없음</div>';
     }
     
@@ -317,59 +297,10 @@ function displaySearchResults(employees) {
         <button onclick="deleteEmployee('${employee.id}')" class="btn-danger">삭제</button>
       </div>
     `;
-    
-    console.log('Employee card HTML:', employeeCard.innerHTML); // 디버깅용
     resultsContainer.appendChild(employeeCard);
-    
-    // 이미지 로딩 확인
-    const avatarImg = employeeCard.querySelector('img');
-    if (avatarImg) {
-      avatarImg.addEventListener('load', () => {
-        console.log('Avatar image loaded successfully');
-      });
-      avatarImg.addEventListener('error', (e) => {
-        console.error('Avatar image failed to load:', e);
-        console.log('Failed image src:', avatarImg.src);
-      });
-    }
   });
 
-  // 다시 검색 버튼 추가
-  const searchAgainButton = document.createElement('div');
-  searchAgainButton.className = 'back-button';
-  searchAgainButton.innerHTML = `
-    <button class="action-button secondary" onclick="resetSearchForm()">← 다시 검색</button>
-    <button class="action-button secondary" onclick="showPage('mainPage')" style="margin-left: 10px;">← 메인으로</button>
-  `;
-  
-  // 기존 뒤로가기 버튼 교체
-  backButton.innerHTML = searchAgainButton.innerHTML;
-}
-
-// 검색 폼 리셋 함수
-window.resetSearchForm = function() {
-  const searchForm = document.querySelector('.search-form');
-  const resultsContainer = document.getElementById('searchResults');
-  const backButton = document.querySelector('.back-button');
-  const status = document.getElementById('searchStatus');
-  
-  // 검색 폼 다시 보이기
-  searchForm.style.display = 'block';
-  
-  // 검색 결과 초기화
-  resultsContainer.innerHTML = '';
-  
-  // 상태 메시지 초기화
-  status.textContent = '';
-  
-  // 입력 필드 초기화
-  document.getElementById('searchName').value = '';
-  document.getElementById('searchTeam').value = '';
-  
-  // 뒤로가기 버튼 원래대로 복원
-  backButton.innerHTML = `
-    <button class="action-button secondary" onclick="showPage('mainPage')">← 메인으로</button>
-  `;
+  showPage('resultPage');
 }
 
 // 직원 상세 결과 표시 (HTML에서 호출)
@@ -467,157 +398,97 @@ window.downloadAvatar = function(name, employeeId) {
 
 // 이미지로 저장 함수 (결과 페이지용)
 window.saveAsImage = async function() {
-  console.log('saveAsImage 함수 시작');
-  
-  // 현재 직원 정보 확인
-  if (!window.currentEmployee) {
-    console.error('저장할 직원 정보가 없습니다.');
-    alert('저장할 직원 정보가 없습니다.');
-    return;
-  }
-
-  const employee = window.currentEmployee;
-  const baseName = employee.name || 'avatar';
-  console.log('직원 정보:', employee);
+  // 전체 배경(assets/back.jpg) 포함, 2160x3840 고정으로 저장
+  const baseName = document.getElementById('resultName')?.textContent || 'avatar';
+  const originalCard = document.getElementById('resultCard');
+  if (!originalCard) return;
 
   // html2canvas 로드
-  console.log('html2canvas 로드 시작');
   const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
-  console.log('html2canvas 로드 완료');
 
   // 오프스크린 래퍼 생성 (9:16, 2160x3840)
   const wrapper = document.createElement('div');
   wrapper.style.cssText = "position:fixed;left:-99999px;top:0;width:2160px;height:3840px;background:url('assets/back.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:0;margin:0;box-sizing:border-box;transform:none";
 
-  // 카드 생성
-  const card = document.createElement('div');
-  card.style.cssText = "background:#f8f8f8;border-radius:64px;padding:0;width:1840px;height:3200px;box-shadow:0 24px 96px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;";
+  // 카드 복제 및 고해상도 스타일 보정
+  const clone = originalCard.cloneNode(true);
+  // 카드 크기/비율 고정 (2160x3840 안 기준): 1840 x 3200
+  clone.style.cssText = "background:#f8f8f8;border-radius:64px;padding:0;width:1840px;height:3200px;max-width:none;box-shadow:0 24px 96px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;transform:none;position:relative";
+  // 원본 카드의 max-width 제약 제거
+  try { clone.classList && clone.classList.remove('result-card'); } catch (e) {}
 
-  // 아바타 사진 영역
-  const photo = document.createElement('div');
-  photo.className = 'employee-photo';
-  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
+  // 주요 요소 타이포/여백 확대
+  const nameEl = clone.querySelector('.employee-name');
+  if (nameEl) {
+    nameEl.style.fontSize = '104px';
+    nameEl.style.padding = '160px 96px 16px 96px';
+    nameEl.style.margin = '-120px 0 0 0';
+    nameEl.style.borderRadius = '72px 72px 0 0';
+    nameEl.style.background = '#fff';
+    nameEl.style.textAlign = 'left';
+  }
+  const teamEl = clone.querySelector('.employee-team');
+  if (teamEl) {
+    teamEl.style.fontSize = '48px';
+    teamEl.style.padding = '0 96px 28px 96px';
+    teamEl.style.background = '#fff';
+    teamEl.style.textAlign = 'left';
+  }
+  const verseEl = clone.querySelector('.employee-id');
+  if (verseEl) {
+    verseEl.style.fontSize = '36px';
+    verseEl.style.lineHeight = '1.8';
+    verseEl.style.padding = '0 96px 96px 96px';
+    verseEl.style.background = '#fff';
+    verseEl.style.borderRadius = '0 0 36px 36px';
+    verseEl.style.textAlign = 'left';
+    verseEl.style.flex = '1 1 auto';
+    verseEl.style.overflow = 'hidden';
+  }
+  const photo = clone.querySelector('.employee-photo');
+  if (photo) {
+    photo.style.width = '1750px';
+    photo.style.height = '1400px';
+    photo.style.margin = '36px';
+    photo.style.borderRadius = '40px 40px 0 0';
+    photo.style.boxShadow = '0 16px 48px rgba(0,0,0,0.12)';
+    photo.style.flex = '0 0 auto';
 
-  // 아바타 데이터로 SVG 생성 (저장된 avatarData 사용)
-  let avatarData = employee.avatarData;
-  console.log('원본 avatarData:', avatarData);
-  if (typeof avatarData === 'string') {
-    try {
-      avatarData = JSON.parse(avatarData);
-      console.log('파싱된 avatarData:', avatarData);
-    } catch (e) {
-      console.error('아바타 데이터 파싱 오류:', e);
-      avatarData = getCurrentAvatarState();
+    // 아바타 이미지를 base64로 변환 (CORS 문제 해결)
+    const avatarImg = photo.querySelector('img');
+    if (avatarImg && avatarImg.src.startsWith('http')) {
+      try {
+        const svgResponse = await fetch(avatarImg.src);
+        const svgText = await svgResponse.text();
+        const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
+        avatarImg.src = svgBase64;
+        console.log('아바타 이미지를 base64로 변환 완료');
+      } catch (error) {
+        console.error('아바타 이미지 base64 변환 실패:', error);
+      }
+    }
+
+    // 내부 SVG가 고정 크기를 갖지 않도록 강제
+    const innerSvg = photo.querySelector('svg');
+    if (innerSvg) {
+      innerSvg.setAttribute('width', '100%');
+      innerSvg.setAttribute('height', '100%');
+      innerSvg.style.width = '100%';
+      innerSvg.style.height = '100%';
     }
   }
-  
-  // Dicebear API URL 직접 생성
-  const dicebearOptions = {
-    seed: avatarData.seed || Date.now().toString(),
-    backgroundColor: avatarData.backgroundColor || [],
-    scale: 100
-  };
 
-  // lorelei 스타일 옵션
-  if (avatarData.hair) dicebearOptions.hair = [avatarData.hair];
-  if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
-  if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
-  if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
-  if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
-  if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
-
-  // API URL 생성
-  console.log('dicebearOptions:', dicebearOptions);
-  let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
-  if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
-    // backgroundColor에서 # 제거 (Dicebear API는 hex 코드만 받음)
-    const bgColors = dicebearOptions.backgroundColor.map(color => color.replace('#', ''));
-    apiUrl += `&backgroundColor=${bgColors.join(',')}`;
-  }
-  if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
-    apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
-  }
-  if (dicebearOptions.eyes && dicebearOptions.eyes.length > 0) {
-    apiUrl += `&eyes=${encodeURIComponent(dicebearOptions.eyes.join(','))}`;
-  }
-  if (dicebearOptions.eyebrows && dicebearOptions.eyebrows.length > 0) {
-    apiUrl += `&eyebrows=${encodeURIComponent(dicebearOptions.eyebrows.join(','))}`;
-  }
-  if (dicebearOptions.mouth && dicebearOptions.mouth.length > 0) {
-    apiUrl += `&mouth=${encodeURIComponent(dicebearOptions.mouth.join(','))}`;
-  }
-  if (dicebearOptions.nose && dicebearOptions.nose.length > 0) {
-    apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
-  }
-  if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
-    apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
-  }
-  
-  console.log('생성된 API URL:', apiUrl);
-
-  // img 태그로 아바타 삽입
-  const avatarImg = document.createElement('img');
-  avatarImg.src = apiUrl;
-  avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
-  avatarImg.crossOrigin = "anonymous"; // CORS 설정
-  photo.appendChild(avatarImg);
-  
-  // 이미지 로드 확인
-  avatarImg.addEventListener('load', () => {
-    console.log('저장용 아바타 이미지 로드 성공');
-  });
-  avatarImg.addEventListener('error', (e) => {
-    console.error('저장용 아바타 이미지 로드 실패:', e);
-    console.log('실패한 URL:', apiUrl);
-  });
-
-  // 이름
-  const nameEl = document.createElement('div');
-  nameEl.className = 'employee-name';
-  nameEl.textContent = employee.name;
-  nameEl.style.cssText = "font-size:104px;padding:160px 96px 16px 96px;margin:-120px 0 0 0;border-radius:72px 72px 0 0;background:#fff;text-align:left;font-weight:700;";
-
-  // 팀
-  const teamEl = document.createElement('div');
-  teamEl.className = 'employee-team';
-  teamEl.textContent = employee.team;
-  teamEl.style.cssText = "font-size:48px;padding:0 96px 28px 96px;background:#fff;text-align:left;color:#666;";
-
-  // 말씀
-  const verseEl = document.createElement('div');
-  verseEl.className = 'employee-id';
-  verseEl.innerHTML = employee.verseContent 
-    ? `${employee.verseContent}<br><span class="verse-reference" style="display:block;margin-top:6px;opacity:0.75;">${employee.verseReference || ''}</span>` 
-    : '';
-  verseEl.style.cssText = "font-size:36px;line-height:1.8;padding:0 96px 96px 96px;background:#fff;border-radius:0 0 36px 36px;text-align:left;flex:1 1 auto;overflow:hidden;";
-
-  // 카드 조립
-  card.appendChild(photo);
-  card.appendChild(nameEl);
-  card.appendChild(teamEl);
-  card.appendChild(verseEl);
-  wrapper.appendChild(card);
+  wrapper.appendChild(clone);
   document.body.appendChild(wrapper);
 
-  // 이미지 로드 대기
-  await new Promise((resolve) => {
-    if (avatarImg.complete) {
-      resolve();
-    } else {
-      avatarImg.addEventListener('load', resolve, { once: true });
-      avatarImg.addEventListener('error', resolve, { once: true });
-    }
-  });
-
-  // 폰트 로드 대기
+  // 폰트/이미지 로드 대기
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
-
-  // 약간의 추가 대기 (렌더링 완료 확인)
-  await new Promise(r => setTimeout(r, 500));
+  const innerImg = clone.querySelector('img');
+  if (innerImg && !(innerImg.complete && (innerImg.naturalWidth || 1) > 0)) {
+    await new Promise(r => { innerImg.addEventListener('load', r, { once:true }); innerImg.addEventListener('error', r, { once:true }); });
+  }
 
   // 캡처
-  console.log('html2canvas 캡처 시작');
-  try {
   const canvas = await html2canvas.default(wrapper, {
     width: 2160,
     height: 3840,
@@ -626,131 +497,19 @@ window.saveAsImage = async function() {
     backgroundColor: null,
     useCORS: true,
     allowTaint: true,
-      logging: true, // 로깅 활성화
+    logging: false,
     removeContainer: false
   });
-    console.log('html2canvas 캡처 완료', canvas);
 
   // 다운로드
-    console.log('다운로드 시작');
-    const dataURL = canvas.toDataURL('image/png', 0.95);
-    console.log('데이터 URL 생성됨:', dataURL.substring(0, 100) + '...');
-    
-    // 다운로드 링크 생성
   const a = document.createElement('a');
-    a.href = dataURL;
-    a.download = `${baseName}_card.png`; // 파일명 단순화
-    a.style.display = 'none';
-    document.body.appendChild(a);
-    
-    // 다운로드 실행
-    console.log('다운로드 링크 클릭');
+  a.href = canvas.toDataURL('image/png', 0.95);
+  a.download = `${baseName}_2160x3840.png`;
   a.click();
-    
-    // 정리
-    setTimeout(() => {
-      document.body.removeChild(a);
-      console.log('다운로드 링크 정리 완료');
-    }, 100);
-    
-    console.log('다운로드 완료');
-    
-    // 사용자에게 알림
-    alert('이미지 다운로드가 시작되었습니다. 브라우저의 다운로드 폴더를 확인해주세요.');
-    
-    // 대안: 새 탭에서 이미지 열기 (수동 저장용)
-    try {
-      const newTab = window.open('', '_blank');
-      if (newTab) {
-        newTab.document.write(`
-          <html>
-            <head><title>${baseName} 카드 이미지</title></head>
-            <body style="margin:0;padding:20px;background:#f0f0f0;text-align:center;">
-              <h2>${baseName} 카드 이미지</h2>
-              <p>이미지를 우클릭하여 "다른 이름으로 저장"을 선택하세요.</p>
-              <img src="${dataURL}" style="max-width:100%;height:auto;border:2px solid #ccc;border-radius:10px;" alt="${baseName} 카드">
-              <br><br>
-              <button onclick="window.close()" style="padding:10px 20px;font-size:16px;background:#007aff;color:white;border:none;border-radius:5px;cursor:pointer;">창 닫기</button>
-            </body>
-          </html>
-        `);
-        newTab.document.close();
-      } else {
-        console.log('팝업이 차단되었습니다. 직접 이미지를 표시합니다.');
-        // 팝업이 차단된 경우 현재 페이지에 이미지 표시
-        showImageInCurrentPage(dataURL, baseName);
-      }
-    } catch (error) {
-      console.error('새 탭 열기 오류:', error);
-      // 오류 발생 시 현재 페이지에 이미지 표시
-      showImageInCurrentPage(dataURL, baseName);
-    }
-  } catch (error) {
-    console.error('html2canvas 오류:', error);
-    alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
-  }
 
   // 정리
   wrapper.remove();
 };
-
-// 현재 페이지에 이미지 표시 함수
-function showImageInCurrentPage(dataURL, baseName) {
-  // 기존 이미지 표시 요소가 있으면 제거
-  const existingDisplay = document.getElementById('imageDisplay');
-  if (existingDisplay) {
-    existingDisplay.remove();
-  }
-  
-  // 이미지 표시 컨테이너 생성
-  const container = document.createElement('div');
-  container.id = 'imageDisplay';
-  container.style.cssText = `
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    box-sizing: border-box;
-  `;
-  
-  const content = document.createElement('div');
-  content.style.cssText = `
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 90%;
-    max-height: 90%;
-    overflow: auto;
-  `;
-  
-  content.innerHTML = `
-    <h2>${baseName} 카드 이미지</h2>
-    <p>이미지를 우클릭하여 "다른 이름으로 저장"을 선택하세요.</p>
-    <img src="${dataURL}" style="max-width:100%;height:auto;border:2px solid #ccc;border-radius:10px;" alt="${baseName} 카드">
-    <br><br>
-    <button onclick="document.getElementById('imageDisplay').remove()" style="padding:10px 20px;font-size:16px;background:#007aff;color:white;border:none;border-radius:5px;cursor:pointer;">닫기</button>
-  `;
-  
-  container.appendChild(content);
-  document.body.appendChild(container);
-  
-  // ESC 키로 닫기
-  const handleEsc = (e) => {
-    if (e.key === 'Escape') {
-      container.remove();
-      document.removeEventListener('keydown', handleEsc);
-    }
-  };
-  document.addEventListener('keydown', handleEsc);
-}
 
 // 카드 이미지 데이터URL 생성 유틸 (DB 저장용)
 async function generateCardImageDataURL(name, team, verseContent, verseReference, avatarData) {
@@ -765,65 +524,27 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
 
   const photo = document.createElement('div');
   photo.className = 'employee-photo';
-  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
+  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;";
 
-  // Dicebear API URL 직접 생성
-  const dicebearOptions = {
-    seed: avatarData.seed || Date.now().toString(),
-    backgroundColor: avatarData.backgroundColor || [],
-    scale: 100
-  };
+  // SVG를 base64로 인코딩해서 CORS 문제 우회
+  const svgResponse = await fetch(apiUrl);
+  const svgText = await svgResponse.text();
+  const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
 
-  // lorelei 스타일 옵션
-  if (avatarData.hair) dicebearOptions.hair = [avatarData.hair];
-  if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
-  if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
-  if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
-  if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
-  if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
-
-  // API URL 생성
-  let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
-  if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
-    // backgroundColor에서 # 제거 (Dicebear API는 hex 코드만 받음)
-    const bgColors = dicebearOptions.backgroundColor.map(color => color.replace('#', ''));
-    apiUrl += `&backgroundColor=${bgColors.join(',')}`;
-  }
-  if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
-    apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
-  }
-  if (dicebearOptions.eyes && dicebearOptions.eyes.length > 0) {
-    apiUrl += `&eyes=${encodeURIComponent(dicebearOptions.eyes.join(','))}`;
-  }
-  if (dicebearOptions.eyebrows && dicebearOptions.eyebrows.length > 0) {
-    apiUrl += `&eyebrows=${encodeURIComponent(dicebearOptions.eyebrows.join(','))}`;
-  }
-  if (dicebearOptions.mouth && dicebearOptions.mouth.length > 0) {
-    apiUrl += `&mouth=${encodeURIComponent(dicebearOptions.mouth.join(','))}`;
-  }
-  if (dicebearOptions.nose && dicebearOptions.nose.length > 0) {
-    apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
-  }
-  if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
-    apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
-  }
-
-  // img 태그로 아바타 삽입
   const avatarImg = document.createElement('img');
-  avatarImg.src = apiUrl;
+  avatarImg.src = svgBase64;
   avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
-  avatarImg.crossOrigin = "anonymous";
   photo.appendChild(avatarImg);
 
   const nameEl = document.createElement('div');
   nameEl.className = 'employee-name';
   nameEl.textContent = name;
-  nameEl.style.cssText = "font-size:104px;padding:160px 96px 16px 96px;margin:-120px 0 0 0;border-radius:72px 72px 0 0;background:#fff;text-align:left;font-weight:700;";
+  nameEl.style.cssText = "font-size:104px;padding:160px 96px 16px 96px;margin:-120px 0 0 0;border-radius:72px 72px 0 0;background:#fff;text-align:left;";
 
   const teamEl = document.createElement('div');
   teamEl.className = 'employee-team';
   teamEl.textContent = team;
-  teamEl.style.cssText = "font-size:48px;padding:0 96px 28px 96px;background:#fff;text-align:left;color:#666;";
+  teamEl.style.cssText = "font-size:48px;padding:0 96px 28px 96px;background:#fff;text-align:left;";
 
   const verseEl = document.createElement('div');
   verseEl.className = 'employee-id';
@@ -837,20 +558,7 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   wrapper.appendChild(card);
   document.body.appendChild(wrapper);
 
-  // 이미지 로드 대기
-  await new Promise((resolve) => {
-    if (avatarImg.complete) {
-      resolve();
-    } else {
-      avatarImg.addEventListener('load', resolve, { once: true });
-      avatarImg.addEventListener('error', resolve, { once: true });
-    }
-  });
-
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
-
-  // 약간의 추가 대기
-  await new Promise(r => setTimeout(r, 500));
 
   const canvas = await html2canvas.default(wrapper, {
     width: 2160,
