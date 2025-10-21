@@ -27,6 +27,15 @@ window.showPage = function(pageId) {
       }
     }, 100);
   }
+  
+  // 검색 페이지로 이동할 때 검색 폼 리셋
+  if (pageId === 'searchPage') {
+    setTimeout(() => {
+      if (typeof resetSearchForm === 'function') {
+        resetSearchForm();
+      }
+    }, 100);
+  }
 };
 
 // 아바타 저장 함수 (새로운 아바타 빌더 시스템 사용)
@@ -254,6 +263,13 @@ window.searchEmployee = async function() {
 // 검색 결과 표시
 function displaySearchResults(employees) {
   const resultsContainer = document.getElementById('searchResults');
+  const searchForm = document.querySelector('.search-form');
+  const backButton = document.querySelector('.back-button');
+  
+  // 검색 폼 숨기기
+  searchForm.style.display = 'none';
+  
+  // 검색 결과 표시
   resultsContainer.innerHTML = '';
 
   employees.forEach(employee => {
@@ -301,10 +317,59 @@ function displaySearchResults(employees) {
         <button onclick="deleteEmployee('${employee.id}')" class="btn-danger">삭제</button>
       </div>
     `;
+    
+    console.log('Employee card HTML:', employeeCard.innerHTML); // 디버깅용
     resultsContainer.appendChild(employeeCard);
+    
+    // 이미지 로딩 확인
+    const avatarImg = employeeCard.querySelector('img');
+    if (avatarImg) {
+      avatarImg.addEventListener('load', () => {
+        console.log('Avatar image loaded successfully');
+      });
+      avatarImg.addEventListener('error', (e) => {
+        console.error('Avatar image failed to load:', e);
+        console.log('Failed image src:', avatarImg.src);
+      });
+    }
   });
 
-  showPage('resultPage');
+  // 다시 검색 버튼 추가
+  const searchAgainButton = document.createElement('div');
+  searchAgainButton.className = 'back-button';
+  searchAgainButton.innerHTML = `
+    <button class="action-button secondary" onclick="resetSearchForm()">← 다시 검색</button>
+    <button class="action-button secondary" onclick="showPage('mainPage')" style="margin-left: 10px;">← 메인으로</button>
+  `;
+  
+  // 기존 뒤로가기 버튼 교체
+  backButton.innerHTML = searchAgainButton.innerHTML;
+}
+
+// 검색 폼 리셋 함수
+window.resetSearchForm = function() {
+  const searchForm = document.querySelector('.search-form');
+  const resultsContainer = document.getElementById('searchResults');
+  const backButton = document.querySelector('.back-button');
+  const status = document.getElementById('searchStatus');
+  
+  // 검색 폼 다시 보이기
+  searchForm.style.display = 'block';
+  
+  // 검색 결과 초기화
+  resultsContainer.innerHTML = '';
+  
+  // 상태 메시지 초기화
+  status.textContent = '';
+  
+  // 입력 필드 초기화
+  document.getElementById('searchName').value = '';
+  document.getElementById('searchTeam').value = '';
+  
+  // 뒤로가기 버튼 원래대로 복원
+  backButton.innerHTML = `
+    <button class="action-button secondary" onclick="showPage('mainPage')">← 메인으로</button>
+  `;
 }
 
 // 직원 상세 결과 표시 (HTML에서 호출)
