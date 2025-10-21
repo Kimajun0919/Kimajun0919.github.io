@@ -394,6 +394,7 @@ input[type="file"] {
   text-align: left;
   position: relative;
   margin-bottom: 30px;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .line-logo {
@@ -411,15 +412,15 @@ input[type="file"] {
   font-size: 22px;
   margin: 0;
   color: #444;
-  font-family: 'Noto Serif KR', serif;
-  font-weight: 500;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
 }
 
 .line-team {
   margin: 4px 0;
   color: #888;
   font-size: 14px;
-  font-family: 'Noto Serif KR', serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .line-bible-verse {
@@ -428,7 +429,7 @@ input[type="file"] {
   font-size: 15px;
   line-height: 1.8;
   font-weight: 400;
-  font-family: 'Noto Serif KR', serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .line-bible-reference {
@@ -438,6 +439,7 @@ input[type="file"] {
   font-size: 11px;
   font-style: italic;
   text-align: right;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 .line-character {
