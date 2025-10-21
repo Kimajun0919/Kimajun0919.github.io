@@ -396,119 +396,197 @@ window.downloadAvatar = function(name, employeeId) {
   img.src = 'data:image/svg+xml;base64,' + btoa(svg);
 };
 
-// 이미지로 저장 함수 (결과 페이지용)
+// 이미지로 저장 함수 (결과 페이지용) - 완전히 새로 작성
 window.saveAsImage = async function() {
-  // 전체 배경(assets/back.jpg) 포함, 2160x3840 고정으로 저장
-  const baseName = document.getElementById('resultName')?.textContent || 'avatar';
-  const originalCard = document.getElementById('resultCard');
-  if (!originalCard) return;
-
-  // html2canvas 로드
+  console.log('=== 이미지 저장 시작 ===');
+  
+  // 1. 현재 직원 정보 가져오기
+  if (!window.currentEmployee) {
+    alert('저장할 직원 정보가 없습니다.');
+    return;
+  }
+  
+  const employee = window.currentEmployee;
+  console.log('직원 정보:', employee);
+  
+  // 2. 아바타 데이터 파싱
+  let avatarData = employee.avatarData;
+  if (typeof avatarData === 'string') {
+    try {
+      avatarData = JSON.parse(avatarData);
+    } catch (e) {
+      console.error('아바타 데이터 파싱 실패:', e);
+      alert('아바타 데이터를 읽을 수 없습니다.');
+      return;
+    }
+  }
+  console.log('아바타 데이터:', avatarData);
+  
+  // 3. html2canvas 로드
   const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
-
-  // 오프스크린 래퍼 생성 (9:16, 2160x3840)
+  
+  // 4. 오프스크린 래퍼 생성 (배경 포함)
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = "position:fixed;left:-99999px;top:0;width:2160px;height:3840px;background:url('assets/back.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:0;margin:0;box-sizing:border-box;transform:none";
-
-  // 카드 복제 및 고해상도 스타일 보정
-  const clone = originalCard.cloneNode(true);
-  // 카드 크기/비율 고정 (2160x3840 안 기준): 1840 x 3200
-  clone.style.cssText = "background:#f8f8f8;border-radius:64px;padding:0;width:1840px;height:3200px;max-width:none;box-shadow:0 24px 96px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;transform:none;position:relative";
-  // 원본 카드의 max-width 제약 제거
-  try { clone.classList && clone.classList.remove('result-card'); } catch (e) {}
-
-  // 주요 요소 타이포/여백 확대
-  const nameEl = clone.querySelector('.employee-name');
-  if (nameEl) {
-    nameEl.style.fontSize = '104px';
-    nameEl.style.padding = '160px 96px 16px 96px';
-    nameEl.style.margin = '-120px 0 0 0';
-    nameEl.style.borderRadius = '72px 72px 0 0';
-    nameEl.style.background = '#fff';
-    nameEl.style.textAlign = 'left';
+  wrapper.style.cssText = `
+    position: fixed;
+    left: -99999px;
+    top: 0;
+    width: 2160px;
+    height: 3840px;
+    background: url('assets/back.jpg') center/cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+  
+  // 5. 카드 생성
+  const card = document.createElement('div');
+  card.style.cssText = `
+    background: #f8f8f8;
+    border-radius: 64px;
+    width: 1840px;
+    height: 3200px;
+    box-shadow: 0 24px 96px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  `;
+  
+  // 6. 아바타 영역 생성
+  const photoArea = document.createElement('div');
+  photoArea.style.cssText = `
+    width: 1750px;
+    height: 1400px;
+    margin: 36px 36px 0 36px;
+    border-radius: 40px 40px 0 0;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  `;
+  
+  // 7. 아바타 SVG 생성 및 삽입
+  const avatarSVG = window.createDicebearAvatar(avatarData);
+  console.log('아바타 SVG 생성:', avatarSVG.substring(0, 200));
+  
+  // SVG를 div에 직접 삽입
+  const avatarContainer = document.createElement('div');
+  avatarContainer.style.cssText = `
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `;
+  avatarContainer.innerHTML = avatarSVG;
+  
+  // SVG 크기 조정
+  const svgElement = avatarContainer.querySelector('svg');
+  if (svgElement) {
+    svgElement.setAttribute('width', '100%');
+    svgElement.setAttribute('height', '100%');
+    svgElement.style.width = '100%';
+    svgElement.style.height = '100%';
+    console.log('SVG 요소 설정 완료');
   }
-  const teamEl = clone.querySelector('.employee-team');
-  if (teamEl) {
-    teamEl.style.fontSize = '48px';
-    teamEl.style.padding = '0 96px 28px 96px';
-    teamEl.style.background = '#fff';
-    teamEl.style.textAlign = 'left';
-  }
-  const verseEl = clone.querySelector('.employee-id');
-  if (verseEl) {
-    verseEl.style.fontSize = '36px';
-    verseEl.style.lineHeight = '1.8';
-    verseEl.style.padding = '0 96px 96px 96px';
-    verseEl.style.background = '#fff';
-    verseEl.style.borderRadius = '0 0 36px 36px';
-    verseEl.style.textAlign = 'left';
-    verseEl.style.flex = '1 1 auto';
-    verseEl.style.overflow = 'hidden';
-  }
-  const photo = clone.querySelector('.employee-photo');
-  if (photo) {
-    photo.style.width = '1750px';
-    photo.style.height = '1400px';
-    photo.style.margin = '36px';
-    photo.style.borderRadius = '40px 40px 0 0';
-    photo.style.boxShadow = '0 16px 48px rgba(0,0,0,0.12)';
-    photo.style.flex = '0 0 auto';
-
-    // 아바타 이미지를 base64로 변환 (CORS 문제 해결)
-    const avatarImg = photo.querySelector('img');
-    if (avatarImg && avatarImg.src.startsWith('http')) {
-      try {
-        const svgResponse = await fetch(avatarImg.src);
-        const svgText = await svgResponse.text();
-        const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
-        avatarImg.src = svgBase64;
-        console.log('아바타 이미지를 base64로 변환 완료');
-      } catch (error) {
-        console.error('아바타 이미지 base64 변환 실패:', error);
-      }
-    }
-
-    // 내부 SVG가 고정 크기를 갖지 않도록 강제
-    const innerSvg = photo.querySelector('svg');
-    if (innerSvg) {
-      innerSvg.setAttribute('width', '100%');
-      innerSvg.setAttribute('height', '100%');
-      innerSvg.style.width = '100%';
-      innerSvg.style.height = '100%';
-    }
-  }
-
-  wrapper.appendChild(clone);
+  
+  photoArea.appendChild(avatarContainer);
+  
+  // 8. 이름 영역
+  const nameArea = document.createElement('div');
+  nameArea.style.cssText = `
+    font-size: 104px;
+    font-weight: 700;
+    padding: 160px 96px 16px 96px;
+    margin: -120px 0 0 0;
+    background: #fff;
+    text-align: left;
+  `;
+  nameArea.textContent = employee.name;
+  
+  // 9. 팀 영역
+  const teamArea = document.createElement('div');
+  teamArea.style.cssText = `
+    font-size: 48px;
+    padding: 0 96px 28px 96px;
+    background: #fff;
+    text-align: left;
+    color: #666;
+  `;
+  teamArea.textContent = employee.team;
+  
+  // 10. 말씀 영역
+  const verseArea = document.createElement('div');
+  verseArea.style.cssText = `
+    font-size: 36px;
+    line-height: 1.8;
+    padding: 0 96px 96px 96px;
+    background: #fff;
+    border-radius: 0 0 36px 36px;
+    text-align: left;
+    flex: 1;
+    overflow: hidden;
+  `;
+  verseArea.innerHTML = employee.verseContent 
+    ? `${employee.verseContent}<br><span style="display:block;margin-top:6px;opacity:0.75;">${employee.verseReference || ''}</span>` 
+    : '';
+  
+  // 11. 카드 조립
+  card.appendChild(photoArea);
+  card.appendChild(nameArea);
+  card.appendChild(teamArea);
+  card.appendChild(verseArea);
+  wrapper.appendChild(card);
   document.body.appendChild(wrapper);
-
-  // 폰트/이미지 로드 대기
-  if (document.fonts && document.fonts.ready) await document.fonts.ready;
-  const innerImg = clone.querySelector('img');
-  if (innerImg && !(innerImg.complete && (innerImg.naturalWidth || 1) > 0)) {
-    await new Promise(r => { innerImg.addEventListener('load', r, { once:true }); innerImg.addEventListener('error', r, { once:true }); });
+  
+  console.log('DOM 구조 생성 완료');
+  
+  // 12. 폰트 로드 대기
+  if (document.fonts && document.fonts.ready) {
+    await document.fonts.ready;
   }
-
-  // 캡처
-  const canvas = await html2canvas.default(wrapper, {
-    width: 2160,
-    height: 3840,
-    windowWidth: 2160,
-    windowHeight: 3840,
-    backgroundColor: null,
-    useCORS: true,
-    allowTaint: true,
-    logging: false,
-    removeContainer: false
-  });
-
-  // 다운로드
-  const a = document.createElement('a');
-  a.href = canvas.toDataURL('image/png', 0.95);
-  a.download = `${baseName}_2160x3840.png`;
-  a.click();
-
-  // 정리
+  
+  // 13. 추가 렌더링 대기 (SVG 렌더링 보장)
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  console.log('렌더링 대기 완료');
+  
+  // 14. html2canvas로 캡처
+  try {
+    const canvas = await html2canvas.default(wrapper, {
+      width: 2160,
+      height: 3840,
+      windowWidth: 2160,
+      windowHeight: 3840,
+      backgroundColor: null,
+      useCORS: true,
+      allowTaint: true,
+      logging: true,
+      scale: 1
+    });
+    
+    console.log('캡처 완료:', canvas.width, 'x', canvas.height);
+    
+    // 15. 다운로드
+    const dataURL = canvas.toDataURL('image/png', 0.95);
+    const link = document.createElement('a');
+    link.download = `${employee.name}_카드.png`;
+    link.href = dataURL;
+    link.click();
+    
+    console.log('다운로드 완료');
+    alert('이미지가 저장되었습니다!');
+    
+  } catch (error) {
+    console.error('캡처 오류:', error);
+    alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);
+  }
+  
+  // 16. 정리
   wrapper.remove();
+  console.log('=== 이미지 저장 완료 ===');
 };
 
 // 카드 이미지 데이터URL 생성 유틸 (DB 저장용)
@@ -524,17 +602,11 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
 
   const photo = document.createElement('div');
   photo.className = 'employee-photo';
-  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;";
+  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
 
-  // SVG를 base64로 인코딩해서 CORS 문제 우회
-  const svgResponse = await fetch(apiUrl);
-  const svgText = await svgResponse.text();
-  const svgBase64 = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgText)));
-
-  const avatarImg = document.createElement('img');
-  avatarImg.src = svgBase64;
-  avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
-  photo.appendChild(avatarImg);
+  // 아바타 SVG 삽입
+  const svgString = generateAvatarSVG(avatarData);
+  photo.innerHTML = svgString;
 
   const nameEl = document.createElement('div');
   nameEl.className = 'employee-name';
