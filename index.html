@@ -66,22 +66,9 @@
         <!-- 미리보기 패널 -->
         <div class="preview-panel preview-sticky">
           <h3>미리보기</h3>
-          <svg id="avatarPreview" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-            <!-- SVG 정의부 -->
-            <defs id="assetDefs"></defs>
-            
-            <!-- 레이어 순서대로 렌더링 -->
-            <g data-part="faceShape"></g>
-            <g data-part="ears"></g>
-            <g data-part="skinTone"></g>
-            <g data-part="hairBack"></g>
-            <g data-part="eyebrows"></g>
-            <g data-part="eyes"></g>
-            <g data-part="nose"></g>
-            <g data-part="mouth"></g>
-            <g data-part="top"></g>
-            <g data-part="hair"></g>
-          </svg>
+          <div id="avatarPreview" style="width: 100%; max-width: 400px; margin: 0 auto;">
+            <!-- Dicebear SVG가 여기에 렌더링됩니다 -->
+          </div>
           
           <div class="export-options">
             <label>
@@ -93,25 +80,23 @@
 
         <!-- 편집 패널 -->
         <div class="editor-panel editor-scroll">
-          <!-- 얼굴형 -->
+          <!-- 아바타 스타일 -->
           <div class="part-section">
-            <div class="part-title">👤 얼굴형</div>
+            <div class="part-title">🎨 아바타 스타일</div>
             <div class="options-grid" id="faceShapeOptions"></div>
           </div>
 
-          <!-- 피부색 -->
+          <!-- 배경색 -->
           <div class="part-section">
-            <div class="part-title">🎨 피부색</div>
+            <div class="part-title">🎨 배경색</div>
             <div class="color-palette" id="skinToneOptions"></div>
           </div>
 
-          <!-- 머리스타일 -->
+          <!-- 빠른 생성 -->
           <div class="part-section">
-            <div class="part-title">💇 머리스타일</div>
-            <div class="options-grid" id="hairOptions"></div>
-            <div class="color-palette" id="hairColorOptions"></div>
+            <div class="part-title">⚡ 빠른 생성</div>
             <div class="control-group">
-              <button class="btn btn-secondary" onclick="randomizePart('hair')">🎲 무작위</button>
+              <button class="btn btn-primary" onclick="randomizePart('all')" style="width: 100%; padding: 12px; font-size: 16px;">🎲 랜덤 아바타 생성</button>
             </div>
           </div>
 
@@ -119,14 +104,12 @@
           <div class="part-section">
             <div class="part-title">👁️ 눈</div>
             <div class="options-grid" id="eyesOptions"></div>
-            <div class="color-palette" id="eyesColorOptions"></div>
           </div>
 
           <!-- 눈썹 -->
           <div class="part-section">
             <div class="part-title">✨ 눈썹</div>
             <div class="options-grid" id="eyebrowsOptions"></div>
-            <div class="color-palette" id="eyebrowsColorOptions"></div>
           </div>
 
           <!-- 코 -->
@@ -139,23 +122,16 @@
           <div class="part-section">
             <div class="part-title">👄 입</div>
             <div class="options-grid" id="mouthOptions"></div>
-            <div class="color-palette" id="mouthColorOptions"></div>
           </div>
 
-          <!-- 귀 -->
+          <!-- 내보내기 -->
           <div class="part-section">
-            <div class="part-title">👂 귀</div>
-            <div class="options-grid" id="earsOptions"></div>
+            <div class="part-title">💾 내보내기</div>
+            <div class="control-group">
+              <button class="btn btn-secondary" onclick="exportAvatarAsSVG()" style="width: 100%; margin-bottom: 8px;">SVG 다운로드</button>
+              <button class="btn btn-secondary" onclick="exportAvatarAsPNG()" style="width: 100%;">PNG 다운로드</button>
+            </div>
           </div>
-
-          <!-- 상의 -->
-          <div class="part-section">
-            <div class="part-title">👕 상의</div>
-            <div class="options-grid" id="topOptions"></div>
-            <div class="color-palette" id="topColorOptions"></div>
-          </div>
-
-          
         </div>
       </div>
       </div>
@@ -205,10 +181,14 @@
     </div>
   </div>
 
+  <!-- Dicebear CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@dicebear/core@7/dist/core.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@dicebear/collection@7/dist/index.umd.js"></script>
+  
   <!-- JavaScript -->
   <script src="js/data.js"></script>
-  <script type="module" src="js/assets.js"></script>
+  <script src="js/assets.js"></script>
   <script src="js/avatar-builder.js"></script>
-  <script type="module" src="js/app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>
