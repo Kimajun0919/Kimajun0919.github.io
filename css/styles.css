@@ -370,102 +370,55 @@ input[type="file"] {
   overflow: hidden;
 }
 
-/* HANEUL 로고 */
-.result-card .card-header {
-  display: block;
-  padding: 0;
-}
-
-.result-card .haneul-brand {
+.result-card .logo {
   color: #00c300;
   font-weight: 700;
   font-size: 40px;
-  margin: 0;
 }
 
-/* 직원 정보 */
-.result-card .card-content {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  gap: 0;
-  flex: 1;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
+.result-card .info {
   margin-top: -50px;
 }
 
-.result-card .employee-info {
-  display: block;
-  text-align: left;
-  z-index: 2;
-  padding: 0;
-  margin: 0;
-}
-
-.result-card .employee-name {
+.result-card .info h2 {
   font-size: 22px;
   margin: 0;
   color: #444;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-.result-card .employee-team {
+.result-card .info p {
   margin: 4px 0;
   color: #888;
   font-size: 14px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* 말씀 */
-.result-card .employee-verse {
-  display: block;
-  position: static;
-  z-index: 2;
-  max-width: none;
-  font-size: 15px;
-  padding: 0;
-  line-height: 1.8;
-  color: #555;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-  text-align: left;
-  font-weight: 400;
+.result-card .bible-verse {
   margin: 12px 0;
+  color: #555;
+  font-size: 15px;
+  line-height: 1.8;
+  font-weight: 400;
 }
 
-.result-card .employee-verse .verse-reference {
+.result-card .bible-reference {
   display: block;
   margin-top: 8px;
   color: #aaa;
   font-size: 11px;
   font-style: italic;
   text-align: right;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
-/* 캐릭터 */
-.result-card .employee-photo {
-  position: static;
+.result-card .character {
   width: 100%;
   text-align: right;
-  z-index: 3;
-  overflow: visible;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  clip-path: none;
-  margin: 0;
-  height: auto;
 }
 
-.result-card .employee-photo svg {
+.result-card .character svg {
   width: 250px;
   max-width: 83%;
   height: auto;
   margin-right: -30px;
-  object-fit: contain;
-  background: transparent;
 }
 
 /* ==================== 저장 모드 (사원증) ==================== */
@@ -499,30 +452,55 @@ input[type="file"] {
   margin: 0;
 }
 
-/* HANEUL 헤더 */
-.card-header {
-  padding: 0;
-  background: #ffffff;
-}
-
-.result-container.saving-mode .card-header {
-  display: block;
-  padding: 0;
-}
-
-.haneul-brand {
-  font-size: 48px;
-  font-weight: 700;
-  color: #00c300;
-  letter-spacing: 0px;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
-}
-
-.result-container.saving-mode .haneul-brand {
+.result-container.saving-mode .logo {
   color: #00c300;
   font-weight: 700;
   font-size: 140px;
+}
+
+.result-container.saving-mode .info {
+  margin-top: -100px;
+}
+
+.result-container.saving-mode .info h2 {
+  font-size: 66px;
   margin: 0;
+  color: #444;
+}
+
+.result-container.saving-mode .info p {
+  margin: 12px 0;
+  color: #888;
+  font-size: 42px;
+}
+
+.result-container.saving-mode .bible-verse {
+  margin: 36px 0;
+  color: #555;
+  font-size: 45px;
+  line-height: 1.8;
+  font-weight: 400;
+}
+
+.result-container.saving-mode .bible-reference {
+  display: block;
+  margin-top: 24px;
+  color: #aaa;
+  font-size: 33px;
+  font-style: italic;
+  text-align: right;
+}
+
+.result-container.saving-mode .character {
+  width: 100%;
+  text-align: right;
+}
+
+.result-container.saving-mode .character svg {
+  width: 750px;
+  max-width: 83%;
+  height: auto;
+  margin-right: -90px;
 }
 
 /* 카드 콘텐츠 영역 */
@@ -544,7 +522,7 @@ input[type="file"] {
   align-items: flex-start;
 }
 
-/* 직원 정보 (이름, 팀) */
+/* 직원 정보 (이름, 팀) - .info 클래스처럼 하나로 묶기 */
 .employee-info {
   flex: 0;
   display: flex;
