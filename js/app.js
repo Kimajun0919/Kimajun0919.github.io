@@ -300,7 +300,7 @@ function displaySearchResults(employees) {
     resultsContainer.appendChild(employeeCard);
   });
 
-  showPage('resultPage');
+  // searchPage에 그대로 유지 (resultPage로 이동하지 않음)
 }
 
 // 직원 상세 결과 표시 (HTML에서 호출)
