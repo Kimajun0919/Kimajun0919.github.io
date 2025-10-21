@@ -57,31 +57,47 @@ const LORELEI_OPTIONS = {
   hairAccessories: ['flowers']
 };
 
-// Dicebear API를 사용한 아바타 생성 함수
+// Dicebear HTTP API를 사용한 아바타 생성 함수 (더 간단하고 안정적)
 function createDicebearAvatar(options = {}) {
-  if (!window.dicebear) {
-    console.error('Dicebear library not loaded');
-    return '';
-  }
-
   const style = options.style || 'lorelei';
   const seed = options.seed || Date.now().toString();
+  const dicebearOptions = options.dicebearOptions || {};
   
   try {
-    // Dicebear collection에서 스타일 가져오기
-    const styleModule = window.dicebear.collection[style];
-    if (!styleModule) {
-      console.error(`Style '${style}' not found`);
-      return '';
+    // API URL 생성
+    let apiUrl = `https://api.dicebear.com/9.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
+    
+    // 옵션 추가
+    if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
+      apiUrl += `&backgroundColor=${encodeURIComponent(dicebearOptions.backgroundColor.join(','))}`;
     }
-
-    // 아바타 생성
-    const avatar = window.dicebear.core.createAvatar(styleModule, {
-      seed: seed,
-      ...options.dicebearOptions
-    });
-
-    return avatar.toString();
+    if (dicebearOptions.eyes && dicebearOptions.eyes.length > 0) {
+      apiUrl += `&eyes=${encodeURIComponent(dicebearOptions.eyes.join(','))}`;
+    }
+    if (dicebearOptions.eyebrows && dicebearOptions.eyebrows.length > 0) {
+      apiUrl += `&eyebrows=${encodeURIComponent(dicebearOptions.eyebrows.join(','))}`;
+    }
+    if (dicebearOptions.mouth && dicebearOptions.mouth.length > 0) {
+      apiUrl += `&mouth=${encodeURIComponent(dicebearOptions.mouth.join(','))}`;
+    }
+    if (dicebearOptions.nose && dicebearOptions.nose.length > 0) {
+      apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
+    }
+    if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
+      apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+    }
+    if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
+      apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
+    }
+    if (dicebearOptions.freckles && dicebearOptions.freckles.length > 0) {
+      apiUrl += `&freckles=${encodeURIComponent(dicebearOptions.freckles.join(','))}`;
+    }
+    if (dicebearOptions.hairAccessories && dicebearOptions.hairAccessories.length > 0) {
+      apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
+    }
+    
+    // SVG를 img 태그로 반환
+    return `<img src="${apiUrl}" alt="Avatar" style="width: 100%; height: 100%; display: block;" />`;
   } catch (error) {
     console.error('Error creating Dicebear avatar:', error);
     return '';
