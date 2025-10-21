@@ -366,22 +366,34 @@ input[type="file"] {
   flex-direction: column;
 }
 
-/* 일반 모드에서도 새 구조 적용 */
+/* 일반 모드에서는 HANEUL 헤더 숨김 */
 .result-card .card-header {
   display: none;
 }
 
+/* 일반 모드는 세로 레이아웃 */
 .result-card .card-content {
-  display: block;
+  display: flex;
+  flex-direction: column;
   padding: 0;
   gap: 0;
 }
 
 .result-card .employee-info {
   display: block;
+  order: 2;
 }
 
-/* 저장 모드 (사원증 세로형 비율) */
+.result-card .employee-photo {
+  order: 1;
+}
+
+.result-card .employee-verse {
+  display: block;
+  order: 3;
+}
+
+/* ==================== 저장 모드 (사원증) ==================== */
 .result-container.saving-mode {
   width: 1080px;
   height: 1920px;
@@ -396,78 +408,73 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .result-card {
-  width: 900px;
-  height: 1600px;
+  width: 920px;
+  height: 1720px;
   background: #ffffff;
-  border-radius: 50px;
-  box-shadow: 0 30px 100px rgba(0,0,0,0.2);
-  overflow: hidden;
+  border-radius: 40px;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.3);
+  overflow: visible;
   margin: 0;
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
+/* HANEUL 헤더 */
+.card-header {
+  padding: 0;
+  background: #ffffff;
+}
+
 .result-container.saving-mode .card-header {
   display: block;
-}
-
-.result-container.saving-mode .card-content {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-}
-
-/* 카드 헤더 - HANEUL 브랜드 */
-.card-header {
-  padding: 80px 80px 60px;
-  background: #ffffff;
+  padding: 90px 90px 60px;
 }
 
 .haneul-brand {
   font-size: 48px;
   font-weight: 700;
   color: #00C73C;
-  letter-spacing: 2px;
+  letter-spacing: 4px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
 }
 
-.result-container.saving-mode .card-header {
-  padding: 100px 100px 80px;
-}
-
 .result-container.saving-mode .haneul-brand {
-  font-size: 80px;
+  font-size: 90px;
   font-weight: 700;
   color: #00C73C;
-  letter-spacing: 3px;
+  letter-spacing: 6px;
 }
 
-/* 카드 콘텐츠 - 왼쪽 정보, 오른쪽 캐릭터 */
+/* 카드 콘텐츠 영역 */
 .card-content {
   display: flex;
   flex: 1;
-  padding: 0 80px 80px;
-  gap: 60px;
+  padding: 0;
+  gap: 0;
 }
 
 .result-container.saving-mode .card-content {
-  padding: 0 100px 100px;
-  gap: 80px;
-}
-
-/* 왼쪽 직원 정보 */
-.employee-info {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  padding: 0 90px 90px;
+  gap: 0;
+  flex: 1;
+}
+
+/* 직원 정보 (이름, 팀) */
+.employee-info {
+  flex: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .result-container.saving-mode .employee-info {
-  padding-top: 40px;
+  padding: 0 0 60px 0;
+  display: block;
 }
 
+/* 기본 모드 사진 */
 .employee-photo {
   width: calc(100% - 32px);
   height: 320px;
@@ -494,20 +501,40 @@ input[type="file"] {
   );
 }
 
-.result-container.saving-mode .employee-photo {
-  width: 500px;
-  height: 900px;
-  margin: 0;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-  border-radius: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #f5f5f5;
-  flex-shrink: 0;
+/* 저장 모드: 하단 영역 (말씀 + 캐릭터) */
+.result-container.saving-mode .card-content::after {
+  content: '';
+  display: block;
+  flex: 1;
 }
 
+.result-container.saving-mode .employee-photo {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+  width: 480px;
+  height: 850px;
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+  background: transparent;
+  flex-shrink: 0;
+  clip-path: none;
+  border: none;
+}
+
+.result-container.saving-mode .employee-photo svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.1);
+}
+
+/* 이름 스타일 */
 .employee-name {
   font-size: clamp(22px, 4vw, 28px);
   color: #1d1d1f;
@@ -523,18 +550,20 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-name {
-  font-size: 56px;
+  font-size: 80px;
   color: #1d1d1f;
   font-weight: 700;
-  letter-spacing: -1px;
-  margin: 0;
+  letter-spacing: -2px;
+  margin: 0 0 15px 0;
   padding: 0;
   text-align: left;
   background: transparent;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
   border-radius: 0;
+  line-height: 1;
 }
 
+/* 팀 스타일 */
 .employee-team {
   font-size: clamp(13px, 2.5vw, 15px);
   color: #86868b;
@@ -549,11 +578,11 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-team {
-  font-size: 32px;
+  font-size: 38px;
   color: #8e8e93;
   font-weight: 500;
-  letter-spacing: 0;
-  margin: 10px 0 0 0;
+  letter-spacing: 0.5px;
+  margin: 0 0 0 0;
   padding: 0;
   text-align: left;
   background: transparent;
@@ -575,6 +604,7 @@ input[type="file"] {
   border-radius: 0 0 12px 12px;
 }
 
+/* 말씀 스타일 */
 .employee-verse {
   font-size: clamp(10px, 2vw, 12px);
   color: #a1a1a6;
@@ -605,11 +635,12 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .employee-verse {
-  font-size: 26px;
+  font-size: 30px;
   color: #636366;
   line-height: 1.8;
   margin: 0;
   padding: 0;
+  padding-right: 480px;
   text-align: left;
   font-weight: 400;
   letter-spacing: 0.3px;
@@ -620,14 +651,16 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  position: relative;
 }
 
 .result-container.saving-mode .employee-verse .verse-reference {
-  font-size: 22px;
+  font-size: 24px;
   color: #8e8e93;
   margin-top: 20px;
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-weight: 400;
 }
 
 /* 로고 스타일은 이제 card-header에 포함됨 */
