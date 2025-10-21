@@ -467,32 +467,33 @@ window.saveAsImage = async function() {
     overflow: hidden;
   `;
   
-  // 7. 아바타 SVG 생성 및 삽입
+  // 7. 아바타 SVG 생성 및 이미지로 변환
   const avatarSVG = window.createDicebearAvatar(avatarData);
   console.log('아바타 SVG 생성:', avatarSVG.substring(0, 200));
   
-  // SVG를 div에 직접 삽입
-  const avatarContainer = document.createElement('div');
-  avatarContainer.style.cssText = `
+  // SVG를 Data URL로 변환 (html2canvas 호환성 향상)
+  const svgBlob = new Blob([avatarSVG], { type: 'image/svg+xml;charset=utf-8' });
+  let svgUrl = URL.createObjectURL(svgBlob);
+  
+  // img 태그로 SVG 로드
+  const avatarImg = document.createElement('img');
+  avatarImg.src = svgUrl;
+  avatarImg.style.cssText = `
     width: 100%;
     height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    object-fit: contain;
   `;
-  avatarContainer.innerHTML = avatarSVG;
   
-  // SVG 크기 조정
-  const svgElement = avatarContainer.querySelector('svg');
-  if (svgElement) {
-    svgElement.setAttribute('width', '100%');
-    svgElement.setAttribute('height', '100%');
-    svgElement.style.width = '100%';
-    svgElement.style.height = '100%';
-    console.log('SVG 요소 설정 완료');
-  }
+  // 이미지 로드 완료를 Promise로 대기
+  await new Promise((resolve, reject) => {
+    avatarImg.onload = () => {
+      console.log('아바타 이미지 로드 완료');
+      resolve();
+    };
+    avatarImg.onerror = reject;
+  });
   
-  photoArea.appendChild(avatarContainer);
+  photoArea.appendChild(avatarImg);
   
   // 8. 이름 영역
   const nameArea = document.createElement('div');
@@ -585,6 +586,9 @@ window.saveAsImage = async function() {
   }
   
   // 16. 정리
+  if (svgUrl) {
+    URL.revokeObjectURL(svgUrl);
+  }
   wrapper.remove();
   console.log('=== 이미지 저장 완료 ===');
 };
@@ -604,9 +608,22 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   photo.className = 'employee-photo';
   photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
 
-  // 아바타 SVG 삽입
+  // 아바타 SVG를 이미지로 변환 (html2canvas 호환성 향상)
   const svgString = generateAvatarSVG(avatarData);
-  photo.innerHTML = svgString;
+  const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+  let svgUrl = URL.createObjectURL(svgBlob);
+  
+  const avatarImg = document.createElement('img');
+  avatarImg.src = svgUrl;
+  avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
+  
+  // 이미지 로드 대기
+  await new Promise((resolve) => {
+    avatarImg.onload = resolve;
+    avatarImg.onerror = resolve;
+  });
+  
+  photo.appendChild(avatarImg);
 
   const nameEl = document.createElement('div');
   nameEl.className = 'employee-name';
@@ -645,6 +662,11 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   });
 
   const dataURL = canvas.toDataURL('image/png', 0.9);
+  
+  // 정리
+  if (svgUrl) {
+    URL.revokeObjectURL(svgUrl);
+  }
   wrapper.remove();
   return dataURL;
 }
