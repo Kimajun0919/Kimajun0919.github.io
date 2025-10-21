@@ -117,8 +117,7 @@ function getCurrentAvatarState() {
     glasses: '',
     earrings: '',
     freckles: '',
-    hairAccessories: '',
-    backgroundColor: []
+    hairAccessories: ''
   };
 }
 
@@ -137,7 +136,6 @@ function generateAvatarSVG(avatarData) {
       // Dicebear 옵션 구성
       const dicebearOptions = {
         seed: seed,
-        backgroundColor: avatarData.backgroundColor || [],
         scale: 100
       };
 
@@ -170,12 +168,10 @@ function generateAvatarSVG(avatarData) {
 
 // 기본 아바타 SVG 생성 (폴백용)
 function createBasicAvatarSVG(avatarData) {
-  const bgColor = avatarData.backgroundColor && avatarData.backgroundColor[0] ? avatarData.backgroundColor[0] : '#f0f0f0';
-  
   return `
     <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
       <!-- 배경 -->
-      <rect width="512" height="512" fill="${bgColor}"/>
+      <rect width="512" height="512" fill="transparent"/>
       
       <!-- 기본 얼굴 -->
       <circle cx="256" cy="256" r="180" fill="#FFE0D4"/>

@@ -9,8 +9,7 @@ let builderState = {
   eyebrows: 'variant01',
   mouth: 'happy01',
   nose: 'variant01',
-  glasses: '',
-  backgroundColor: []
+  glasses: ''
 };
 
 let builderHistory = [];
@@ -216,28 +215,7 @@ function createLoreleiOptions() {
 
 // 색상 옵션 생성
 function createColorOptions() {
-  // 피부색 (배경색으로 사용)
-  const skinContainer = document.getElementById('skinToneOptions');
-  if (skinContainer) {
-    skinContainer.innerHTML = '';
-    AVATAR_COLORS.skin.forEach(color => {
-      const btn = document.createElement('button');
-      btn.className = 'color-btn';
-      btn.style.backgroundColor = color;
-      btn.onclick = () => {
-        builderState.backgroundColor = [color];
-        renderBuilderAvatar(builderState);
-        updateActiveButton(skinContainer, btn);
-        saveBuilderToHistory();
-        saveBuilderToLocalStorage();
-      };
-      // 현재 선택된 배경색이면 active 클래스 추가
-      if (builderState.backgroundColor && builderState.backgroundColor.length > 0 && builderState.backgroundColor[0] === color) {
-        btn.classList.add('active');
-      }
-      skinContainer.appendChild(btn);
-    });
-  }
+  // 배경색 옵션 제거됨
 }
 
 // 활성 버튼 업데이트
@@ -262,7 +240,6 @@ function renderBuilderAvatar(state) {
   // Dicebear 옵션 구성
   const dicebearOptions = {
     seed: state.seed,
-    backgroundColor: state.backgroundColor || [],
     scale: 100
   };
 
@@ -306,9 +283,6 @@ function randomizePart(part) {
     
     // 선택적 옵션들 (확률로 랜덤 추가)
     builderState.glasses = Math.random() > 0.7 ? LORELEI_OPTIONS.glasses[Math.floor(Math.random() * LORELEI_OPTIONS.glasses.length)] : '';
-    
-    // 배경색도 랜덤
-    builderState.backgroundColor = Math.random() > 0.5 ? [AVATAR_COLORS.skin[Math.floor(Math.random() * AVATAR_COLORS.skin.length)]] : [];
   } else if (part === 'hair') {
     builderState.seed = generateRandomSeed();
   }

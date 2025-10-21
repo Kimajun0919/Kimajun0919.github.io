@@ -78,11 +78,6 @@ function createDicebearAvatar(options = {}) {
     apiUrl += `&scale=${scale}`;
     
     // 옵션 추가
-    if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
-      // backgroundColor에서 # 제거 (Dicebear API는 hex 코드만 받음)
-      const bgColors = dicebearOptions.backgroundColor.map(color => color.replace('#', ''));
-      apiUrl += `&backgroundColor=${bgColors.join(',')}`;
-    }
     if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
       apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
     }
