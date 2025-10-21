@@ -73,7 +73,7 @@ window.saveAvatar = async function() {
 
     status.innerHTML = `✅ 아바타 저장 완료!`;
     status.style.color = "#27ae60";
-    
+      
     // 입력 필드 초기화
     document.getElementById('avatarName').value = '';
     document.getElementById('avatarTeam').value = '';
@@ -398,10 +398,14 @@ window.downloadAvatar = function(name, employeeId) {
 
 // 이미지로 저장 함수 (결과 페이지용)
 window.saveAsImage = async function() {
-  // 전체 배경(assets/back.jpg) 포함, 2160x3840 고정으로 저장
-  const baseName = document.getElementById('resultName')?.textContent || 'avatar';
-  const originalCard = document.getElementById('resultCard');
-  if (!originalCard) return;
+  // 현재 직원 정보 확인
+  if (!window.currentEmployee) {
+    alert('저장할 직원 정보가 없습니다.');
+    return;
+  }
+
+  const employee = window.currentEmployee;
+  const baseName = employee.name || 'avatar';
 
   // html2canvas 로드
   const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
@@ -410,69 +414,127 @@ window.saveAsImage = async function() {
   const wrapper = document.createElement('div');
   wrapper.style.cssText = "position:fixed;left:-99999px;top:0;width:2160px;height:3840px;background:url('assets/back.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:center;padding:0;margin:0;box-sizing:border-box;transform:none";
 
-  // 카드 복제 및 고해상도 스타일 보정
-  const clone = originalCard.cloneNode(true);
-  // 카드 크기/비율 고정 (2160x3840 안 기준): 1840 x 3200
-  clone.style.cssText = "background:#f8f8f8;border-radius:64px;padding:0;width:1840px;height:3200px;max-width:none;box-shadow:0 24px 96px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;transform:none;position:relative";
-  // 원본 카드의 max-width 제약 제거
-  try { clone.classList && clone.classList.remove('result-card'); } catch (e) {}
+  // 카드 생성
+  const card = document.createElement('div');
+  card.style.cssText = "background:#f8f8f8;border-radius:64px;padding:0;width:1840px;height:3200px;box-shadow:0 24px 96px rgba(0,0,0,0.12);overflow:hidden;display:flex;flex-direction:column;box-sizing:border-box;";
 
-  // 주요 요소 타이포/여백 확대
-  const nameEl = clone.querySelector('.employee-name');
-  if (nameEl) {
-    nameEl.style.fontSize = '104px';
-    nameEl.style.padding = '160px 96px 16px 96px';
-    nameEl.style.margin = '-120px 0 0 0';
-    nameEl.style.borderRadius = '72px 72px 0 0';
-    nameEl.style.background = '#fff';
-    nameEl.style.textAlign = 'left';
-  }
-  const teamEl = clone.querySelector('.employee-team');
-  if (teamEl) {
-    teamEl.style.fontSize = '48px';
-    teamEl.style.padding = '0 96px 28px 96px';
-    teamEl.style.background = '#fff';
-    teamEl.style.textAlign = 'left';
-  }
-  const verseEl = clone.querySelector('.employee-id');
-  if (verseEl) {
-    verseEl.style.fontSize = '36px';
-    verseEl.style.lineHeight = '1.8';
-    verseEl.style.padding = '0 96px 96px 96px';
-    verseEl.style.background = '#fff';
-    verseEl.style.borderRadius = '0 0 36px 36px';
-    verseEl.style.textAlign = 'left';
-    verseEl.style.flex = '1 1 auto';
-    verseEl.style.overflow = 'hidden';
-  }
-  const photo = clone.querySelector('.employee-photo');
-  if (photo) {
-    photo.style.width = '1750px';
-    photo.style.height = '1400px';
-    photo.style.margin = '36px';
-    photo.style.borderRadius = '40px 40px 0 0';
-    photo.style.boxShadow = '0 16px 48px rgba(0,0,0,0.12)';
-    photo.style.flex = '0 0 auto';
+  // 아바타 사진 영역
+  const photo = document.createElement('div');
+  photo.className = 'employee-photo';
+  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
 
-    // 내부 SVG가 고정 크기를 갖지 않도록 강제
-    const innerSvg = photo.querySelector('svg');
-    if (innerSvg) {
-      innerSvg.setAttribute('width', '100%');
-      innerSvg.setAttribute('height', '100%');
-      innerSvg.style.width = '100%';
-      innerSvg.style.height = '100%';
+  // 아바타 데이터로 SVG 생성 (저장된 avatarData 사용)
+  let avatarData = employee.avatarData;
+  if (typeof avatarData === 'string') {
+    try {
+      avatarData = JSON.parse(avatarData);
+    } catch (e) {
+      console.error('아바타 데이터 파싱 오류:', e);
+      avatarData = getCurrentAvatarState();
     }
   }
+  
+  // Dicebear API URL 직접 생성
+  const dicebearOptions = {
+    seed: avatarData.seed || Date.now().toString(),
+    backgroundColor: avatarData.backgroundColor || [],
+    scale: 100
+  };
 
-  wrapper.appendChild(clone);
+  // lorelei 스타일 옵션
+  if (avatarData.hair) dicebearOptions.hair = [avatarData.hair];
+  if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
+  if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
+  if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
+  if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
+  if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
+  if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
+  if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
+  if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
+
+  // API URL 생성
+  let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
+  if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
+    apiUrl += `&backgroundColor=${encodeURIComponent(dicebearOptions.backgroundColor.join(','))}`;
+  }
+  if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
+    apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
+  }
+  if (dicebearOptions.eyes && dicebearOptions.eyes.length > 0) {
+    apiUrl += `&eyes=${encodeURIComponent(dicebearOptions.eyes.join(','))}`;
+  }
+  if (dicebearOptions.eyebrows && dicebearOptions.eyebrows.length > 0) {
+    apiUrl += `&eyebrows=${encodeURIComponent(dicebearOptions.eyebrows.join(','))}`;
+  }
+  if (dicebearOptions.mouth && dicebearOptions.mouth.length > 0) {
+    apiUrl += `&mouth=${encodeURIComponent(dicebearOptions.mouth.join(','))}`;
+  }
+  if (dicebearOptions.nose && dicebearOptions.nose.length > 0) {
+    apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
+  }
+  if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
+    apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+  }
+  if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
+    apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
+  }
+  if (dicebearOptions.freckles && dicebearOptions.freckles.length > 0) {
+    apiUrl += `&freckles=${encodeURIComponent(dicebearOptions.freckles.join(','))}`;
+  }
+  if (dicebearOptions.hairAccessories && dicebearOptions.hairAccessories.length > 0) {
+    apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
+  }
+
+  // img 태그로 아바타 삽입
+  const avatarImg = document.createElement('img');
+  avatarImg.src = apiUrl;
+  avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
+  avatarImg.crossOrigin = "anonymous"; // CORS 설정
+  photo.appendChild(avatarImg);
+
+  // 이름
+  const nameEl = document.createElement('div');
+  nameEl.className = 'employee-name';
+  nameEl.textContent = employee.name;
+  nameEl.style.cssText = "font-size:104px;padding:160px 96px 16px 96px;margin:-120px 0 0 0;border-radius:72px 72px 0 0;background:#fff;text-align:left;font-weight:700;";
+
+  // 팀
+  const teamEl = document.createElement('div');
+  teamEl.className = 'employee-team';
+  teamEl.textContent = employee.team;
+  teamEl.style.cssText = "font-size:48px;padding:0 96px 28px 96px;background:#fff;text-align:left;color:#666;";
+
+  // 말씀
+  const verseEl = document.createElement('div');
+  verseEl.className = 'employee-id';
+  verseEl.innerHTML = employee.verseContent 
+    ? `${employee.verseContent}<br><span class="verse-reference" style="display:block;margin-top:6px;opacity:0.75;">${employee.verseReference || ''}</span>` 
+    : '';
+  verseEl.style.cssText = "font-size:36px;line-height:1.8;padding:0 96px 96px 96px;background:#fff;border-radius:0 0 36px 36px;text-align:left;flex:1 1 auto;overflow:hidden;";
+
+  // 카드 조립
+  card.appendChild(photo);
+  card.appendChild(nameEl);
+  card.appendChild(teamEl);
+  card.appendChild(verseEl);
+  wrapper.appendChild(card);
   document.body.appendChild(wrapper);
 
-  // 폰트/이미지 로드 대기
+  // 이미지 로드 대기
+  await new Promise((resolve) => {
+    if (avatarImg.complete) {
+      resolve();
+    } else {
+      avatarImg.addEventListener('load', resolve, { once: true });
+      avatarImg.addEventListener('error', resolve, { once: true });
+    }
+  });
+
+  // 폰트 로드 대기
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
-  const innerImg = clone.querySelector('img');
-  if (innerImg && !(innerImg.complete && (innerImg.naturalWidth || 1) > 0)) {
-    await new Promise(r => { innerImg.addEventListener('load', r, { once:true }); innerImg.addEventListener('error', r, { once:true }); });
-  }
+
+  // 약간의 추가 대기 (렌더링 완료 확인)
+  await new Promise(r => setTimeout(r, 500));
 
   // 캡처
   const canvas = await html2canvas.default(wrapper, {
@@ -510,21 +572,75 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
 
   const photo = document.createElement('div');
   photo.className = 'employee-photo';
-  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;";
+  photo.style.cssText = "width:1750px;height:1400px;margin:36px;border-radius:40px 40px 0 0;box-shadow:0 16px 48px rgba(0,0,0,0.12);overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;";
 
-  // 아바타 SVG 삽입
-  const svgString = generateAvatarSVG(avatarData);
-  photo.innerHTML = svgString;
+  // Dicebear API URL 직접 생성
+  const dicebearOptions = {
+    seed: avatarData.seed || Date.now().toString(),
+    backgroundColor: avatarData.backgroundColor || [],
+    scale: 100
+  };
+
+  // lorelei 스타일 옵션
+  if (avatarData.hair) dicebearOptions.hair = [avatarData.hair];
+  if (avatarData.eyes) dicebearOptions.eyes = [avatarData.eyes];
+  if (avatarData.eyebrows) dicebearOptions.eyebrows = [avatarData.eyebrows];
+  if (avatarData.mouth) dicebearOptions.mouth = [avatarData.mouth];
+  if (avatarData.nose) dicebearOptions.nose = [avatarData.nose];
+  if (avatarData.glasses && avatarData.glasses !== '') dicebearOptions.glasses = [avatarData.glasses];
+  if (avatarData.earrings && avatarData.earrings !== '') dicebearOptions.earrings = [avatarData.earrings];
+  if (avatarData.freckles && avatarData.freckles !== '') dicebearOptions.freckles = [avatarData.freckles];
+  if (avatarData.hairAccessories && avatarData.hairAccessories !== '') dicebearOptions.hairAccessories = [avatarData.hairAccessories];
+
+  // API URL 생성
+  let apiUrl = `https://api.dicebear.com/9.x/lorelei/svg?seed=${encodeURIComponent(dicebearOptions.seed)}`;
+  if (dicebearOptions.backgroundColor && dicebearOptions.backgroundColor.length > 0) {
+    apiUrl += `&backgroundColor=${encodeURIComponent(dicebearOptions.backgroundColor.join(','))}`;
+  }
+  if (dicebearOptions.hair && dicebearOptions.hair.length > 0) {
+    apiUrl += `&hair=${encodeURIComponent(dicebearOptions.hair.join(','))}`;
+  }
+  if (dicebearOptions.eyes && dicebearOptions.eyes.length > 0) {
+    apiUrl += `&eyes=${encodeURIComponent(dicebearOptions.eyes.join(','))}`;
+  }
+  if (dicebearOptions.eyebrows && dicebearOptions.eyebrows.length > 0) {
+    apiUrl += `&eyebrows=${encodeURIComponent(dicebearOptions.eyebrows.join(','))}`;
+  }
+  if (dicebearOptions.mouth && dicebearOptions.mouth.length > 0) {
+    apiUrl += `&mouth=${encodeURIComponent(dicebearOptions.mouth.join(','))}`;
+  }
+  if (dicebearOptions.nose && dicebearOptions.nose.length > 0) {
+    apiUrl += `&nose=${encodeURIComponent(dicebearOptions.nose.join(','))}`;
+  }
+  if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
+    apiUrl += `&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+  }
+  if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
+    apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
+  }
+  if (dicebearOptions.freckles && dicebearOptions.freckles.length > 0) {
+    apiUrl += `&freckles=${encodeURIComponent(dicebearOptions.freckles.join(','))}`;
+  }
+  if (dicebearOptions.hairAccessories && dicebearOptions.hairAccessories.length > 0) {
+    apiUrl += `&hairAccessories=${encodeURIComponent(dicebearOptions.hairAccessories.join(','))}`;
+  }
+
+  // img 태그로 아바타 삽입
+  const avatarImg = document.createElement('img');
+  avatarImg.src = apiUrl;
+  avatarImg.style.cssText = "width:100%;height:100%;object-fit:contain;";
+  avatarImg.crossOrigin = "anonymous";
+  photo.appendChild(avatarImg);
 
   const nameEl = document.createElement('div');
   nameEl.className = 'employee-name';
   nameEl.textContent = name;
-  nameEl.style.cssText = "font-size:104px;padding:160px 96px 16px 96px;margin:-120px 0 0 0;border-radius:72px 72px 0 0;background:#fff;text-align:left;";
+  nameEl.style.cssText = "font-size:104px;padding:160px 96px 16px 96px;margin:-120px 0 0 0;border-radius:72px 72px 0 0;background:#fff;text-align:left;font-weight:700;";
 
   const teamEl = document.createElement('div');
   teamEl.className = 'employee-team';
   teamEl.textContent = team;
-  teamEl.style.cssText = "font-size:48px;padding:0 96px 28px 96px;background:#fff;text-align:left;";
+  teamEl.style.cssText = "font-size:48px;padding:0 96px 28px 96px;background:#fff;text-align:left;color:#666;";
 
   const verseEl = document.createElement('div');
   verseEl.className = 'employee-id';
@@ -538,7 +654,20 @@ async function generateCardImageDataURL(name, team, verseContent, verseReference
   wrapper.appendChild(card);
   document.body.appendChild(wrapper);
 
+  // 이미지 로드 대기
+  await new Promise((resolve) => {
+    if (avatarImg.complete) {
+      resolve();
+    } else {
+      avatarImg.addEventListener('load', resolve, { once: true });
+      avatarImg.addEventListener('error', resolve, { once: true });
+    }
+  });
+
   if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+  // 약간의 추가 대기
+  await new Promise(r => setTimeout(r, 500));
 
   const canvas = await html2canvas.default(wrapper, {
     width: 2160,
