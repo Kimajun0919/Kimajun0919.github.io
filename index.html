@@ -37,18 +37,11 @@
 
   <!-- 아바타 생성 페이지 -->
   <div id="avatarPage" class="page">
-    <div class="container">
+    <div class="search-container">
+      <div class="search-card">
       <div class="avatar-builder-header">
         <h2>아바타 생성</h2>
-        <div class="header-actions">
-          <button class="btn" onclick="randomizeAll()" aria-label="전체 무작위 생성">🎲 전체 무작위</button>
-          <button class="btn btn-secondary" onclick="undoAvatar()" aria-label="실행 취소">↶ 실행취소</button>
-          <button class="btn btn-secondary" onclick="redoAvatar()" aria-label="다시 실행">↷ 다시실행</button>
-          <button class="btn btn-secondary" onclick="resetAvatar()" aria-label="초기화">🔄 초기화</button>
-          <button class="btn" onclick="exportPNG()" aria-label="PNG로 내보내기">💾 PNG</button>
-          <button class="btn" onclick="exportSVG()" aria-label="SVG로 내보내기">📄 SVG</button>
-          <button class="btn btn-secondary" onclick="showPage('mainPage')">← 메인으로</button>
-        </div>
+        <!-- 헤더 액션 제거: 저장/뒤로는 아래 폼에 배치 -->
       </div>
       
       <!-- 아바타 저장 폼 -->
@@ -57,14 +50,17 @@
         <div class="form-group">
           <input type="text" id="avatarName" placeholder="이름을 입력하세요" class="form-input">
           <input type="text" id="avatarTeam" placeholder="팀명을 입력하세요" class="form-input">
-          <button onclick="saveAvatar()" class="btn btn-primary">아바타 저장</button>
+          <div class="form-actions">
+            <button onclick="saveAvatar()" class="btn btn-primary">저장</button>
+            <button onclick="showPage('mainPage')" class="btn btn-secondary">뒤로가기</button>
+          </div>
         </div>
         <div id="avatarStatus" class="status-message"></div>
       </div>
 
       <div class="main-grid">
         <!-- 미리보기 패널 -->
-        <div class="preview-panel">
+        <div class="preview-panel preview-sticky">
           <h3>미리보기</h3>
           <svg id="avatarPreview" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
             <!-- SVG 정의부 -->
@@ -92,7 +88,7 @@
         </div>
 
         <!-- 편집 패널 -->
-        <div class="editor-panel">
+        <div class="editor-panel editor-scroll">
           <!-- 얼굴형 -->
           <div class="part-section">
             <div class="part-title">👤 얼굴형</div>
@@ -155,18 +151,9 @@
             <div class="color-palette" id="topColorOptions"></div>
           </div>
 
-          <!-- 프리셋 관리 -->
-          <div class="part-section">
-            <div class="part-title">💾 프리셋</div>
-            <div class="preset-actions">
-              <button class="btn btn-secondary" onclick="savePreset()">저장</button>
-              <button class="btn btn-secondary" onclick="loadPreset()">불러오기</button>
-              <button class="btn btn-secondary" onclick="copyJSON()">JSON 복사</button>
-              <button class="btn btn-secondary" onclick="toggleJSONViewer()">JSON 보기</button>
-            </div>
-            <div id="jsonViewer" class="json-viewer"></div>
-          </div>
+          
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -216,6 +203,7 @@
 
   <!-- JavaScript -->
   <script src="js/data.js"></script>
+  <script src="js/assets.js"></script>
   <script src="js/avatar-builder.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
