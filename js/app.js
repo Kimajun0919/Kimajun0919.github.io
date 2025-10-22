@@ -529,6 +529,7 @@ window.showEmployeeResult = function(employee) {
       
       // 클릭/터치로 카드 뒤집기 기능 추가
       let isFlipping = false;
+      let touchHandled = false;
       
       const flipCard = function() {
         if (isFlipping) return;
@@ -541,14 +542,26 @@ window.showEmployeeResult = function(employee) {
         }, 800);
       };
       
-      // PC - 클릭 이벤트
-      cardContainer.addEventListener('click', flipCard);
-      
-      // 모바일 - 터치 이벤트 (중복 방지를 위해 passive: false)
+      // 모바일 - 터치 이벤트 (우선 처리)
       cardContainer.addEventListener('touchend', function(e) {
         e.preventDefault();
+        touchHandled = true;
         flipCard();
+        
+        // 300ms 후 touch 플래그 리셋 (click 이벤트 발생 방지)
+        setTimeout(() => {
+          touchHandled = false;
+        }, 300);
       }, { passive: false });
+      
+      // PC - 클릭 이벤트 (터치가 처리되지 않았을 때만)
+      cardContainer.addEventListener('click', function(e) {
+        if (touchHandled) {
+          e.preventDefault();
+          return;
+        }
+        flipCard();
+      });
     }
   }, 100);
 };
