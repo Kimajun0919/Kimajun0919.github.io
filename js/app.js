@@ -624,14 +624,6 @@ window.showEmployeeResult = function(employee) {
           setTimeout(() => {
             touchHandled = false;
           }, 300);
-        } else if (!isSwiping && Math.abs(e.changedTouches[0].clientX - touchStartX) < 10) {
-          // 탭한 경우 (스와이프가 아니고 이동이 거의 없음)
-          touchHandled = true;
-          flipCard();
-          
-          setTimeout(() => {
-            touchHandled = false;
-          }, 300);
         }
         
         isSwiping = false;
