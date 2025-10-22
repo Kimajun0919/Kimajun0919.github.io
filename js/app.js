@@ -565,7 +565,7 @@ window.showEmployeeResult = function(employee) {
       let touchStartX = 0;
       let touchStartY = 0;
       let isFlipping = false;
-      let lastTapTime = 0;
+      let lastClickTime = 0;
       
       const flipCard = function() {
         if (isFlipping) return;
@@ -595,26 +595,38 @@ window.showEmployeeResult = function(employee) {
         // 좌우 스와이프인지 확인 (상하 이동보다 좌우 이동이 큰 경우)
         if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
           flipCard();
-          lastTapTime = 0; // 스와이프 후 더블탭 카운트 리셋
+          lastClickTime = 0; // 스와이프 후 더블탭 카운트 리셋
         } else if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
           // 움직임이 거의 없으면 탭으로 간주 - 더블탭 감지
           const currentTime = new Date().getTime();
-          const tapInterval = currentTime - lastTapTime;
+          const tapInterval = currentTime - lastClickTime;
           
           if (tapInterval < 300 && tapInterval > 0) {
             // 더블탭!
             flipCard();
-            lastTapTime = 0; // 리셋
+            lastClickTime = 0; // 리셋
           } else {
             // 첫 번째 탭
-            lastTapTime = currentTime;
+            lastClickTime = currentTime;
           }
         }
       }, { passive: true });
       
-      // PC - 더블클릭 이벤트
-      cardContainer.addEventListener('dblclick', function(e) {
-        flipCard();
+      // PC - 클릭 이벤트로 더블클릭 감지
+      cardContainer.addEventListener('click', function(e) {
+        if (isFlipping) return;
+        
+        const currentTime = new Date().getTime();
+        const clickInterval = currentTime - lastClickTime;
+        
+        if (clickInterval < 300 && clickInterval > 0) {
+          // 더블클릭!
+          flipCard();
+          lastClickTime = 0; // 리셋
+        } else {
+          // 첫 번째 클릭
+          lastClickTime = currentTime;
+        }
       });
     }
   }, 100);
