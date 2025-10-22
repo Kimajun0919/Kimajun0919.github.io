@@ -483,6 +483,7 @@ input[type="file"] {
   -webkit-backface-visibility: hidden;
   border-radius: 20px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: visible;
 }
 
 /* 카드 뒷면 */
@@ -512,6 +513,7 @@ input[type="file"] {
   text-align: left;
   position: relative;
   font-family: 'Helvetica Neue', Arial, sans-serif;
+  overflow: visible;
 }
 
 .line-logo {
@@ -696,6 +698,11 @@ input[type="file"] {
   cursor: default;
   pointer-events: none;
   filter: drop-shadow(0 15px 40px rgba(0, 0, 0, 0.25));
+  overflow: visible;
+}
+
+.result-container.saving-mode .card-face {
+  overflow: visible;
 }
 
 /* 저장 모드에서 카드 - 원래 비율로 복원 */
@@ -711,6 +718,7 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: visible;
 }
 
 /* 저장 모드에서 카드 내부 요소들 - 기본 카드와 동일한 구조 */
