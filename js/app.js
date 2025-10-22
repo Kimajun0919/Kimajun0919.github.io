@@ -152,6 +152,20 @@ window.saveAvatar = async function() {
   if (!name || !team) {
     status.textContent = "❌ 이름과 팀명을 입력해주세요!";
     status.style.color = "#e74c3c";
+    
+    // 상단 입력 필드로 스크롤 이동
+    const avatarSaveForm = document.querySelector('.avatar-save-form');
+    if (avatarSaveForm) {
+      avatarSaveForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    
+    // 첫 번째 빈 입력 필드에 포커스
+    if (!name) {
+      document.getElementById('avatarName').focus();
+    } else if (!team) {
+      document.getElementById('avatarTeam').focus();
+    }
+    
     return;
   }
 
