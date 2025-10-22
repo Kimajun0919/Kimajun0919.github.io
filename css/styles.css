@@ -446,6 +446,7 @@ input[type="file"] {
   text-align: left;
   position: relative;
   font-family: 'Helvetica Neue', Arial, sans-serif;
+  gap: 0;
 }
 
 .line-logo {
@@ -453,10 +454,11 @@ input[type="file"] {
   font-weight: 700;
   font-size: 40px;
   font-family: 'Helvetica Neue', Arial, sans-serif;
+  margin-bottom: 10px;
 }
 
 .line-info {
-  margin-top: -50px;
+  flex: 0 0 auto;
 }
 
 .line-info h2 {
@@ -601,10 +603,11 @@ input[type="file"] {
 /* 저장 모드에서 카드 내부 요소들 - hello.html과 동일한 구조 */
 .result-container.saving-mode .line-logo {
   font-size: 40px;
+  margin-bottom: 10px;
 }
 
 .result-container.saving-mode .line-info {
-  margin-top: -50px;
+  flex: 0 0 auto;
 }
 
 .result-container.saving-mode .line-info h2 {
@@ -1423,10 +1426,11 @@ input[type="file"] {
 
   .line-logo {
     font-size: 32px;
+    margin-bottom: 8px;
   }
 
   .line-info {
-    margin-top: -20px;
+    flex: 0 0 auto;
   }
 
   .line-info h2 {
@@ -1464,10 +1468,11 @@ input[type="file"] {
 
   .line-logo {
     font-size: 32px;
+    margin-bottom: 8px;
   }
 
   .line-info {
-    margin-top: -15px;
+    flex: 0 0 auto;
   }
 
   .line-info h2 {
