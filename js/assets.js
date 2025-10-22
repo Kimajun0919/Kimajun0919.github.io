@@ -95,6 +95,9 @@ function createDicebearAvatar(options = {}) {
     }
     if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
       apiUrl += `&glassesProbability=100&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+    } else {
+      // 안경이 없을 때는 명시적으로 probability를 0으로 설정
+      apiUrl += `&glassesProbability=0`;
     }
     if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
       apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;
@@ -147,6 +150,9 @@ function createDicebearAvatarPNG(options = {}) {
     }
     if (dicebearOptions.glasses && dicebearOptions.glasses.length > 0) {
       apiUrl += `&glassesProbability=100&glasses=${encodeURIComponent(dicebearOptions.glasses.join(','))}`;
+    } else {
+      // 안경이 없을 때는 명시적으로 probability를 0으로 설정
+      apiUrl += `&glassesProbability=0`;
     }
     if (dicebearOptions.earrings && dicebearOptions.earrings.length > 0) {
       apiUrl += `&earrings=${encodeURIComponent(dicebearOptions.earrings.join(','))}`;

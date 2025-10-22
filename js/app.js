@@ -229,7 +229,7 @@ function getCurrentAvatarState() {
   // 기본 상태 반환 (lorelei 스타일 고정)
   return {
     style: 'lorelei',
-    seed: Date.now().toString(),
+    seed: 'default-avatar', // 고정된 seed로 항상 동일한 기본 이미지
     hair: 'variant01',
     eyes: 'variant01',
     eyebrows: 'variant01',
