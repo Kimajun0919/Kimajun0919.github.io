@@ -400,25 +400,17 @@ input[type="file"] {
   position: relative;
   margin-bottom: 30px;
   transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.6s ease;
   cursor: pointer;
-  touch-action: pan-y pinch-zoom;
+  touch-action: pan-y;
 }
 
 .card-flip-container:hover {
-  filter: brightness(1.05);
-}
-
-.card-flip-container:active {
-  transform: scale(0.98) rotateY(var(--rotate-y, 0deg));
+  filter: brightness(1.02);
 }
 
 .card-flip-container.flipped {
   transform: rotateY(180deg);
-}
-
-.card-flip-container.flipped:active {
-  transform: scale(0.98) rotateY(180deg);
 }
 
 /* 화면 크기에 따른 스케일 조정 */
@@ -430,14 +422,6 @@ input[type="file"] {
   .card-flip-container.flipped {
     transform: scale(0.95) rotateY(180deg);
   }
-  
-  .card-flip-container:active {
-    transform: scale(0.93) rotateY(var(--rotate-y, 0deg));
-  }
-  
-  .card-flip-container.flipped:active {
-    transform: scale(0.93) rotateY(180deg);
-  }
 }
 
 @media (max-width: 480px) {
@@ -448,14 +432,6 @@ input[type="file"] {
   .card-flip-container.flipped {
     transform: scale(0.85) rotateY(180deg);
   }
-  
-  .card-flip-container:active {
-    transform: scale(0.83) rotateY(var(--rotate-y, 0deg));
-  }
-  
-  .card-flip-container.flipped:active {
-    transform: scale(0.83) rotateY(180deg);
-  }
 }
 
 @media (max-width: 360px) {
@@ -465,14 +441,6 @@ input[type="file"] {
   
   .card-flip-container.flipped {
     transform: scale(0.75) rotateY(180deg);
-  }
-  
-  .card-flip-container:active {
-    transform: scale(0.73) rotateY(var(--rotate-y, 0deg));
-  }
-  
-  .card-flip-container.flipped:active {
-    transform: scale(0.73) rotateY(180deg);
   }
 }
 

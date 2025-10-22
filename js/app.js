@@ -541,121 +541,59 @@ window.showEmployeeResult = function(employee) {
     if (cardContainer) {
       cardContainer.classList.add('flipped');
       
-      // 카드 플립 관련 변수
-      let isFlipping = false;
-      let touchHandled = false;
-      
-      // 스와이프 관련 변수
+      // 간단하고 안정적인 스와이프 구현
       let touchStartX = 0;
       let touchStartY = 0;
-      let currentRotation = 180; // 초기값 (앞면)
-      let isDragging = false;
-      let isSwiping = false;
+      let isFlipping = false;
+      let lastTapTime = 0;
       
       const flipCard = function() {
         if (isFlipping) return;
         isFlipping = true;
         cardContainer.classList.toggle('flipped');
-        currentRotation = currentRotation === 180 ? 0 : 180;
-        
         setTimeout(() => {
           isFlipping = false;
-        }, 800);
+        }, 600);
       };
       
       // 터치 시작
       cardContainer.addEventListener('touchstart', function(e) {
         if (isFlipping) return;
-        
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        isDragging = true;
-        isSwiping = false;
-        
-        // 트랜지션 제거 (실시간 회전을 위해)
-        cardContainer.style.transition = 'none';
-      }, { passive: false });
+      }, { passive: true });
       
-      // 터치 이동 (스와이프 중)
-      cardContainer.addEventListener('touchmove', function(e) {
-        if (!isDragging || isFlipping) return;
-        
-        const touchX = e.touches[0].clientX;
-        const touchY = e.touches[0].clientY;
-        const deltaX = touchX - touchStartX;
-        const deltaY = touchY - touchStartY;
-        
-        // 좌우 스와이프인지 확인 (좌우 이동이 상하 이동보다 크면)
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
-          isSwiping = true;
-          // 스크롤 및 기본 터치 동작 방지 (페이지가 움직이는 것 방지)
-          e.preventDefault();
-          e.stopPropagation();
-          
-          // 드래그 거리에 따라 회전 각도 계산 (최대 180도)
-          const maxDrag = 200; // 최대 드래그 거리 (픽셀)
-          const dragRatio = Math.max(-1, Math.min(1, deltaX / maxDrag));
-          const rotationDelta = dragRatio * 180;
-          
-          // 현재 회전 각도에 델타 적용
-          let newRotation = currentRotation + rotationDelta;
-          
-          // 실시간 회전 적용
-          cardContainer.style.transform = `rotateY(${newRotation}deg)`;
-        } else if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
-          // 작은 움직임도 스와이프 가능성이 있으므로 수평 스크롤 방지
-          if (Math.abs(deltaX) > Math.abs(deltaY) * 0.5) {
-            e.preventDefault();
-          }
-        }
-      }, { passive: false });
-      
-      // 터치 종료
+      // 터치 종료 - 스와이프 또는 더블탭 감지
       cardContainer.addEventListener('touchend', function(e) {
-        if (!isDragging) return;
+        if (isFlipping) return;
         
-        isDragging = false;
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
         
-        // 트랜지션 복원
-        cardContainer.style.transition = '';
-        
-        if (isSwiping) {
-          // 스와이프한 경우
-          e.preventDefault();
-          touchHandled = true;
+        // 좌우 스와이프인지 확인 (상하 이동보다 좌우 이동이 큰 경우)
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
+          flipCard();
+          lastTapTime = 0; // 스와이프 후 더블탭 카운트 리셋
+        } else if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
+          // 움직임이 거의 없으면 탭으로 간주 - 더블탭 감지
+          const currentTime = new Date().getTime();
+          const tapInterval = currentTime - lastTapTime;
           
-          const touchX = e.changedTouches[0].clientX;
-          const deltaX = touchX - touchStartX;
-          
-          // 스와이프 거리가 임계값(80px) 이상이면 뒤집기
-          if (Math.abs(deltaX) > 80) {
+          if (tapInterval < 300 && tapInterval > 0) {
+            // 더블탭!
             flipCard();
+            lastTapTime = 0; // 리셋
           } else {
-            // 임계값 미만이면 원래 상태로
-            if (currentRotation === 180) {
-              cardContainer.classList.add('flipped');
-            } else {
-              cardContainer.classList.remove('flipped');
-            }
+            // 첫 번째 탭
+            lastTapTime = currentTime;
           }
-          
-          // 스타일 초기화
-          cardContainer.style.transform = '';
-          
-          setTimeout(() => {
-            touchHandled = false;
-          }, 300);
         }
-        
-        isSwiping = false;
-      }, { passive: false });
+      }, { passive: true });
       
-      // PC - 클릭 이벤트
-      cardContainer.addEventListener('click', function(e) {
-        if (touchHandled) {
-          e.preventDefault();
-          return;
-        }
+      // PC - 더블클릭 이벤트
+      cardContainer.addEventListener('dblclick', function(e) {
         flipCard();
       });
     }
