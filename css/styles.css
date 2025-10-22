@@ -586,7 +586,6 @@ input[type="file"] {
   justify-content: flex-end;
   align-items: flex-end;
   pointer-events: none;
-  margin-right: -30px;
   transition: height 0.3s ease;
 }
 
@@ -598,6 +597,7 @@ input[type="file"] {
   object-fit: contain;
   object-position: bottom right;
   transition: width 0.3s ease;
+  margin-right: -30px;
 }
 
 /* 말씀 길이에 따른 아바타 크기 조정 */
@@ -608,6 +608,7 @@ input[type="file"] {
 .line-card.verse-short .line-character img,
 .line-card.verse-short .line-character svg {
   width: 260px;
+  margin-right: -30px;
 }
 
 .line-card.verse-medium .line-character {
@@ -617,6 +618,7 @@ input[type="file"] {
 .line-card.verse-medium .line-character img,
 .line-card.verse-medium .line-character svg {
   width: 220px;
+  margin-right: -30px;
 }
 
 .line-card.verse-long .line-character {
@@ -626,6 +628,7 @@ input[type="file"] {
 .line-card.verse-long .line-character img,
 .line-card.verse-long .line-character svg {
   width: 190px;
+  margin-right: -30px;
 }
 
 .card-title {
@@ -777,7 +780,6 @@ input[type="file"] {
   justify-content: flex-end;
   align-items: flex-end;
   pointer-events: none;
-  margin-right: -30px;
   transition: height 0.3s ease;
 }
 
@@ -789,6 +791,7 @@ input[type="file"] {
   object-fit: contain;
   object-position: bottom right;
   transition: width 0.3s ease;
+  margin-right: -30px;
 }
 
 /* 저장 모드에서도 말씀 길이에 따른 아바타 크기 조정 */
@@ -799,6 +802,7 @@ input[type="file"] {
 .result-container.saving-mode .line-card.verse-short .line-character img,
 .result-container.saving-mode .line-card.verse-short .line-character svg {
   width: 260px;
+  margin-right: -30px;
 }
 
 .result-container.saving-mode .line-card.verse-medium .line-character {
@@ -808,6 +812,7 @@ input[type="file"] {
 .result-container.saving-mode .line-card.verse-medium .line-character img,
 .result-container.saving-mode .line-card.verse-medium .line-character svg {
   width: 220px;
+  margin-right: -30px;
 }
 
 .result-container.saving-mode .line-card.verse-long .line-character {
@@ -817,6 +822,7 @@ input[type="file"] {
 .result-container.saving-mode .line-card.verse-long .line-character img,
 .result-container.saving-mode .line-card.verse-long .line-character svg {
   width: 190px;
+  margin-right: -30px;
 }
 
 .result-container.saving-mode .haneul-logo {
