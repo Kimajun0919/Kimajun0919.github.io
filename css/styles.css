@@ -561,11 +561,6 @@ input[type="file"] {
   flex: 1 1 auto;
   word-break: keep-all;
   overflow-wrap: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 9;
-  line-clamp: 9;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .line-bible-reference {
@@ -783,11 +778,6 @@ input[type="file"] {
   flex: 1 1 auto;
   word-break: keep-all;
   overflow-wrap: break-word;
-  display: -webkit-box;
-  -webkit-line-clamp: 9;
-  line-clamp: 9;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 
 .result-container.saving-mode .line-bible-reference {
