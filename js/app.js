@@ -527,34 +527,117 @@ window.showEmployeeResult = function(employee) {
     if (cardContainer) {
       cardContainer.classList.add('flipped');
       
-      // 클릭/터치로 카드 뒤집기 기능 추가
+      // 카드 플립 관련 변수
       let isFlipping = false;
       let touchHandled = false;
+      
+      // 스와이프 관련 변수
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let currentRotation = 180; // 초기값 (앞면)
+      let isDragging = false;
+      let isSwiping = false;
       
       const flipCard = function() {
         if (isFlipping) return;
         isFlipping = true;
         cardContainer.classList.toggle('flipped');
+        currentRotation = currentRotation === 180 ? 0 : 180;
         
-        // 애니메이션이 끝난 후 다시 클릭 가능하도록
         setTimeout(() => {
           isFlipping = false;
         }, 800);
       };
       
-      // 모바일 - 터치 이벤트 (우선 처리)
-      cardContainer.addEventListener('touchend', function(e) {
-        e.preventDefault();
-        touchHandled = true;
-        flipCard();
+      // 터치 시작
+      cardContainer.addEventListener('touchstart', function(e) {
+        if (isFlipping) return;
         
-        // 300ms 후 touch 플래그 리셋 (click 이벤트 발생 방지)
-        setTimeout(() => {
-          touchHandled = false;
-        }, 300);
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isDragging = true;
+        isSwiping = false;
+        
+        // 트랜지션 제거 (실시간 회전을 위해)
+        cardContainer.style.transition = 'none';
+      }, { passive: true });
+      
+      // 터치 이동 (스와이프 중)
+      cardContainer.addEventListener('touchmove', function(e) {
+        if (!isDragging || isFlipping) return;
+        
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
+        const deltaX = touchX - touchStartX;
+        const deltaY = touchY - touchStartY;
+        
+        // 좌우 스와이프인지 확인 (좌우 이동이 상하 이동보다 크면)
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+          isSwiping = true;
+          e.preventDefault(); // 스크롤 방지
+          
+          // 드래그 거리에 따라 회전 각도 계산 (최대 180도)
+          const maxDrag = 150; // 최대 드래그 거리 (픽셀)
+          const dragRatio = Math.max(-1, Math.min(1, deltaX / maxDrag));
+          const rotationDelta = dragRatio * 180;
+          
+          // 현재 회전 각도에 델타 적용
+          let newRotation = currentRotation + rotationDelta;
+          
+          // 실시간 회전 적용
+          cardContainer.style.transform = `rotateY(${newRotation}deg)`;
+        }
       }, { passive: false });
       
-      // PC - 클릭 이벤트 (터치가 처리되지 않았을 때만)
+      // 터치 종료
+      cardContainer.addEventListener('touchend', function(e) {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        
+        // 트랜지션 복원
+        cardContainer.style.transition = '';
+        
+        if (isSwiping) {
+          // 스와이프한 경우
+          e.preventDefault();
+          touchHandled = true;
+          
+          const touchX = e.changedTouches[0].clientX;
+          const deltaX = touchX - touchStartX;
+          
+          // 스와이프 거리가 임계값(50px) 이상이면 뒤집기
+          if (Math.abs(deltaX) > 50) {
+            flipCard();
+          } else {
+            // 임계값 미만이면 원래 상태로
+            if (currentRotation === 180) {
+              cardContainer.classList.add('flipped');
+            } else {
+              cardContainer.classList.remove('flipped');
+            }
+          }
+          
+          // 스타일 초기화
+          cardContainer.style.transform = '';
+          
+          setTimeout(() => {
+            touchHandled = false;
+          }, 300);
+        } else if (!isSwiping && Math.abs(e.changedTouches[0].clientX - touchStartX) < 10) {
+          // 탭한 경우 (스와이프가 아니고 이동이 거의 없음)
+          touchHandled = true;
+          flipCard();
+          
+          setTimeout(() => {
+            touchHandled = false;
+          }, 300);
+        }
+        
+        isSwiping = false;
+      }, { passive: false });
+      
+      // PC - 클릭 이벤트
       cardContainer.addEventListener('click', function(e) {
         if (touchHandled) {
           e.preventDefault();
