@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getDatabase, ref, push, get, child, remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getDatabase, ref, push, get, child, remove, set, runTransaction } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCXaqnaoQYWZGywi_PPRohGaAJj_dBVDK0",
@@ -13,6 +13,120 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+
+// Firebase 기반 중복 최소화 시스템
+// Firebase에서 사용된 말씀 인덱스 가져오기
+async function getUsedVersesFromFirebase() {
+  try {
+    const snapshot = await get(ref(db, "usedVerses"));
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      return Array.isArray(data) ? data : [];
+    }
+    return [];
+  } catch (e) {
+    console.error('Failed to load used verses from Firebase:', e);
+    return [];
+  }
+}
+
+// Firebase에 사용된 말씀 인덱스 저장
+async function saveUsedVersesToFirebase(usedIndexes) {
+  try {
+    await set(ref(db, "usedVerses"), usedIndexes);
+  } catch (e) {
+    console.error('Failed to save used verses to Firebase:', e);
+  }
+}
+
+// 중복을 최소화하며 말씀 선택 (Firebase 기반)
+async function getUniqueVerse() {
+  if (!window.verses || window.verses.length === 0) {
+    return null;
+  }
+
+  try {
+    // Transaction을 사용하여 동시성 문제 해결
+    const verseRef = ref(db, "usedVerses");
+    const result = await runTransaction(verseRef, (currentData) => {
+      let usedIndexes = Array.isArray(currentData) ? currentData : [];
+      
+      // 모든 말씀을 다 사용했으면 초기화
+      if (usedIndexes.length >= window.verses.length) {
+        console.log('모든 말씀을 사용했습니다. 초기화합니다.');
+        usedIndexes = [];
+      }
+      
+      // 사용되지 않은 인덱스 찾기
+      const availableIndexes = [];
+      for (let i = 0; i < window.verses.length; i++) {
+        if (!usedIndexes.includes(i)) {
+          availableIndexes.push(i);
+        }
+      }
+      
+      // 사용 가능한 인덱스 중 랜덤 선택
+      const randomIndex = availableIndexes[Math.floor(Math.random() * availableIndexes.length)];
+      
+      // 사용된 인덱스에 추가
+      usedIndexes.push(randomIndex);
+      
+      // 선택된 인덱스를 임시 저장 (transaction 외부에서 사용)
+      window._selectedVerseIndex = randomIndex;
+      
+      return usedIndexes;
+    });
+
+    if (result.committed && typeof window._selectedVerseIndex !== 'undefined') {
+      const selectedIndex = window._selectedVerseIndex;
+      const selectedVerse = window.verses[selectedIndex];
+      const usedCount = result.snapshot.val().length;
+      
+      console.log(`말씀 선택 (${usedCount}/${window.verses.length}):`, selectedVerse.reference);
+      
+      // 임시 변수 정리
+      delete window._selectedVerseIndex;
+      
+      return selectedVerse;
+    }
+    
+    // Transaction 실패 시 폴백
+    throw new Error('Transaction failed');
+    
+  } catch (e) {
+    console.error('Failed to get unique verse from Firebase:', e);
+    // 폴백: 랜덤 선택
+    const randomVerse = window.verses[Math.floor(Math.random() * window.verses.length)];
+    console.log('폴백으로 랜덤 말씀 선택:', randomVerse.reference);
+    return randomVerse;
+  }
+}
+
+// 사용 통계 확인 (개발자 도구에서 확인용)
+async function getVerseStats() {
+  const usedIndexes = await getUsedVersesFromFirebase();
+  return {
+    total: window.verses.length,
+    used: usedIndexes.length,
+    remaining: window.verses.length - usedIndexes.length,
+    percentage: ((usedIndexes.length / window.verses.length) * 100).toFixed(1) + '%'
+  };
+}
+
+// 사용 기록 초기화 (필요시 - 관리자 전용)
+async function resetUsedVerses() {
+  try {
+    await set(ref(db, "usedVerses"), []);
+    console.log('사용된 말씀 기록을 초기화했습니다.');
+  } catch (e) {
+    console.error('Failed to reset used verses:', e);
+  }
+}
+
+// 전역으로 노출
+window.getUniqueVerse = getUniqueVerse;
+window.getVerseStats = getVerseStats;
+window.resetUsedVerses = resetUsedVerses;
 
 // 페이지 전환 함수 (HTML에서 호출)
 window.showPage = function(pageId) {
@@ -51,10 +165,17 @@ window.saveAvatar = async function() {
     // 고유 ID 생성
     const employeeId = String(Date.now()).slice(-6);
 
-    // 랜덤 말씀 선택(저장 시 고정)
+    // 중복을 최소화하며 말씀 선택 (저장 시 고정)
     let verseContent = '';
     let verseReference = '';
-    if (Array.isArray(window.verses) && window.verses.length > 0) {
+    if (typeof window.getUniqueVerse === 'function') {
+      const v = await window.getUniqueVerse();
+      if (v) {
+        verseContent = v.content;
+        verseReference = v.reference;
+      }
+    } else if (Array.isArray(window.verses) && window.verses.length > 0) {
+      // 폴백: getUniqueVerse가 없으면 랜덤 선택
       const v = window.verses[Math.floor(Math.random() * window.verses.length)];
       verseContent = v.content;
       verseReference = v.reference;
@@ -405,6 +526,29 @@ window.showEmployeeResult = function(employee) {
     const cardContainer = document.getElementById('cardFlipContainer');
     if (cardContainer) {
       cardContainer.classList.add('flipped');
+      
+      // 클릭/터치로 카드 뒤집기 기능 추가
+      let isFlipping = false;
+      
+      const flipCard = function() {
+        if (isFlipping) return;
+        isFlipping = true;
+        cardContainer.classList.toggle('flipped');
+        
+        // 애니메이션이 끝난 후 다시 클릭 가능하도록
+        setTimeout(() => {
+          isFlipping = false;
+        }, 800);
+      };
+      
+      // PC - 클릭 이벤트
+      cardContainer.addEventListener('click', flipCard);
+      
+      // 모바일 - 터치 이벤트 (중복 방지를 위해 passive: false)
+      cardContainer.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        flipCard();
+      }, { passive: false });
     }
   }, 100);
 };
@@ -496,10 +640,10 @@ window.saveAsImage = async function() {
       allowTaint: true,
       logging: false,
       scale: 2,
-      width: 720,
-      height: 1280,
-      windowWidth: 720,
-      windowHeight: 1280
+      width: 540,
+      height: 960,
+      windowWidth: 540,
+      windowHeight: 960
     });
     
     // 아바타를 원래 SVG로 복원

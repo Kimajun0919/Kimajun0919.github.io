@@ -376,3 +376,6 @@ const verses = [
 
 // verses 배열을 전역으로 노출
 window.verses = verses;
+
+// Firebase 기반 중복 최소화 시스템
+// (app.js에서 Firebase를 import하므로, 여기서는 함수만 정의하고 app.js에서 구현)

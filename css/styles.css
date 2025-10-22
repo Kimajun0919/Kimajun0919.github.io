@@ -388,10 +388,23 @@ input[type="file"] {
   margin-bottom: 30px;
   transform-style: preserve-3d;
   transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.card-flip-container:hover {
+  filter: brightness(1.05);
+}
+
+.card-flip-container:active {
+  transform: scale(0.98) rotateY(var(--rotate-y, 0deg));
 }
 
 .card-flip-container.flipped {
   transform: rotateY(180deg);
+}
+
+.card-flip-container.flipped:active {
+  transform: scale(0.98) rotateY(180deg);
 }
 
 /* 카드 앞면/뒷면 공통 스타일 */
@@ -539,10 +552,10 @@ input[type="file"] {
   opacity: 0.6;
 }
 
-/* 이미지 저장을 위한 스타일 - 720x1280 세로형 고정 (저장용) */
+/* 이미지 저장을 위한 스타일 - 540x960 세로형 고정 (저장용) */
 .result-container.saving-mode {
-  width: 720px;
-  height: 1280px;
+  width: 540px;
+  height: 960px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -565,6 +578,8 @@ input[type="file"] {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotateY(180deg);
+  cursor: default;
+  pointer-events: none;
 }
 
 /* 저장 모드에서 카드 - 원래 비율로 복원 */
