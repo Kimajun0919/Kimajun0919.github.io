@@ -586,12 +586,12 @@ window.showEmployeeResult = function(employee) {
         const deltaY = touchY - touchStartY;
         
         // 좌우 스와이프인지 확인 (좌우 이동이 상하 이동보다 크면)
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 20) {
           isSwiping = true;
           e.preventDefault(); // 스크롤 방지
           
           // 드래그 거리에 따라 회전 각도 계산 (최대 180도)
-          const maxDrag = 150; // 최대 드래그 거리 (픽셀)
+          const maxDrag = 200; // 최대 드래그 거리 (픽셀)
           const dragRatio = Math.max(-1, Math.min(1, deltaX / maxDrag));
           const rotationDelta = dragRatio * 180;
           
@@ -620,8 +620,8 @@ window.showEmployeeResult = function(employee) {
           const touchX = e.changedTouches[0].clientX;
           const deltaX = touchX - touchStartX;
           
-          // 스와이프 거리가 임계값(50px) 이상이면 뒤집기
-          if (Math.abs(deltaX) > 50) {
+          // 스와이프 거리가 임계값(80px) 이상이면 뒤집기
+          if (Math.abs(deltaX) > 80) {
             flipCard();
           } else {
             // 임계값 미만이면 원래 상태로
