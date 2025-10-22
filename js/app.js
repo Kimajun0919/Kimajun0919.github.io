@@ -541,6 +541,26 @@ window.showEmployeeResult = function(employee) {
     if (cardContainer) {
       cardContainer.classList.add('flipped');
       
+      // 말씀 길이에 따라 아바타 크기 조정
+      const lineCard = cardContainer.querySelector('.line-card');
+      const verseElement = cardContainer.querySelector('.line-bible-verse');
+      
+      if (lineCard && verseElement) {
+        // 실제 렌더링된 높이로 줄 수 계산
+        const lineHeight = parseFloat(window.getComputedStyle(verseElement).lineHeight);
+        const verseHeight = verseElement.scrollHeight;
+        const lineCount = Math.round(verseHeight / lineHeight);
+        
+        // 말씀 길이에 따라 클래스 추가
+        if (lineCount <= 4) {
+          lineCard.classList.add('verse-short');
+        } else if (lineCount <= 7) {
+          lineCard.classList.add('verse-medium');
+        } else {
+          lineCard.classList.add('verse-long');
+        }
+      }
+      
       // 간단하고 안정적인 스와이프 구현
       let touchStartX = 0;
       let touchStartY = 0;

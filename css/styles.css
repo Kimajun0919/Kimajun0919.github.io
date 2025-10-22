@@ -528,8 +528,7 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  max-height: calc(100% - 60px);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .line-info h2 {
@@ -552,23 +551,23 @@ input[type="file"] {
 .line-bible-verse {
   margin: 0;
   color: #555;
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.7;
   font-weight: 400;
   font-family: 'Helvetica Neue', Arial, sans-serif;
   flex: 1 1 auto;
   word-break: keep-all;
   overflow-wrap: break-word;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
-  line-clamp: 7;
+  -webkit-line-clamp: 9;
+  line-clamp: 9;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .line-bible-reference {
   display: block;
-  margin-top: 8px;
+  margin-top: 6px;
   color: #aaa;
   font-size: 11px;
   font-style: italic;
@@ -586,6 +585,7 @@ input[type="file"] {
   align-items: flex-end;
   pointer-events: none;
   margin-right: -30px;
+  transition: height 0.3s ease;
 }
 
 .line-character img,
@@ -595,6 +595,35 @@ input[type="file"] {
   height: 100%;
   object-fit: contain;
   object-position: bottom right;
+  transition: width 0.3s ease;
+}
+
+/* 말씀 길이에 따른 아바타 크기 조정 */
+.line-card.verse-short .line-character {
+  height: 240px;
+}
+
+.line-card.verse-short .line-character img,
+.line-card.verse-short .line-character svg {
+  width: 260px;
+}
+
+.line-card.verse-medium .line-character {
+  height: 200px;
+}
+
+.line-card.verse-medium .line-character img,
+.line-card.verse-medium .line-character svg {
+  width: 220px;
+}
+
+.line-card.verse-long .line-character {
+  height: 170px;
+}
+
+.line-card.verse-long .line-character img,
+.line-card.verse-long .line-character svg {
+  width: 190px;
 }
 
 .card-title {
@@ -696,8 +725,7 @@ input[type="file"] {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  max-height: calc(100% - 60px);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .result-container.saving-mode .line-info h2 {
@@ -714,22 +742,22 @@ input[type="file"] {
 }
 
 .result-container.saving-mode .line-bible-verse {
-  font-size: 15px;
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.7;
   margin: 0;
   flex: 1 1 auto;
   word-break: keep-all;
   overflow-wrap: break-word;
   display: -webkit-box;
-  -webkit-line-clamp: 7;
-  line-clamp: 7;
+  -webkit-line-clamp: 9;
+  line-clamp: 9;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .result-container.saving-mode .line-bible-reference {
   font-size: 11px;
-  margin-top: 8px;
+  margin-top: 6px;
   flex: 0 0 auto;
 }
 
@@ -742,6 +770,7 @@ input[type="file"] {
   align-items: flex-end;
   pointer-events: none;
   margin-right: -30px;
+  transition: height 0.3s ease;
 }
 
 .result-container.saving-mode .line-character img,
@@ -751,6 +780,35 @@ input[type="file"] {
   height: 100%;
   object-fit: contain;
   object-position: bottom right;
+  transition: width 0.3s ease;
+}
+
+/* 저장 모드에서도 말씀 길이에 따른 아바타 크기 조정 */
+.result-container.saving-mode .line-card.verse-short .line-character {
+  height: 240px;
+}
+
+.result-container.saving-mode .line-card.verse-short .line-character img,
+.result-container.saving-mode .line-card.verse-short .line-character svg {
+  width: 260px;
+}
+
+.result-container.saving-mode .line-card.verse-medium .line-character {
+  height: 200px;
+}
+
+.result-container.saving-mode .line-card.verse-medium .line-character img,
+.result-container.saving-mode .line-card.verse-medium .line-character svg {
+  width: 220px;
+}
+
+.result-container.saving-mode .line-card.verse-long .line-character {
+  height: 170px;
+}
+
+.result-container.saving-mode .line-card.verse-long .line-character img,
+.result-container.saving-mode .line-card.verse-long .line-character svg {
+  width: 190px;
 }
 
 .result-container.saving-mode .haneul-logo {
