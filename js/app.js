@@ -313,10 +313,11 @@ function generateAvatarPNG(avatarData) {
       const style = avatarData.style || 'lorelei';
       const seed = avatarData.seed || Date.now().toString();
       
-      // Dicebear 옵션 구성
+      // Dicebear 옵션 구성 - 고해상도 설정
       const dicebearOptions = {
         seed: seed,
-        scale: 100
+        scale: 100,
+        size: 1024 // 1024px 고해상도 PNG
       };
 
       // lorelei 스타일 옵션 (빈 문자열은 제외)
@@ -693,17 +694,34 @@ window.saveAsImage = async function() {
     const characterDiv = resultCard.querySelector('.line-character');
     const originalHTML = characterDiv ? characterDiv.innerHTML : '';
     
-    // 현재 아바타 데이터로 PNG 생성
+    // 현재 아바타 데이터로 고해상도 PNG 생성
     if (characterDiv && window.currentEmployee && window.currentEmployee.avatarData) {
       try {
         const avatarData = typeof window.currentEmployee.avatarData === 'string' 
           ? JSON.parse(window.currentEmployee.avatarData) 
           : window.currentEmployee.avatarData;
+        
+        // 고해상도 PNG 생성 (1024px)
         const avatarPNG = generateAvatarPNG(avatarData);
         characterDiv.innerHTML = avatarPNG;
         
-        // 이미지 로딩 대기
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // PNG 이미지 요소 찾기
+        const imgElement = characterDiv.querySelector('img');
+        if (imgElement) {
+          // 이미지 완전 로딩 대기
+          await new Promise((resolve) => {
+            if (imgElement.complete) {
+              resolve();
+            } else {
+              imgElement.onload = resolve;
+              imgElement.onerror = resolve;
+            }
+          });
+          // 추가 안정화 시간
+          await new Promise(resolve => setTimeout(resolve, 300));
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
       } catch (e) {
         console.error('Failed to convert to PNG:', e);
       }
@@ -713,6 +731,7 @@ window.saveAsImage = async function() {
     const html2canvas = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/+esm');
     
     // 전체 컨테이너 캡처 (배경 + 로고 포함)
+    // 아바타는 이미 1024px PNG로 고해상도이므로 scale 2면 충분
     const canvas = await html2canvas.default(resultContainer, {
       backgroundColor: null,
       useCORS: true,
@@ -722,7 +741,9 @@ window.saveAsImage = async function() {
       width: 540,
       height: 960,
       windowWidth: 540,
-      windowHeight: 960
+      windowHeight: 960,
+      imageTimeout: 0, // 이미지 로딩 타임아웃 제거
+      removeContainer: false
     });
     
     // 아바타를 원래 SVG로 복원
@@ -733,15 +754,13 @@ window.saveAsImage = async function() {
     // 저장 모드 비활성화
     resultContainer.classList.remove('saving-mode');
     
-    // 다운로드
-    const dataURL = canvas.toDataURL('image/png', 1.0);
+    // 다운로드 - 최고 품질 PNG
+    const dataURL = canvas.toDataURL('image/png'); // PNG는 무손실이므로 품질 파라미터 불필요
     const link = document.createElement('a');
     const employeeName = window.currentEmployee ? window.currentEmployee.name : 'HANEUL';
     link.download = `${employeeName}_카드.png`;
     link.href = dataURL;
     link.click();
-    
-    alert('이미지가 저장되었습니다!');
   } catch (error) {
     console.error('캡처 오류:', error);
     alert('이미지 저장 중 오류가 발생했습니다: ' + error.message);

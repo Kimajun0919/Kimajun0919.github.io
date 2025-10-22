@@ -125,8 +125,12 @@ function createDicebearAvatarPNG(options = {}) {
   const dicebearOptions = options.dicebearOptions || {};
   
   try {
-    // API URL 생성 (PNG 형식)
+    // API URL 생성 (PNG 형식) - 고해상도로 요청
     let apiUrl = `https://api.dicebear.com/9.x/${style}/png?seed=${encodeURIComponent(seed)}`;
+    
+    // size 파라미터 추가 (픽셀 단위, 고해상도)
+    const size = dicebearOptions.size || 1024; // 기본값을 1024로 증가
+    apiUrl += `&size=${size}`;
     
     // scale 옵션 추가 (기본값: 100)
     const scale = dicebearOptions.scale || 100;

@@ -598,6 +598,12 @@ input[type="file"] {
   object-position: bottom right;
   transition: width 0.3s ease;
   margin-right: -30px;
+  /* 고품질 이미지 렌더링 설정 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* 말씀 길이에 따른 아바타 크기 조정 */
@@ -792,6 +798,12 @@ input[type="file"] {
   object-position: bottom right;
   transition: width 0.3s ease;
   margin-right: -30px;
+  /* 고품질 이미지 렌더링 설정 */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
 /* 저장 모드에서도 말씀 길이에 따른 아바타 크기 조정 */
