@@ -224,9 +224,9 @@ window.saveAvatar = async function() {
         employeeId: employeeId
       });
       
-      // 새 아바타 생성 (randomizePart가 정의되어 있을 때만)
-      if (typeof window.randomizePart === 'function') {
-        window.randomizePart('all');
+      // 디폴트 아바타로 초기화 (initAvatarBuilder가 정의되어 있을 때만)
+      if (typeof window.initAvatarBuilder === 'function') {
+        window.initAvatarBuilder();
       }
     }, 1500);
   } catch (error) {

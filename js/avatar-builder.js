@@ -18,13 +18,20 @@ const MAX_BUILDER_HISTORY = 10;
 
 // 초기화
 function initAvatarBuilder() {
-  // 로컬 스토리지에서 불러오기 (없으면 기본값 사용)
-  loadBuilderFromLocalStorage();
+  // 로컬 스토리지 초기화 (이전 설정 제거)
+  localStorage.removeItem('avatarBuilderState');
   
-  // 로컬 스토리지에 저장된 값이 없으면 기본 seed 유지
-  if (!builderState.seed) {
-    builderState.seed = 'default-avatar';
-  }
+  // 항상 디폴트 값으로 초기화
+  builderState = {
+    style: 'lorelei',
+    seed: 'default-avatar',
+    hair: 'variant01',
+    eyes: 'variant01',
+    eyebrows: 'variant01',
+    mouth: 'happy01',
+    nose: 'variant01',
+    glasses: ''
+  };
   
   window.builderState = builderState; // 전역 상태 동기화
   setupBuilderUI();
@@ -79,7 +86,6 @@ function createLoreleiOptions() {
         renderBuilderAvatar(builderState);
         updateActiveButton(hairContainer, btn);
         saveBuilderToHistory();
-        saveBuilderToLocalStorage();
       };
       if (builderState.hair === variant) {
         btn.classList.add('active');
@@ -101,7 +107,6 @@ function createLoreleiOptions() {
         renderBuilderAvatar(builderState);
         updateActiveButton(eyesContainer, btn);
         saveBuilderToHistory();
-        saveBuilderToLocalStorage();
       };
       if (builderState.eyes === variant) {
         btn.classList.add('active');
@@ -123,7 +128,6 @@ function createLoreleiOptions() {
         renderBuilderAvatar(builderState);
         updateActiveButton(eyebrowsContainer, btn);
         saveBuilderToHistory();
-        saveBuilderToLocalStorage();
       };
       if (builderState.eyebrows === variant) {
         btn.classList.add('active');
@@ -145,7 +149,6 @@ function createLoreleiOptions() {
         renderBuilderAvatar(builderState);
         updateActiveButton(mouthContainer, btn);
         saveBuilderToHistory();
-        saveBuilderToLocalStorage();
       };
       if (builderState.mouth === variant) {
         btn.classList.add('active');
@@ -167,7 +170,6 @@ function createLoreleiOptions() {
         renderBuilderAvatar(builderState);
         updateActiveButton(noseContainer, btn);
         saveBuilderToHistory();
-        saveBuilderToLocalStorage();
       };
       if (builderState.nose === variant) {
         btn.classList.add('active');
@@ -190,7 +192,6 @@ function createLoreleiOptions() {
       renderBuilderAvatar(builderState);
       updateActiveButton(glassesContainer, noneBtn);
       saveBuilderToHistory();
-      saveBuilderToLocalStorage();
     };
     if (!builderState.glasses) {
       noneBtn.classList.add('active');
@@ -207,7 +208,6 @@ function createLoreleiOptions() {
         renderBuilderAvatar(builderState);
         updateActiveButton(glassesContainer, btn);
         saveBuilderToHistory();
-        saveBuilderToLocalStorage();
       };
       if (builderState.glasses === variant) {
         btn.classList.add('active');
@@ -272,7 +272,6 @@ function applyBuilderOption(part, value) {
   window.builderState = builderState; // 전역 상태 동기화
   renderBuilderAvatar(builderState);
   saveBuilderToHistory();
-  saveBuilderToLocalStorage();
 }
 
 // 랜덤화
@@ -295,7 +294,6 @@ function randomizePart(part) {
   renderBuilderAvatar(builderState);
   setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
   saveBuilderToHistory();
-  saveBuilderToLocalStorage();
 }
 
 // 히스토리 관리
@@ -317,7 +315,6 @@ function undoAvatar() {
     window.builderState = builderState; // 전역 상태 동기화
     renderBuilderAvatar(builderState);
     setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
-    saveBuilderToLocalStorage();
   }
 }
 
@@ -328,7 +325,6 @@ function redoAvatar() {
     window.builderState = builderState; // 전역 상태 동기화
     renderBuilderAvatar(builderState);
     setupBuilderUI(); // UI 재생성해서 active 상태 업데이트
-    saveBuilderToLocalStorage();
   }
 }
 
