@@ -496,10 +496,10 @@ window.saveAsImage = async function() {
       allowTaint: true,
       logging: false,
       scale: 2,
-      width: 1080,
-      height: 1920,
-      windowWidth: 1080,
-      windowHeight: 1920
+      width: 720,
+      height: 1280,
+      windowWidth: 720,
+      windowHeight: 1280
     });
     
     // 아바타를 원래 SVG로 복원
