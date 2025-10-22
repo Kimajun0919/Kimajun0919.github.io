@@ -502,10 +502,10 @@ input[type="file"] {
   opacity: 0.6;
 }
 
-/* 이미지 저장을 위한 스타일 - 1080x1920 세로형 고정 (저장용) */
+/* 이미지 저장을 위한 스타일 - 720x1280 세로형 고정 (저장용) */
 .result-container.saving-mode {
-  width: 1080px;
-  height: 1920px;
+  width: 720px;
+  height: 1280px;
   display: flex;
   flex-direction: column;
   justify-content: center;
