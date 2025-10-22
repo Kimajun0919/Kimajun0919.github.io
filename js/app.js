@@ -372,25 +372,41 @@ window.showEmployeeResult = function(employee) {
     verseReference = v.reference;
   }
   
-  // LINE 카드 스타일로 HTML 구성 (카드만 생성, 버튼은 HTML에 있음)
+  // 카드 플립 구조로 HTML 구성
   resultCard.innerHTML = `
-    <div class="line-card">
-      <div class="line-logo">HANEUL</div>
-      <div class="line-info">
-        <h2>${employee.name || ''}</h2>
-        <p class="line-team">${employee.team || ''}</p>
-        <p class="line-bible-verse">
-          ${verseContent}
-          <span class="line-bible-reference">${verseReference}</span>
-        </p>
-      </div>
-      <div class="line-character">
-        ${avatarSVG}
+    <div class="card-flip-container" id="cardFlipContainer">
+      <!-- 카드 뒷면 -->
+      <div class="card-face card-back"></div>
+      
+      <!-- 카드 앞면 -->
+      <div class="card-face card-front">
+        <div class="line-card">
+          <div class="line-logo">HANEUL</div>
+          <div class="line-info">
+            <h2>${employee.name || ''}</h2>
+            <p class="line-team">${employee.team || ''}</p>
+            <p class="line-bible-verse">
+              ${verseContent}
+              <span class="line-bible-reference">${verseReference}</span>
+            </p>
+          </div>
+          <div class="line-character">
+            ${avatarSVG}
+          </div>
+        </div>
       </div>
     </div>
   `;
   
   showPage('resultPage');
+  
+  // 페이지 전환 후 카드 뒤집기 애니메이션 실행
+  setTimeout(() => {
+    const cardContainer = document.getElementById('cardFlipContainer');
+    if (cardContainer) {
+      cardContainer.classList.add('flipped');
+    }
+  }, 100);
 };
 
 // 삭제 함수 (HTML에서 호출)
@@ -487,7 +503,7 @@ window.saveAsImage = async function() {
     });
     
     // 아바타를 원래 SVG로 복원
-    if (characterDiv) {
+    if (characterDiv && originalHTML) {
       characterDiv.innerHTML = originalHTML;
     }
     
@@ -512,8 +528,8 @@ window.saveAsImage = async function() {
     
     // 아바타 복원
     const characterDiv = resultCard.querySelector('.line-character');
-    if (characterDiv && originalHTML) {
-      characterDiv.innerHTML = originalHTML;
+    if (characterDiv) {
+      characterDiv.innerHTML = '';
     }
   }
 };
