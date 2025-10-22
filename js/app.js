@@ -169,12 +169,32 @@ window.saveAvatar = async function() {
     return;
   }
 
+  // 현재 아바타 상태 가져오기
+  const currentAvatarState = getCurrentAvatarState();
+  
+  // 기본 캐릭터인지 확인
+  const isDefaultAvatar = 
+    currentAvatarState.seed === 'default-avatar' &&
+    currentAvatarState.hair === 'variant01' &&
+    currentAvatarState.eyes === 'variant01' &&
+    currentAvatarState.eyebrows === 'variant01' &&
+    currentAvatarState.mouth === 'happy01' &&
+    currentAvatarState.nose === 'variant01' &&
+    (!currentAvatarState.glasses || currentAvatarState.glasses === '');
+
+  // 기본 캐릭터라면 확인 창 표시
+  if (isDefaultAvatar) {
+    const confirmed = confirm('기본 캐릭터로 저장하시겠습니까?');
+    if (!confirmed) {
+      status.textContent = "";
+      return; // 사용자가 취소하면 저장하지 않음
+    }
+  }
+
   status.textContent = "💾 아바타 저장 중...";
   status.style.color = "#3498db";
 
   try {
-    // 현재 아바타 상태 가져오기
-    const currentAvatarState = getCurrentAvatarState();
     
     // 고유 ID 생성
     const employeeId = String(Date.now()).slice(-6);
