@@ -575,10 +575,12 @@ window.showEmployeeResult = function(employee) {
         // 말씀 길이에 따라 클래스 추가
         if (lineCount <= 4) {
           lineCard.classList.add('verse-short');
-        } else if (lineCount <= 7) {
+        } else if (lineCount <= 6) {
           lineCard.classList.add('verse-medium');
-        } else {
+        } else if (lineCount <= 8) {
           lineCard.classList.add('verse-long');
+        } else {
+          lineCard.classList.add('verse-extra-long');
         }
       }
       
