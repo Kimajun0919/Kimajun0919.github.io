@@ -9,14 +9,15 @@
   <body>
     <div id="app">
       <header>
-        <h1>무용 논문 RAG 시스템</h1>
+        <h1>무용 논문 검색</h1>
+        <p class="subtitle">Dance Research Archive</p>
       </header>
       <main>
         <section id="upload-section">
           <h2>PDF 업로드</h2>
           <div class="input-group">
             <input type="file" multiple id="pdfUpload" accept="application/pdf" />
-            <button id="uploadBtn">PDF 업로드</button>
+            <button id="uploadBtn">업로드</button>
           </div>
           <div id="uploadStatus" role="status" aria-live="polite"></div>
         </section>
@@ -26,7 +27,7 @@
             <input
               type="text"
               id="searchInput"
-              placeholder="검색어 또는 질문을 입력하세요"
+              placeholder="무용 이론, 안무, 움직임에 대해 질문해보세요..."
             />
             <button id="searchBtn">검색</button>
           </div>
