@@ -1,44 +1,51 @@
-const SUPABASE_FUNCTIONS_BASE_URL =
-  window.__SUPABASE_FUNCTIONS_URL__ ?? import.meta.env?.VITE_SUPABASE_FUNCTIONS_URL ?? '';
+(() => {
+  const globalObj = typeof window !== 'undefined' ? window : globalThis;
+  const baseUrl =
+    globalObj.__SUPABASE_FUNCTIONS_URL__ ||
+    (typeof process !== 'undefined' ? process.env?.SUPABASE_FUNCTIONS_URL : '') ||
+    '';
 
-async function callSupabaseFunction(path, init = {}) {
-  if (!SUPABASE_FUNCTIONS_BASE_URL) {
-    throw new Error('Supabase Functions URL is not configured.');
+  function resolveUrl(path) {
+    if (!baseUrl) {
+      throw new Error('Supabase Functions URL is not configured.');
+    }
+
+    const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+    const trimmedPath = path.replace(/^\//, '');
+    return `${normalizedBase}${trimmedPath}`;
   }
 
-  const url = `${SUPABASE_FUNCTIONS_BASE_URL}/${path}`.replace(/\/{2,}/g, '/').replace(':/', '://');
-  const response = await fetch(url, init);
+  async function fetchSupabase(path, method = 'GET', body) {
+    const url = resolveUrl(path);
+    const options = { method, headers: {} };
 
-  if (!response.ok) {
+    if (method.toUpperCase() === 'GET') {
+      options.headers = undefined;
+    } else if (body instanceof FormData) {
+      options.body = body;
+    } else if (body !== undefined && body !== null) {
+      options.headers['Content-Type'] = 'application/json';
+      options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(url, options);
     const text = await response.text();
-    throw new Error(text || 'Supabase function call failed.');
+
+    if (!response.ok) {
+      throw new Error(text || `Supabase request failed (${response.status})`);
+    }
+
+    if (!text) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(text);
+    } catch (_error) {
+      return text;
+    }
   }
 
-  const contentType = response.headers.get('content-type') ?? '';
-  if (contentType.includes('application/json')) {
-    return response.json();
-  }
-
-  return response.text();
-}
-
-export async function uploadDocument(file) {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  return callSupabaseFunction('ingest', {
-    method: 'POST',
-    body: formData,
-  });
-}
-
-export async function searchDocuments(payload) {
-  return callSupabaseFunction('search', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-}
+  globalObj.fetchSupabase = fetchSupabase;
+})();
 

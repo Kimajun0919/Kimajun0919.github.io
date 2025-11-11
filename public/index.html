@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>무용 논문 RAG 시스템</title>
-    <link rel="stylesheet" href="../styles/style.css" />
+    <link rel="stylesheet" href="/styles/style.css" />
   </head>
   <body>
     <div id="app">
@@ -14,28 +14,29 @@
       <main>
         <section id="upload-section">
           <h2>PDF 업로드</h2>
-          <form id="upload-form">
-            <input type="file" id="pdf-input" accept="application/pdf" />
-            <button type="submit">업로드</button>
-          </form>
-          <div id="upload-status" role="status" aria-live="polite"></div>
+          <div class="input-group">
+            <input type="file" multiple id="pdfUpload" accept="application/pdf" />
+            <button id="uploadBtn">PDF 업로드</button>
+          </div>
+          <div id="uploadStatus" role="status" aria-live="polite"></div>
         </section>
         <section id="search-section">
           <h2>검색</h2>
-          <form id="search-form">
+          <div class="input-group">
             <input
-              type="search"
-              id="search-input"
-              placeholder="검색어를 입력하세요"
+              type="text"
+              id="searchInput"
+              placeholder="검색어 또는 질문을 입력하세요"
             />
-            <button type="submit">검색</button>
-          </form>
-          <div id="search-results"></div>
+            <button id="searchBtn">검색</button>
+          </div>
         </section>
+        <div id="result"></div>
       </main>
     </div>
-    <script type="module" src="../src/upload.js"></script>
-    <script type="module" src="../src/search.js"></script>
+    <script src="/src/api.js"></script>
+    <script src="src/upload.js"></script>
+    <script src="src/search.js"></script>
   </body>
 </html>
 
