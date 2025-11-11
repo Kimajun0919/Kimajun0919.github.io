@@ -21,7 +21,7 @@ async function uploadPdfs() {
   });
 
   try {
-    uploadButton.disabled = true;
+    if (uploadButton) uploadButton.disabled = true;
     setUploadMessage('업로드 중입니다...');
     console.log('Upload started:', Array.from(pdfInput.files).map((file) => file.name));
     const response = await window.fetchSupabase('/ingest', 'POST', formData);
@@ -34,7 +34,7 @@ async function uploadPdfs() {
     console.error('PDF upload failed', error);
     setUploadMessage(`업로드 실패: ${error.message ?? '알 수 없는 오류'}`);
   } finally {
-    uploadButton.disabled = false;
+    if (uploadButton) uploadButton.disabled = false;
   }
 }
 

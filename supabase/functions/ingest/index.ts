@@ -26,6 +26,8 @@ serve(async (req) => {
     const formData = await req.formData();
     const files = getUploadedFiles(formData);
 
+    console.log('Ingest function invoked. Files received:', files.map((file) => file.name));
+
     if (files.length === 0) {
       return new Response('No PDF files provided.', { status: 400 });
     }

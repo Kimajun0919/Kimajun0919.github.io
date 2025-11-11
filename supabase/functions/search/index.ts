@@ -30,6 +30,8 @@ serve(async (req) => {
       return new Response('Query is required.', { status: 400 });
     }
 
+    console.log('Search function received query:', query);
+
     // 1) Query embedding 생성
     const queryVector = await generateQueryEmbedding(query);
 
@@ -45,6 +47,8 @@ serve(async (req) => {
 
     // 4) 상위 5개 결과 준비
     const topResults = rerankedCandidates.slice(0, 5).map(toResultPayload);
+
+    console.log('Search function returning results:', topResults);
 
     return Response.json({
       results: topResults,
