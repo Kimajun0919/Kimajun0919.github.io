@@ -33,6 +33,12 @@
           </div>
         </section>
         <div id="result"></div>
+        <section id="library-section">
+          <h2>업로드된 문서</h2>
+          <button id="refreshLibraryBtn" type="button">목록 새로고침</button>
+          <div id="libraryStatus" role="status" aria-live="polite"></div>
+          <ul id="libraryList" class="document-list"></ul>
+        </section>
       </main>
     </div>
     <script>
@@ -46,6 +52,7 @@
     <script src="./src/api.js"></script>
     <script src="./src/upload.js"></script>
     <script src="./src/search.js"></script>
+    <script src="./src/library.js"></script>
   </body>
 </html>
 

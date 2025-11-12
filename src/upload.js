@@ -29,6 +29,9 @@ async function uploadPdfs() {
       (response && typeof response === 'object' && response.message) || '업로드 완료';
     setUploadMessage(message);
     console.log('Upload success:', response);
+    if (typeof window.refreshDocumentList === 'function') {
+      window.refreshDocumentList();
+    }
     pdfInput.value = '';
   } catch (error) {
     console.error('PDF upload failed', error);
