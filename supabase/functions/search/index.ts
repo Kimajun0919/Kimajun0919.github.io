@@ -7,34 +7,42 @@ declare const Deno: {
   };
 };
 
-// TODO: Replace with @supabase/supabase-js once environment variables are configured.
-// import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+// @ts-ignore Supabase Edge Functions resolve this import at runtime.
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = Deno.env.get('SB_URL'); // TODO: Configure Supabase URL.
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SB_SERVICE_ROLE_KEY'); // TODO: Configure service key.
 const EMBEDDING_API_KEY = Deno.env.get('EMBEDDING_API_KEY'); // TODO: Provide embedding API key.
 const RERANKER_API_KEY = Deno.env.get('RERANKER_API_KEY'); // TODO: Provide reranker API key.
 
-// Placeholder Supabase client setup.
-// const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!, {
-//   auth: { persistSession: false },
-// });
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  throw new Error('Supabase credentials are missing. Ensure SB_URL and SB_SERVICE_ROLE_KEY secrets are set.');
+}
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+  auth: { persistSession: false },
+});
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, Authorization, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+};
 
 serve(async (req) => {
-  if (req.method !== 'POST') {
-    return new Response('Method Not Allowed', { status: 405 });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
-  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-    console.error('Supabase credentials are missing.');
-    return new Response('Server configuration error.', { status: 500 });
+  if (req.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405, headers: corsHeaders });
   }
 
   try {
     const { query } = await req.json();
 
     if (typeof query !== 'string' || query.trim().length === 0) {
-      return new Response('Query is required.', { status: 400 });
+      return new Response('Query is required.', { status: 400, headers: corsHeaders });
     }
 
     console.log('Search function received query:', query);
@@ -46,7 +54,7 @@ serve(async (req) => {
     const initialCandidates = await searchSimilarChunks(queryVector, 50);
 
     if (initialCandidates.length === 0) {
-      return Response.json({ results: [] });
+      return Response.json({ results: [] }, { headers: corsHeaders });
     }
 
     // 3) 리랭킹 (top 50 → top 10)
@@ -57,23 +65,58 @@ serve(async (req) => {
 
     console.log('Search function returning results:', topResults);
 
-    return Response.json({
-      results: topResults,
-    });
+    return Response.json(
+      {
+        results: topResults,
+      },
+      { headers: corsHeaders },
+    );
   } catch (error) {
     console.error('Search function error:', error);
-    return new Response('Internal Server Error', { status: 500 });
+    return new Response('Internal Server Error', { status: 500, headers: corsHeaders });
   }
 });
 
-async function generateQueryEmbedding(_query: string): Promise<number[]> {
+async function generateQueryEmbedding(query: string): Promise<number[]> {
+  const fallback = new Array(1024).fill(0);
+
   if (!EMBEDDING_API_KEY) {
-    console.warn('Embedding API key not configured. Returning zero vector.');
+    console.warn('EMBEDDING_API_KEY not configured. Using zero vector.');
+    return fallback;
   }
 
-  // TODO: Call bge-m3 embedding service and return the embedding vector.
-  console.log('generateQueryEmbedding placeholder invoked.');
-  return Array(1024).fill(0);
+  try {
+    const res = await fetch('https://api.openai.com/v1/embeddings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${EMBEDDING_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'text-embedding-3-large',
+        input: query,
+      }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Embedding API error:', res.status, text);
+      return fallback;
+    }
+
+    const json = await res.json();
+    const embedding = json?.data?.[0]?.embedding;
+
+    if (!Array.isArray(embedding)) {
+      console.error('Embedding API returned unexpected payload:', json);
+      return fallback;
+    }
+
+    return embedding as number[];
+  } catch (error) {
+    console.error('Embedding API request failed:', error);
+    return fallback;
+  }
 }
 
 type ChunkRecord = {
@@ -87,22 +130,32 @@ type ChunkRecord = {
   score: number;
 };
 
-async function searchSimilarChunks(_queryVector: number[], limit: number): Promise<ChunkRecord[]> {
-  // TODO: Use Supabase RPC or REST query to perform vector similarity search against chunks.vector.
-  console.log('searchSimilarChunks placeholder invoked.');
-  return Array.from({ length: limit }, (_, index) => ({
-    id: crypto.randomUUID(),
-    document_id: crypto.randomUUID(),
-    text: `Placeholder chunk text ${index + 1}`,
-    page_from: 1,
-    page_to: 1,
-    section: 'Placeholder section',
-    doi: `10.0000/placeholder${index + 1}`,
-    score: 1 - index * 0.01,
-  }));
+async function searchSimilarChunks(queryVector: number[], limit: number): Promise<ChunkRecord[]> {
+  try {
+    const { data, error } = await supabase.rpc('match_chunks', {
+      query_embedding: queryVector,
+      match_threshold: 0.75,
+      match_count: limit,
+    });
+
+    if (error) {
+      console.error('match_chunks RPC error:', error);
+      return [];
+    }
+
+    if (!Array.isArray(data)) {
+      console.warn('match_chunks RPC returned unexpected payload:', data);
+      return [];
+    }
+
+    return data as ChunkRecord[];
+  } catch (error) {
+    console.error('match_chunks RPC call failed:', error);
+    return [];
+  }
 }
 
-type RerankedCandidate = ChunkRecord & { rerank_score: number };
+type RerankedCandidate = ChunkRecord & { rerank_score?: number };
 
 async function rerankCandidates(
   _query: string,
@@ -111,27 +164,68 @@ async function rerankCandidates(
 ): Promise<RerankedCandidate[]> {
   if (!RERANKER_API_KEY) {
     console.warn('Reranker API key not configured. Using initial ranking.');
+    return candidates.slice(0, limit).map((candidate) => ({
+      ...candidate,
+      rerank_score: candidate.score,
+    }));
   }
 
-  // TODO: Call bge-reranker-v2 API to score candidates and return top results.
-  console.log('rerankCandidates placeholder invoked.');
+  try {
+    const res = await fetch('https://api.openai.com/v1/rerank', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${RERANKER_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini-rerank',
+        query: _query,
+        documents: candidates.map((candidate) => candidate.text),
+      }),
+    });
 
-  const reranked = candidates
-    .map((candidate, index) => ({
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('Reranker API error:', res.status, text);
+      return candidates.slice(0, limit).map((candidate) => ({
+        ...candidate,
+        rerank_score: candidate.score,
+      }));
+    }
+
+    const json = await res.json();
+    const ranked = json?.results?.map((result: { index: number; score: number }) => ({
+      ...candidates[result.index],
+      rerank_score: result.score,
+    }));
+
+    if (!Array.isArray(ranked)) {
+      console.warn('Reranker API returned unexpected payload:', json);
+      return candidates.slice(0, limit).map((candidate) => ({
+        ...candidate,
+        rerank_score: candidate.score,
+      }));
+    }
+
+    return ranked.sort((a, b) => (b.rerank_score ?? 0) - (a.rerank_score ?? 0)).slice(0, limit);
+  } catch (error) {
+    console.error('Reranker API request failed:', error);
+    return candidates.slice(0, limit).map((candidate) => ({
       ...candidate,
-      rerank_score: candidate.score - index * 0.001,
-    }))
-    .sort((a, b) => b.rerank_score - a.rerank_score);
-
-  return reranked.slice(0, limit);
+      rerank_score: candidate.score,
+    }));
+  }
 }
 
 function toResultPayload(candidate: RerankedCandidate) {
+  const score = candidate.rerank_score ?? candidate.score ?? null;
   return {
     sentence: candidate.text,
     page: candidate.page_from === candidate.page_to ? candidate.page_from : candidate.page_from,
     doi: candidate.doi,
-    score: candidate.rerank_score,
+    section: candidate.section ?? null,
+    document_id: candidate.document_id ?? null,
+    score,
   };
 }
 
