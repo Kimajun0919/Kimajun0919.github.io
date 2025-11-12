@@ -1,7 +1,9 @@
+// 검색 영역에서 사용할 DOM 요소를 미리 찾아 둡니다.
 const searchInput = document.getElementById('searchInput');
 const searchButton = document.getElementById('searchBtn');
 const resultContainer = document.getElementById('result');
 
+// 사용자 입력 혹은 API 응답 안에 HTML 태그가 있어도 안전하게 출력하기 위한 유틸입니다.
 function escapeHtml(value = '') {
   return String(value)
     .replace(/&/g, '&amp;')
@@ -99,10 +101,12 @@ async function performSearch() {
 }
 
 if (searchButton) {
+  // 버튼 클릭 시 검색을 수행합니다.
   searchButton.addEventListener('click', performSearch);
 }
 
 if (searchInput) {
+  // 엔터 키로도 검색이 되도록 키보드 이벤트를 연결합니다.
   searchInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();

@@ -1,7 +1,9 @@
+// 문서 목록 렌더링에 필요한 DOM 요소 캐시
 const libraryList = document.getElementById('libraryList');
 const libraryStatus = document.getElementById('libraryStatus');
 const refreshLibraryBtn = document.getElementById('refreshLibraryBtn');
 
+// API에서 넘어온 날짜 문자열을 사람이 읽기 쉬운 형태로 변환합니다.
 function formatDate(value) {
   if (!value) return '알 수 없음';
   try {
@@ -81,12 +83,15 @@ async function loadDocuments() {
 }
 
 if (refreshLibraryBtn) {
+  // 사용자가 버튼을 눌러 직접 문서를 새로고침할 수 있습니다.
   refreshLibraryBtn.addEventListener('click', loadDocuments);
 }
 
 if (typeof window !== 'undefined') {
+  // 업로드 코드에서 문서 목록을 다시 읽도록 전역 함수로 노출합니다.
   window.refreshDocumentList = loadDocuments;
 }
 
+// 페이지 로딩 시 자동으로 최초 문서 목록을 불러옵니다.
 loadDocuments();
 

@@ -1,3 +1,4 @@
+// PDF 업로드를 받아 텍스트를 청크로 나누고 임베딩을 생성한 뒤 Supabase DB에 저장하는 Edge Function입니다.
 // @ts-ignore Supabase Edge Functions load Deno std modules at runtime.
 import { serve } from 'https://deno.land/std@0.203.0/http/server.ts';
 
@@ -12,6 +13,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 // @ts-ignore PDF.js is loaded through an ESM shim.
 import pdfjsLib from 'https://esm.sh/pdfjs-dist@3.11.174/legacy/build/pdf.mjs';
 
+// Supabase와 OpenAI에 연결하기 위한 주요 환경 변수들입니다.
 const SUPABASE_URL = Deno.env.get('SB_URL'); // TODO: Set Supabase URL in project settings.
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SB_SERVICE_ROLE_KEY'); // TODO: Provide service role key.
 const EMBEDDING_API_KEY = Deno.env.get('EMBEDDING_API_KEY'); // TODO: Provide embedding model API key.
@@ -26,10 +28,12 @@ if (!EMBEDDING_API_KEY) {
   throw new Error('Embedding API key is not configured. Set EMBEDDING_API_KEY in project secrets.');
 }
 
+// Edge Function 안에서 DB에 접근하기 위한 Supabase 클라이언트를 생성합니다.
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 });
 
+// 브라우저에서 직접 호출하기 때문에 CORS 헤더를 명시해 줍니다.
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, Authorization, x-client-info, content-type',
@@ -40,11 +44,13 @@ if (pdfjsLib?.GlobalWorkerOptions) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://esm.sh/pdfjs-dist@3.11.174/build/pdf.worker.mjs';
 }
 
+// Edge Function의 엔트리 포인트: 각 HTTP 요청이 여기로 들어옵니다.
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
 
+  // 업로드는 POST 요청만 허용합니다.
   if (req.method !== 'POST') {
     return new Response('Method Not Allowed', { status: 405, headers: corsHeaders });
   }
@@ -70,6 +76,7 @@ serve(async (req) => {
   }
 });
 
+// 사용자가 `file` 또는 `files` 필드에 넣어 보낸 파일들을 하나의 배열로 합칩니다.
 function getUploadedFiles(formData: FormData): File[] {
   const result: File[] = [];
   const singleFile = formData.get('file');
@@ -112,6 +119,7 @@ type PdfPageText = {
   text: string;
 };
 
+// pdf.js를 사용해 PDF에서 페이지별 텍스트를 추출합니다.
 async function extractTextFromPdf(file: File): Promise<PdfPageText[]> {
   const buffer = await file.arrayBuffer();
   const typedArray = new Uint8Array(buffer);
@@ -164,7 +172,9 @@ type Chunk = {
 
 const DEFAULT_CHUNK_SIZE = Number(Deno.env.get('CHUNK_CHAR_LIMIT') ?? '800') || 800;
 
+// 추출된 텍스트를 일정 길이(기본 800자)로 잘라 검색에 알맞은 청크를 만듭니다.
 async function splitTextIntoChunks(pages: PdfPageText[]): Promise<Chunk[]> {
+  // 각 페이지 텍스트를 줄바꿈 기준으로 잘라 페이지 번호 정보를 유지합니다.
   const paragraphs = pages.flatMap((page) =>
     page.text
       .split(/\n+/)
@@ -239,6 +249,7 @@ async function splitTextIntoChunks(pages: PdfPageText[]): Promise<Chunk[]> {
   return chunks;
 }
 
+// 생성된 청크 텍스트를 OpenAI Embeddings API에 제출해 벡터 목록을 만듭니다.
 async function generateEmbeddings(chunks: Chunk[]): Promise<number[][]> {
   try {
     const response = await fetch('https://api.openai.com/v1/embeddings', {
@@ -301,6 +312,7 @@ type PersistPayload = {
   embeddings: number[][];
 };
 
+// documents / chunks 테이블에 메타데이터와 임베딩을 저장합니다.
 async function persistToSupabase(payload: PersistPayload) {
   console.log('Persisting document to Supabase:', payload.file.name);
 

@@ -1,13 +1,16 @@
+// 업로드 섹션에서 사용하는 DOM 요소들을 한 번만 찾아 재사용합니다.
 const pdfInput = document.getElementById('pdfUpload');
 const uploadButton = document.getElementById('uploadBtn');
 const uploadStatus = document.getElementById('uploadStatus');
 
+// 화면에 표시되는 업로드 상태 메시지를 갱신합니다.
 function setUploadMessage(message) {
   if (uploadStatus) {
     uploadStatus.textContent = message;
   }
 }
 
+// 선택한 PDF 파일들을 Supabase Edge Function(`/ingest`)에 전송합니다.
 async function uploadPdfs() {
   if (!pdfInput || !pdfInput.files || pdfInput.files.length === 0) {
     setUploadMessage('업로드할 PDF 파일을 선택해 주세요.');
@@ -42,6 +45,7 @@ async function uploadPdfs() {
 }
 
 if (uploadButton) {
+  // 업로드 버튼 클릭 시 실제 업로드 로직이 실행됩니다.
   uploadButton.addEventListener('click', uploadPdfs);
 }
 

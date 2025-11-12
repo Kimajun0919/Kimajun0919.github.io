@@ -1,3 +1,6 @@
+-- Supabase 프로젝트를 초기화할 때 실행하는 스크립트입니다.
+-- 테이블, 인덱스, 권한, RPC 함수까지 한 번에 정의합니다.
+
 -- 1. Enable pgvector extension (필수)
 CREATE EXTENSION IF NOT EXISTS vector;
 

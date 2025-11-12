@@ -1,3 +1,4 @@
+// 사용자 질문을 받아 벡터 검색과(선택적) 리랭킹을 수행하는 Edge Function입니다.
 // @ts-ignore Supabase Edge Functions load Deno std modules at runtime.
 import { serve } from 'https://deno.land/std@0.203.0/http/server.ts';
 
@@ -10,6 +11,7 @@ declare const Deno: {
 // @ts-ignore Supabase Edge Functions resolve this import at runtime.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+// 검색에 필요한 외부 서비스(Supabase, OpenAI) 정보를 환경 변수에서 읽습니다.
 const SUPABASE_URL = Deno.env.get('SB_URL'); // TODO: Configure Supabase URL.
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SB_SERVICE_ROLE_KEY'); // TODO: Configure service key.
 const EMBEDDING_API_KEY = Deno.env.get('EMBEDDING_API_KEY'); // TODO: Provide embedding API key.
@@ -28,16 +30,19 @@ if (!EMBEDDING_API_KEY) {
   throw new Error('Embedding API key is missing. Set EMBEDDING_API_KEY in project secrets.');
 }
 
+// Supabase의 match_chunks RPC를 호출하기 위해 클라이언트를 초기화합니다.
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
 });
 
+// 브라우저에서 fetch로 호출할 수 있게 CORS를 허용합니다.
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, Authorization, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+// HTTP 엔드포인트: 질문을 JSON으로 받아 검색 결과를 JSON으로 돌려줍니다.
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -86,6 +91,7 @@ serve(async (req) => {
   }
 });
 
+// 사용자의 자연어 질문을 임베딩 벡터로 변환합니다.
 async function generateQueryEmbedding(query: string): Promise<number[]> {
   try {
     const res = await fetch('https://api.openai.com/v1/embeddings', {
@@ -132,6 +138,7 @@ type ChunkRecord = {
   score: number;
 };
 
+// Supabase에 정의된 match_chunks RPC를 호출해 벡터 유사도 기반으로 후보를 찾습니다.
 async function searchSimilarChunks(queryVector: number[], limit: number): Promise<ChunkRecord[]> {
   try {
     const { data, error } = await supabase.rpc('match_chunks', {
@@ -159,6 +166,7 @@ async function searchSimilarChunks(queryVector: number[], limit: number): Promis
 
 type RerankedCandidate = ChunkRecord & { rerank_score?: number };
 
+// (선택) OpenAI Rerank API를 사용해 더 높은 품질의 정렬을 수행합니다.
 async function rerankCandidates(
   _query: string,
   candidates: ChunkRecord[],
@@ -219,6 +227,7 @@ async function rerankCandidates(
   }
 }
 
+// 프런트엔드에서 바로 사용할 수 있는 형태로 후보 데이터를 가공합니다.
 function toResultPayload(candidate: RerankedCandidate) {
   const score = candidate.rerank_score ?? candidate.score ?? null;
   const pageFrom = candidate.page_from ?? null;

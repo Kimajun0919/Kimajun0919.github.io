@@ -1,4 +1,8 @@
-/* Copy this file to docs/config.js and fill in your Supabase credentials. */
+/* 
+ * 예시 구성 파일입니다.
+ * 1) 이 파일을 docs/config.js로 복사한 뒤
+ * 2) 아래 URL과 키를 본인 Supabase 프로젝트 값으로 교체하세요.
+ */
 (function configureSupabase() {
   const SUPABASE_FUNCTIONS_URL = 'https://your-project.supabase.co/functions/v1';
   const SUPABASE_ANON_KEY = 'supabase-anon-key';
