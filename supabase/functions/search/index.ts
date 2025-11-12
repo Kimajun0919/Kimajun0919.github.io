@@ -1,10 +1,17 @@
+// @ts-ignore Supabase Edge Functions load Deno std modules at runtime.
 import { serve } from 'https://deno.land/std@0.203.0/http/server.ts';
+
+declare const Deno: {
+  env: {
+    get(name: string): string | undefined;
+  };
+};
 
 // TODO: Replace with @supabase/supabase-js once environment variables are configured.
 // import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const SUPABASE_URL = Deno.env.get('SUPABASE_URL'); // TODO: Configure Supabase URL.
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'); // TODO: Configure service key.
+const SUPABASE_URL = Deno.env.get('SB_URL'); // TODO: Configure Supabase URL.
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SB_SERVICE_ROLE_KEY'); // TODO: Configure service key.
 const EMBEDDING_API_KEY = Deno.env.get('EMBEDDING_API_KEY'); // TODO: Provide embedding API key.
 const RERANKER_API_KEY = Deno.env.get('RERANKER_API_KEY'); // TODO: Provide reranker API key.
 
