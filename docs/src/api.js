@@ -4,6 +4,10 @@
     globalObj.__SUPABASE_FUNCTIONS_URL__ ||
     (typeof process !== 'undefined' ? process.env?.SUPABASE_FUNCTIONS_URL : '') ||
     '';
+  const anonKey =
+    globalObj.__SUPABASE_ANON_KEY__ ||
+    (typeof process !== 'undefined' ? process.env?.SUPABASE_ANON_KEY : '') ||
+    '';
 
   function resolveUrl(path) {
     if (!baseUrl) {
@@ -17,15 +21,31 @@
 
   async function fetchSupabase(path, method = 'GET', body) {
     const url = resolveUrl(path);
-    const options = { method, headers: {} };
+    const headers = {};
+
+    if (anonKey) {
+      headers.Authorization = `Bearer ${anonKey}`;
+      headers.apikey = anonKey;
+    }
+
+    const options = { method, headers };
 
     if (method.toUpperCase() === 'GET') {
-      options.headers = undefined;
+      if (!anonKey) {
+        delete options.headers;
+      }
     } else if (body instanceof FormData) {
       options.body = body;
+      if (!anonKey) {
+        delete options.headers;
+      }
     } else if (body !== undefined && body !== null) {
       options.headers['Content-Type'] = 'application/json';
       options.body = JSON.stringify(body);
+      if (!anonKey) {
+        delete options.headers.apikey;
+        delete options.headers.Authorization;
+      }
     }
 
     const response = await fetch(url, options);
