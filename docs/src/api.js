@@ -25,7 +25,6 @@
 
     if (anonKey) {
       headers.Authorization = `Bearer ${anonKey}`;
-      headers.apikey = anonKey;
     }
 
     const options = { method, headers };
@@ -43,7 +42,6 @@
       options.headers['Content-Type'] = 'application/json';
       options.body = JSON.stringify(body);
       if (!anonKey) {
-        delete options.headers.apikey;
         delete options.headers.Authorization;
       }
     }
