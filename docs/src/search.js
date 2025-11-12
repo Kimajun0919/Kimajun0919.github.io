@@ -11,6 +11,26 @@ function escapeHtml(value = '') {
     .replace(/'/g, '&#039;');
 }
 
+function formatPageRange(item = {}) {
+  const explicitPage = typeof item.page === 'string' ? item.page.trim() : '';
+  if (explicitPage) {
+    return explicitPage;
+  }
+
+  const pageFrom = item.page_from ?? item.pageFrom ?? null;
+  const pageTo = item.page_to ?? item.pageTo ?? null;
+
+  if (pageFrom !== null && pageTo !== null) {
+    return pageFrom === pageTo ? String(pageFrom) : `${pageFrom}-${pageTo}`;
+  }
+
+  if (pageFrom !== null || pageTo !== null) {
+    return String(pageFrom ?? pageTo);
+  }
+
+  return '';
+}
+
 function renderResults(data) {
   if (!resultContainer) return;
 
@@ -27,7 +47,7 @@ function renderResults(data) {
         item.text ??
         item.content ??
         '결과 문장이 제공되지 않았습니다.';
-      const page = item.page ?? item.page_number ?? item.pageFrom ?? item.page_to ?? '';
+      const page = formatPageRange(item);
       const doi = item.doi ?? item.reference ?? item.link ?? '';
 
       const pageMarkup = page ? `<p class="result-page">페이지: ${escapeHtml(page)}</p>` : '';

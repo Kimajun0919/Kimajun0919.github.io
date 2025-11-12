@@ -22,6 +22,9 @@ const EMBEDDING_DIMENSION = Number(Deno.env.get('EMBEDDING_DIMENSION') ?? '1536'
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   throw new Error('Supabase credentials are not configured.');
 }
+if (!EMBEDDING_API_KEY) {
+  throw new Error('Embedding API key is not configured. Set EMBEDDING_API_KEY in project secrets.');
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
@@ -237,13 +240,6 @@ async function splitTextIntoChunks(pages: PdfPageText[]): Promise<Chunk[]> {
 }
 
 async function generateEmbeddings(chunks: Chunk[]): Promise<number[][]> {
-  if (!EMBEDDING_API_KEY) {
-    console.warn('Embedding API key is not configured. Returning zero vectors.');
-    return chunks.map(() => new Array(EMBEDDING_DIMENSION).fill(0));
-  }
-
-  const fallbackVector = new Array(EMBEDDING_DIMENSION).fill(0);
-
   try {
     const response = await fetch('https://api.openai.com/v1/embeddings', {
       method: 'POST',
@@ -260,7 +256,7 @@ async function generateEmbeddings(chunks: Chunk[]): Promise<number[][]> {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Embedding API error:', response.status, errorText);
-      return chunks.map(() => [...fallbackVector]);
+      throw new Error('Embedding API call failed.');
     }
 
     const json = await response.json();
@@ -270,7 +266,7 @@ async function generateEmbeddings(chunks: Chunk[]): Promise<number[][]> {
       const embedding = vectors[index]?.embedding;
       if (!Array.isArray(embedding)) {
         console.warn('Embedding API returned unexpected payload for chunk index', index);
-        return [...fallbackVector];
+        throw new Error('Embedding API returned unexpected payload.');
       }
 
       if (embedding.length === EMBEDDING_DIMENSION) {
@@ -295,7 +291,7 @@ async function generateEmbeddings(chunks: Chunk[]): Promise<number[][]> {
     });
   } catch (error) {
     console.error('Embedding API request failed:', error);
-    return chunks.map(() => [...fallbackVector]);
+    throw error instanceof Error ? error : new Error('Embedding API request failed.');
   }
 }
 

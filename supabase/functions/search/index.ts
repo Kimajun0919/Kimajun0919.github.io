@@ -24,6 +24,9 @@ const RETURN_COUNT = Number(Deno.env.get('RETURN_COUNT') ?? '5') || 5;
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   throw new Error('Supabase credentials are missing. Ensure SB_URL and SB_SERVICE_ROLE_KEY secrets are set.');
 }
+if (!EMBEDDING_API_KEY) {
+  throw new Error('Embedding API key is missing. Set EMBEDDING_API_KEY in project secrets.');
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
   auth: { persistSession: false },
@@ -84,13 +87,6 @@ serve(async (req) => {
 });
 
 async function generateQueryEmbedding(query: string): Promise<number[]> {
-  const fallback = new Array(EMBEDDING_DIMENSION).fill(0);
-
-  if (!EMBEDDING_API_KEY) {
-    console.warn('EMBEDDING_API_KEY not configured. Using zero vector.');
-    return fallback;
-  }
-
   try {
     const res = await fetch('https://api.openai.com/v1/embeddings', {
       method: 'POST',
@@ -107,7 +103,7 @@ async function generateQueryEmbedding(query: string): Promise<number[]> {
     if (!res.ok) {
       const text = await res.text();
       console.error('Embedding API error:', res.status, text);
-      return fallback;
+      throw new Error('Embedding API call failed.');
     }
 
     const json = await res.json();
@@ -115,13 +111,13 @@ async function generateQueryEmbedding(query: string): Promise<number[]> {
 
     if (!Array.isArray(embedding)) {
       console.error('Embedding API returned unexpected payload:', json);
-      return fallback;
+      throw new Error('Embedding API returned unexpected payload.');
     }
 
     return embedding as number[];
   } catch (error) {
     console.error('Embedding API request failed:', error);
-    return fallback;
+    throw error instanceof Error ? error : new Error('Embedding API request failed.');
   }
 }
 
@@ -225,9 +221,21 @@ async function rerankCandidates(
 
 function toResultPayload(candidate: RerankedCandidate) {
   const score = candidate.rerank_score ?? candidate.score ?? null;
+  const pageFrom = candidate.page_from ?? null;
+  const pageTo = candidate.page_to ?? null;
+  let page: string | number | null = null;
+
+  if (pageFrom !== null && pageTo !== null) {
+    page = pageFrom === pageTo ? pageFrom : `${pageFrom}-${pageTo}`;
+  } else if (pageFrom !== null || pageTo !== null) {
+    page = pageFrom ?? pageTo;
+  }
+
   return {
     sentence: candidate.text,
-    page: candidate.page_from === candidate.page_to ? candidate.page_from : candidate.page_from,
+    page,
+    page_from: pageFrom,
+    page_to: pageTo,
     doi: candidate.doi,
     section: candidate.section ?? null,
     document_id: candidate.document_id ?? null,
