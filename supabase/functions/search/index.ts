@@ -14,6 +14,12 @@ const SUPABASE_URL = Deno.env.get('SB_URL'); // TODO: Configure Supabase URL.
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SB_SERVICE_ROLE_KEY'); // TODO: Configure service key.
 const EMBEDDING_API_KEY = Deno.env.get('EMBEDDING_API_KEY'); // TODO: Provide embedding API key.
 const RERANKER_API_KEY = Deno.env.get('RERANKER_API_KEY'); // TODO: Provide reranker API key.
+const EMBEDDING_MODEL =
+  Deno.env.get('EMBEDDING_MODEL') ?? Deno.env.get('OPENAI_EMBEDDING_MODEL') ?? 'text-embedding-3-small';
+const EMBEDDING_DIMENSION = Number(Deno.env.get('EMBEDDING_DIMENSION') ?? '1536') || 1536;
+const MATCH_THRESHOLD = Number(Deno.env.get('MATCH_THRESHOLD') ?? '0.75') || 0.75;
+const MATCH_COUNT = Number(Deno.env.get('MATCH_COUNT') ?? '20') || 20;
+const RETURN_COUNT = Number(Deno.env.get('RETURN_COUNT') ?? '5') || 5;
 
 if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   throw new Error('Supabase credentials are missing. Ensure SB_URL and SB_SERVICE_ROLE_KEY secrets are set.');
@@ -51,17 +57,17 @@ serve(async (req) => {
     const queryVector = await generateQueryEmbedding(query);
 
     // 2) pgvector에서 top 50 검색
-    const initialCandidates = await searchSimilarChunks(queryVector, 50);
+    const initialCandidates = await searchSimilarChunks(queryVector, MATCH_COUNT);
 
     if (initialCandidates.length === 0) {
       return Response.json({ results: [] }, { headers: corsHeaders });
     }
 
     // 3) 리랭킹 (top 50 → top 10)
-    const rerankedCandidates = await rerankCandidates(query, initialCandidates, 10);
+    const rerankedCandidates = await rerankCandidates(query, initialCandidates, Math.max(RETURN_COUNT, 5));
 
     // 4) 상위 5개 결과 준비
-    const topResults = rerankedCandidates.slice(0, 5).map(toResultPayload);
+    const topResults = rerankedCandidates.slice(0, RETURN_COUNT).map(toResultPayload);
 
     console.log('Search function returning results:', topResults);
 
@@ -78,7 +84,7 @@ serve(async (req) => {
 });
 
 async function generateQueryEmbedding(query: string): Promise<number[]> {
-  const fallback = new Array(1024).fill(0);
+  const fallback = new Array(EMBEDDING_DIMENSION).fill(0);
 
   if (!EMBEDDING_API_KEY) {
     console.warn('EMBEDDING_API_KEY not configured. Using zero vector.');
@@ -93,7 +99,7 @@ async function generateQueryEmbedding(query: string): Promise<number[]> {
         Authorization: `Bearer ${EMBEDDING_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'text-embedding-3-large',
+        model: EMBEDDING_MODEL,
         input: query,
       }),
     });
@@ -134,7 +140,7 @@ async function searchSimilarChunks(queryVector: number[], limit: number): Promis
   try {
     const { data, error } = await supabase.rpc('match_chunks', {
       query_embedding: queryVector,
-      match_threshold: 0.75,
+      match_threshold: MATCH_THRESHOLD,
       match_count: limit,
     });
 

@@ -61,3 +61,38 @@ CREATE OR REPLACE FUNCTION public.count_chunks()
 RETURNS bigint LANGUAGE sql STABLE AS $$
   SELECT count(*) FROM chunks;
 $$;
+
+-- 8. match_chunks RPC for semantic search
+CREATE OR REPLACE FUNCTION public.match_chunks(
+  query_embedding vector,
+  match_threshold float DEFAULT 0.75,
+  match_count integer DEFAULT 10
+)
+RETURNS TABLE (
+  id uuid,
+  document_id uuid,
+  text text,
+  page_from int,
+  page_to int,
+  section text,
+  doi text,
+  score float
+)
+LANGUAGE sql
+STABLE
+AS $$
+  SELECT
+    c.id,
+    c.document_id,
+    c.text,
+    c.page_from,
+    c.page_to,
+    c.section,
+    d.doi,
+    1 - (c.vector <=> query_embedding) AS score
+  FROM chunks c
+  JOIN documents d ON d.id = c.document_id
+  WHERE c.vector <=> query_embedding <= (1 - match_threshold)
+  ORDER BY c.vector <=> query_embedding
+  LIMIT LEAST(match_count, 200);
+$$;
