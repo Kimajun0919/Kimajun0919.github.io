@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>기도 트리</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module">
+      import { listPrayers } from "./firebase.js";
+
+      function placeNotes(container, items) {
+        const { width, height } = container.getBoundingClientRect();
+        const placed = [];
+
+        const isOverlap = (a, b) =>
+          !(
+            a.x + a.w < b.x ||
+            b.x + b.w < a.x ||
+            a.y + a.h < b.y ||
+            b.y + b.h < a.y
+          );
+
+        items.forEach((item) => {
+          const note = document.createElement("div");
+          note.className = "card note";
+          note.style.setProperty("--r", Math.random().toFixed(2));
+          note.innerHTML = `
+            <div>${item.content.length > 80 ? item.content.slice(0, 77) + "..." : item.content}</div>
+            <div class="small">- ${item.author || "익명"}</div>
+          `;
+
+          const w = 180;
+          const h = 120;
+          let tries = 0;
+          while (tries < 80) {
+            const x = Math.random() * (width - w);
+            const y = Math.random() * (height - h);
+            const box = { x, y, w, h };
+            if (!placed.some((p) => isOverlap(p, box))) {
+              placed.push(box);
+              note.style.left = `${x}px`;
+              note.style.top = `${y}px`;
+              container.appendChild(note);
+              break;
+            }
+            tries++;
+          }
+        });
+      }
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        const stage = document.querySelector(".tree-stage");
+        try {
+          const prayers = await listPrayers();
+          placeNotes(stage, prayers);
+        } catch (e) {
+          console.error(e);
+          alert("불러오기에 실패했습니다.");
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="main">
+      <h2>기도제목 트리</h2>
+      <div class="tree-stage">
+        <div class="tree-bg"></div>
+      </div>
+      <div style="margin-top: 16px">
+        <a class="btn" href="index.html">홈으로</a>
+        <a class="btn" href="write.html">새 기도제목</a>
+      </div>
+    </div>
+  </body>
+</html>
+

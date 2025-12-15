@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>기도제목 작성</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module">
+      import { createPrayer } from "./firebase.js";
+
+      window.addEventListener("DOMContentLoaded", () => {
+        const form = document.getElementById("form");
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const content = form.content.value.trim();
+          const author = form.author.value.trim();
+          if (!content) {
+            alert("기도제목을 입력해주세요.");
+            return;
+          }
+          try {
+            await createPrayer({ content, author });
+            window.location.href = "view.html";
+          } catch (err) {
+            console.error(err);
+            alert("저장 중 문제가 발생했습니다.");
+          }
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="main" style="max-width: 640px">
+      <h2>기도제목 작성</h2>
+      <form id="form">
+        <label>기도제목 (필수)</label>
+        <textarea name="content" rows="5" required placeholder="기도 제목을 남겨주세요"></textarea>
+        <label>작성자 (선택, 미입력 시 익명)</label>
+        <input name="author" placeholder="이름 또는 닉네임" />
+        <button class="btn" type="submit">전송하기</button>
+      </form>
+      <div style="margin-top: 16px">
+        <a class="btn" href="index.html">홈으로</a>
+      </div>
+    </div>
+  </body>
+</html>
+

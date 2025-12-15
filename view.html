@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>기도제목 보기</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module">
+      import { findMyLatest, pickRandom } from "./firebase.js";
+
+      const myEl = document.getElementById("my");
+      const randomEl = document.getElementById("random");
+
+      function render(target, title, data, emptyText) {
+        target.innerHTML = "";
+        const box = document.createElement("div");
+        box.className = "card";
+        if (!data) {
+          box.innerHTML = `<strong>${title}</strong><div class="small">${emptyText}</div>`;
+        } else {
+          box.innerHTML = `
+            <strong>${title}</strong>
+            <div style="margin-top: 8px;">${data.content}</div>
+            <div class="small">- ${data.author || "익명"}</div>
+          `;
+        }
+        target.appendChild(box);
+      }
+
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const [mine, rand] = await Promise.all([findMyLatest(), pickRandom()]);
+          render(myEl, "내가 작성한 기도제목", mine, "작성한 기도제목이 없습니다.");
+          render(randomEl, "랜덤 기도제목", rand, "아직 기도제목이 없습니다.");
+        } catch (e) {
+          console.error(e);
+          alert("불러오기 실패");
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="main" style="max-width: 720px">
+      <h2>기도제목 보기</h2>
+      <div id="my"></div>
+      <div style="height: 12px"></div>
+      <div id="random"></div>
+      <div style="margin-top: 16px">
+        <a class="btn" href="index.html">홈으로</a>
+        <a class="btn" href="write.html">새로 작성</a>
+        <a class="btn" href="tree.html">트리 보기</a>
+      </div>
+    </div>
+  </body>
+</html>
+
