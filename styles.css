@@ -55,12 +55,89 @@ body::before {
 }
 
 .main {
-  max-width: 960px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
   text-align: center;
   position: relative;
   z-index: 2;
+}
+
+/* 히어로 섹션 - 통합 레이아웃 */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, 
+    rgba(255, 250, 240, 0.08) 0%, 
+    rgba(255, 248, 235, 0.12) 50%,
+    rgba(250, 245, 235, 0.08) 100%);
+  border: 3px solid rgba(189, 165, 104, 0.3);
+  border-radius: 32px;
+  padding: 48px 32px;
+  margin: 20px auto;
+  backdrop-filter: blur(20px);
+  box-shadow: 
+    0 20px 60px rgba(25, 51, 15, 0.3),
+    0 8px 24px rgba(189, 165, 104, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+/* 히어로 섹션 배경 장식 */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center,
+    rgba(189, 165, 104, 0.1) 0%,
+    transparent 50%);
+  animation: rotate 30s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 히어로 섹션 코너 장식 */
+.hero-section::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid rgba(189, 165, 104, 0.2);
+  border-radius: 28px;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  margin: 16px 0 32px;
+  color: #e0e7ff;
+  opacity: 0.95;
+}
+
+.hero-tree {
+  margin: 32px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 40px;
 }
 
 h1, h2 {
@@ -82,19 +159,31 @@ p {
 }
 
 .btn {
-  display: inline-block;
-  margin: 8px;
-  padding: 14px 28px;
-  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  padding: 16px 32px;
+  border-radius: 20px;
   border: 2px solid transparent;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.2));
-  color: #e0f2fe;
   text-decoration: none;
   font-weight: 600;
+  font-size: 16px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);
+  min-width: 200px;
+  justify-content: center;
+}
+
+.btn-icon {
+  font-size: 24px;
+  transition: transform 0.3s ease;
+}
+
+.btn-text {
+  position: relative;
+  z-index: 1;
 }
 
 .btn::before {
@@ -104,19 +193,89 @@ p {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
 }
 
 .btn:hover::before {
   left: 100%;
 }
 
+.btn:hover .btn-icon {
+  transform: scale(1.2) rotate(5deg);
+}
+
 .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+  transform: translateY(-4px);
+}
+
+/* Primary Button - 기도제목 적기 */
+.btn-primary {
+  background: linear-gradient(135deg, 
+    rgba(189, 165, 104, 0.3) 0%,
+    rgba(212, 200, 150, 0.4) 100%);
+  border-color: rgba(189, 165, 104, 0.5);
+  color: #fff4e6;
+  box-shadow: 
+    0 6px 20px rgba(189, 165, 104, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, 
+    rgba(189, 165, 104, 0.5) 0%,
+    rgba(212, 200, 150, 0.6) 100%);
+  border-color: rgba(189, 165, 104, 0.8);
+  box-shadow: 
+    0 10px 30px rgba(189, 165, 104, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 40px rgba(189, 165, 104, 0.3);
+}
+
+/* Secondary Button - 기도제목 보기 */
+.btn-secondary {
+  background: linear-gradient(135deg, 
+    rgba(45, 95, 27, 0.3) 0%,
+    rgba(93, 150, 71, 0.4) 100%);
+  border-color: rgba(45, 95, 27, 0.5);
+  color: #e0f9e0;
+  box-shadow: 
+    0 6px 20px rgba(45, 95, 27, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, 
+    rgba(45, 95, 27, 0.5) 0%,
+    rgba(93, 150, 71, 0.6) 100%);
+  border-color: rgba(93, 150, 71, 0.8);
+  box-shadow: 
+    0 10px 30px rgba(45, 95, 27, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 40px rgba(93, 150, 71, 0.3);
+}
+
+/* Accent Button - 트리에서 보기 */
+.btn-accent {
+  background: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.3) 0%,
+    rgba(59, 130, 246, 0.4) 100%);
   border-color: rgba(16, 185, 129, 0.5);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.3));
+  color: #e0f2fe;
+  box-shadow: 
+    0 6px 20px rgba(16, 185, 129, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-accent:hover {
+  background: linear-gradient(135deg, 
+    rgba(16, 185, 129, 0.5) 0%,
+    rgba(59, 130, 246, 0.6) 100%);
+  border-color: rgba(16, 185, 129, 0.8);
+  box-shadow: 
+    0 10px 30px rgba(16, 185, 129, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 0 40px rgba(16, 185, 129, 0.3);
 }
 
 .card {
@@ -503,10 +662,27 @@ strong {
     font-size: 15px;
   }
 
+  .hero-section {
+    padding: 36px 24px;
+    border-radius: 24px;
+  }
+
+  .hero-tree {
+    min-height: 350px;
+  }
+
+  .hero-buttons {
+    gap: 12px;
+  }
+
   .btn {
-    padding: 12px 20px;
-    font-size: 14px;
-    margin: 6px;
+    padding: 14px 24px;
+    font-size: 15px;
+    min-width: 180px;
+  }
+
+  .btn-icon {
+    font-size: 22px;
   }
 
   .tree-stage {
@@ -558,13 +734,37 @@ strong {
     line-height: 1.5;
   }
 
+  .hero-section {
+    padding: 28px 20px;
+    border-radius: 20px;
+    margin: 12px auto;
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+    margin: 12px 0 24px;
+  }
+
+  .hero-tree {
+    min-height: 300px;
+    margin: 24px auto;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
   .btn {
-    display: inline-block;
-    width: calc(50% - 12px);
-    margin: 6px;
-    padding: 12px 16px;
-    font-size: 14px;
-    box-sizing: border-box;
+    width: 100%;
+    padding: 16px 24px;
+    font-size: 15px;
+    min-width: unset;
+  }
+
+  .btn-icon {
+    font-size: 20px;
   }
 
   button.btn {
@@ -656,11 +856,29 @@ strong {
     font-size: 13px;
   }
 
+  .hero-section {
+    padding: 24px 16px;
+    border-radius: 16px;
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+  }
+
+  .hero-tree {
+    min-height: 280px;
+    margin: 20px auto;
+  }
+
   .btn {
     width: 100%;
-    margin: 6px 0;
-    padding: 14px;
-    font-size: 15px;
+    padding: 16px;
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .btn-icon {
+    font-size: 18px;
   }
 
   .tree-stage {
