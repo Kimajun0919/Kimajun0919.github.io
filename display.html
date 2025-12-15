@@ -35,12 +35,19 @@
         margin: 0;
         padding: 0;
         letter-spacing: 2px;
+        background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
       }
 
       .display-header p {
         font-size: 1.8rem;
         margin: 16px 0 0 0;
+        color: #e0f2fe;
         opacity: 0.9;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
       }
 
       .display-tree-stage {
@@ -85,20 +92,19 @@
         position: absolute;
         width: 240px;
         background: linear-gradient(135deg, 
-          rgba(255, 250, 240, 0.96) 0%, 
-          rgba(255, 248, 235, 0.98) 50%,
-          rgba(250, 245, 235, 0.96) 100%);
-        border: 3px solid #BDA568;
+          rgba(255, 255, 255, 0.12) 0%, 
+          rgba(255, 255, 255, 0.08) 50%,
+          rgba(255, 255, 255, 0.10) 100%);
+        border: 2px solid rgba(189, 165, 104, 0.4);
         border-radius: 20px;
         padding: 28px;
         padding-top: 32px;
-        color: #19330F;
-        backdrop-filter: blur(16px) saturate(180%);
+        color: #f0f9ff;
+        backdrop-filter: blur(20px) saturate(150%);
         box-shadow: 
-          0 16px 56px rgba(25, 51, 15, 0.4),
-          0 6px 24px rgba(189, 165, 104, 0.3),
-          inset 0 2px 0 rgba(255, 255, 255, 0.9),
-          inset 0 -1px 0 rgba(189, 165, 104, 0.3);
+          0 16px 56px rgba(0, 0, 0, 0.4),
+          0 6px 24px rgba(189, 165, 104, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
         transform: rotate(calc(-8deg + 16deg * var(--r)));
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         animation: floatIn 1.2s ease-out backwards;
@@ -127,35 +133,32 @@
         height: 1px;
         background: linear-gradient(90deg, 
           transparent,
-          #BDA568 20%,
-          #BDA568 80%,
+          rgba(189, 165, 104, 0.5) 20%,
+          rgba(189, 165, 104, 0.5) 80%,
           transparent);
-        opacity: 0.5;
       }
 
       .display-note::after {
         content: '';
         position: absolute;
-        top: -3px;
-        left: -3px;
-        right: -3px;
-        bottom: -3px;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
         background: linear-gradient(135deg, 
-          #BDA568 0%,
-          #d4c896 25%,
-          #BDA568 50%,
-          #a89158 75%,
-          #BDA568 100%);
+          rgba(189, 165, 104, 0.3) 0%,
+          rgba(212, 200, 150, 0.2) 50%,
+          rgba(189, 165, 104, 0.3) 100%);
         border-radius: 20px;
         z-index: -1;
-        opacity: 0.4;
+        opacity: 0.5;
       }
 
       .display-note-content {
         font-size: 18px;
         line-height: 1.7;
-        color: #19330F;
-        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+        color: #f0f9ff;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         font-weight: 500;
         margin-bottom: 16px;
         margin-top: 4px;
@@ -163,9 +166,9 @@
 
       .display-note-author {
         font-size: 15px;
-        color: #2D5F1B;
+        color: #cbd5e1;
         font-style: italic;
-        opacity: 0.85;
+        opacity: 0.9;
         text-align: right;
         font-weight: 600;
       }
@@ -271,6 +274,7 @@
 
         .display-header h1 {
           font-size: 2rem;
+          letter-spacing: 1px;
         }
 
         .display-header p {
@@ -284,11 +288,13 @@
         .display-note {
           width: 160px;
           padding: 16px;
+          padding-top: 20px;
           border-radius: 16px;
         }
 
         .display-note-content {
           font-size: 14px;
+          line-height: 1.5;
           margin-bottom: 12px;
         }
 
