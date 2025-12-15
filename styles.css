@@ -390,6 +390,7 @@ p {
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  z-index: 5;
 }
 
 /* SVG 트리 컨테이너 */
@@ -400,6 +401,7 @@ p {
   filter: drop-shadow(0 20px 60px rgba(16, 185, 129, 0.4)) 
           drop-shadow(0 0 40px rgba(255, 215, 0, 0.2));
   animation: treeGlow 3s ease-in-out infinite;
+  z-index: 10;
 }
 
 @keyframes treeGlow {
@@ -474,45 +476,65 @@ p {
 .note {
   position: absolute;
   width: 180px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.12) 0%, 
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.10) 100%);
+  border: 2px solid rgba(189, 165, 104, 0.4);
   transform: rotate(calc(-6deg + 12deg * var(--r)));
   box-shadow: 
-    0 12px 40px rgba(25, 51, 15, 0.35),
-    0 4px 16px rgba(189, 165, 104, 0.25),
-    inset 0 2px 0 rgba(255, 255, 255, 0.8),
-    inset 0 -1px 0 rgba(189, 165, 104, 0.3);
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 4px 16px rgba(189, 165, 104, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeInUp 0.8s ease-out backwards;
   animation-delay: calc(var(--r) * 0.5s);
   cursor: pointer;
   padding-top: 24px;
+  backdrop-filter: blur(16px) saturate(150%);
+  z-index: 20;
+}
+
+.note::before {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent,
+    rgba(189, 165, 104, 0.5) 20%,
+    rgba(189, 165, 104, 0.5) 80%,
+    transparent);
 }
 
 .note:hover {
   transform: rotate(0deg) scale(1.08) translateY(-8px);
   box-shadow: 
-    0 20px 60px rgba(25, 51, 15, 0.45),
+    0 20px 60px rgba(0, 0, 0, 0.5),
     0 8px 32px rgba(189, 165, 104, 0.4),
-    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
     0 0 30px rgba(189, 165, 104, 0.5);
-  border-color: #BDA568;
+  border-color: rgba(189, 165, 104, 0.6);
   z-index: 100;
 }
 
 .note div:first-child {
   font-size: 14px;
   line-height: 1.6;
-  color: #19330F;
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+  color: #f0f9ff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   font-weight: 500;
   margin-top: 4px;
 }
 
 .small {
   font-size: 11px;
-  color: #2D5F1B;
+  color: #cbd5e1;
   margin-top: 12px;
   font-style: italic;
-  opacity: 0.8;
+  opacity: 0.9;
   text-align: right;
   font-weight: 600;
 }
@@ -696,14 +718,17 @@ strong {
   .note {
     width: 160px;
     padding: 14px;
+    padding-top: 20px;
   }
 
   .note div:first-child {
     font-size: 13px;
+    line-height: 1.5;
   }
 
   .small {
     font-size: 11px;
+    margin-top: 10px;
   }
 }
 
@@ -790,6 +815,7 @@ strong {
   .note {
     width: 140px;
     padding: 12px;
+    padding-top: 18px;
     border-radius: 12px;
   }
 
@@ -893,10 +919,12 @@ strong {
   .note {
     width: 120px;
     padding: 10px;
+    padding-top: 16px;
   }
 
   .note div:first-child {
     font-size: 11px;
+    line-height: 1.4;
   }
 
   .small {

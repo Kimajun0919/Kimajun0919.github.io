@@ -11,25 +11,42 @@
       function placeNotes(container, items) {
         const { width, height } = container.getBoundingClientRect();
         const placed = [];
+        const centerX = width / 2;
+        const centerY = height / 2;
 
         // 반응형: 화면 크기에 따라 카드 크기 조정
         let w = 180;
         let h = 120;
         let maxLength = 80;
+        let treeWidth = 300;
+        let treeHeight = 500;
         
         if (window.innerWidth <= 480) {
           w = 120;
           h = 100;
           maxLength = 50;
+          treeWidth = 180;
+          treeHeight = 350;
         } else if (window.innerWidth <= 768) {
           w = 140;
           h = 110;
           maxLength = 60;
+          treeWidth = 220;
+          treeHeight = 400;
         } else if (window.innerWidth <= 1024) {
           w = 160;
           h = 115;
           maxLength = 70;
+          treeWidth = 260;
+          treeHeight = 450;
         }
+
+        // 트리 중심 영역 제외 (타원형)
+        const isInTree = (x, y) => {
+          const dx = (x + w/2 - centerX) / (treeWidth / 2);
+          const dy = (y + h/2 - centerY) / (treeHeight / 2);
+          return (dx * dx + dy * dy) < 1;
+        };
 
         const isOverlap = (a, b) =>
           !(
@@ -54,16 +71,19 @@
           `;
 
           let tries = 0;
-          while (tries < 80) {
+          let placed_flag = false;
+          while (tries < 150 && !placed_flag) {
             const x = Math.random() * (width - w);
             const y = Math.random() * (height - h);
             const box = { x, y, w, h };
-            if (!placed.some((p) => isOverlap(p, box))) {
+            
+            // 트리 영역을 피하고, 다른 카드와 겹치지 않는 경우에만 배치
+            if (!isInTree(x, y) && !placed.some((p) => isOverlap(p, box))) {
               placed.push(box);
               note.style.left = `${x}px`;
               note.style.top = `${y}px`;
               container.appendChild(note);
-              break;
+              placed_flag = true;
             }
             tries++;
           }

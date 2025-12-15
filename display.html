@@ -57,6 +57,69 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: hidden;
+      }
+
+      /* 눈 내리는 효과 */
+      @keyframes snowfall {
+        0% {
+          transform: translateY(-10px) translateX(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) translateX(50px);
+          opacity: 0.3;
+        }
+      }
+
+      .display-tree-stage::before,
+      .display-tree-stage::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        width: 4px;
+        height: 4px;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 
+          50px 20px 0 -1px white,
+          100px 60px 0 -1px white,
+          150px 30px 0 -1px white,
+          200px 80px 0 -1px white,
+          250px 50px 0 -1px white,
+          300px 90px 0 -1px white,
+          350px 40px 0 -1px white,
+          400px 70px 0 -1px white,
+          450px 100px 0 -1px white,
+          500px 60px 0 -1px white,
+          550px 30px 0 -1px white,
+          600px 80px 0 -1px white,
+          650px 50px 0 -1px white,
+          700px 90px 0 -1px white,
+          750px 40px 0 -1px white,
+          800px 70px 0 -1px white,
+          850px 20px 0 -1px white,
+          900px 60px 0 -1px white,
+          950px 100px 0 -1px white,
+          1000px 50px 0 -1px white,
+          1050px 80px 0 -1px white,
+          1100px 30px 0 -1px white,
+          1150px 70px 0 -1px white,
+          1200px 90px 0 -1px white,
+          1250px 40px 0 -1px white,
+          1300px 60px 0 -1px white,
+          1350px 100px 0 -1px white,
+          1400px 50px 0 -1px white,
+          1450px 80px 0 -1px white,
+          1500px 30px 0 -1px white;
+        animation: snowfall 10s linear infinite;
+        pointer-events: none;
+        z-index: 50;
+      }
+
+      .display-tree-stage::after {
+        animation-delay: 5s;
+        animation-duration: 12s;
       }
 
       .display-tree-container {
@@ -109,8 +172,8 @@
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         animation: floatIn 1.2s ease-out backwards;
         animation-delay: calc(var(--r) * 0.8s);
-        position: relative;
         overflow: visible;
+        z-index: 20;
       }
 
       @keyframes floatIn {
