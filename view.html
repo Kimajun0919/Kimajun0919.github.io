@@ -31,7 +31,7 @@
         try {
           const [mine, rand] = await Promise.all([findMyLatest(), pickRandom()]);
           render(myEl, "내가 작성한 기도제목", mine, "작성한 기도제목이 없습니다.");
-          render(randomEl, "랜덤 기도제목", rand, "아직 기도제목이 없습니다.");
+          render(randomEl, "내가 기도할 기도제목", rand, "아직 기도제목이 없습니다.");
         } catch (e) {
           console.error(e);
           alert("불러오기 실패");
@@ -41,15 +41,24 @@
   </head>
   <body>
     <div class="main" style="max-width: 720px">
-      <h2>📖 기도제목 보기</h2>
+      <h2>기도제목 보기</h2>
       <p style="color: #e0e7ff; margin-bottom: 24px;">여러분의 기도제목을 확인하세요</p>
       <div id="my"></div>
       <div style="height: 20px"></div>
       <div id="random"></div>
-      <div style="margin-top: 24px">
-        <a class="btn" href="index.html">🏠 홈으로</a>
-        <a class="btn" href="write.html">✍️ 새로 작성</a>
-        <a class="btn" href="tree.html">🎄 트리 보기</a>
+      <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <a class="btn btn-secondary" href="index.html">
+          <span class="btn-icon">🏠</span>
+          <span class="btn-text">홈으로</span>
+        </a>
+        <a class="btn btn-primary" href="write.html">
+          <span class="btn-icon">✍️</span>
+          <span class="btn-text">새로 작성</span>
+        </a>
+        <a class="btn btn-accent" href="tree.html">
+          <span class="btn-icon">🎄</span>
+          <span class="btn-text">트리 보기</span>
+        </a>
       </div>
     </div>
   </body>

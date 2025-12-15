@@ -31,18 +31,27 @@
   </head>
   <body>
     <div class="main" style="max-width: 640px">
-      <h2>✍️ 기도제목 작성</h2>
+      <h2>기도제목 작성</h2>
       <p style="color: #e0e7ff; margin-bottom: 24px;">소중한 기도제목을 트리에 달아주세요</p>
       <form id="form">
-        <label style="display: block; margin-bottom: 8px; color: #e0e7ff; font-weight: 600;">기도제목 (필수)</label>
+        <label>기도제목 (필수)</label>
         <textarea name="content" rows="5" required placeholder="기도 제목을 남겨주세요..."></textarea>
-        <label style="display: block; margin-bottom: 8px; color: #e0e7ff; font-weight: 600;">작성자 (선택, 미입력 시 익명)</label>
+        <label>작성자 (선택, 미입력 시 익명)</label>
         <input name="author" placeholder="이름 또는 닉네임" />
-        <button class="btn" type="submit" style="width: 100%; margin-top: 8px; font-size: 16px;">🙏 전송하기</button>
+        <button class="btn btn-primary" type="submit" style="width: 100%; margin-top: 8px; font-size: 16px;">
+          <span class="btn-icon">🙏</span>
+          <span class="btn-text">전송하기</span>
+        </button>
       </form>
-      <div style="margin-top: 24px">
-        <a class="btn" href="index.html">🏠 홈으로</a>
-        <a class="btn" href="tree.html">🎄 트리 보기</a>
+      <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <a class="btn btn-secondary" href="index.html">
+          <span class="btn-icon">🏠</span>
+          <span class="btn-text">홈으로</span>
+        </a>
+        <a class="btn btn-accent" href="tree.html">
+          <span class="btn-icon">🎄</span>
+          <span class="btn-text">트리 보기</span>
+        </a>
       </div>
     </div>
   </body>
