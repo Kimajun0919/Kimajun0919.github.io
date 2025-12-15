@@ -1,0 +1,597 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>관리자 페이지 - 크리스마스 기도 트리</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      /* 관리자 페이지 전용 스타일 */
+      .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+
+      .admin-header {
+        text-align: center;
+        margin-bottom: 32px;
+      }
+
+      .admin-actions {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .admin-actions-left {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .admin-actions-right {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .prayer-table {
+        width: 100%;
+        background: linear-gradient(135deg, 
+          rgba(255, 250, 240, 0.95) 0%, 
+          rgba(255, 248, 235, 0.98) 100%);
+        border: 3px solid #BDA568;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 
+          0 12px 40px rgba(25, 51, 15, 0.3),
+          0 4px 16px rgba(189, 165, 104, 0.2);
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        color: #19330F;
+      }
+
+      th {
+        background: linear-gradient(135deg, #BDA568 0%, #d4c896 100%);
+        color: #fff;
+        padding: 16px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid #a89158;
+      }
+
+      th:first-child {
+        border-radius: 12px 0 0 0;
+        width: 40px;
+        text-align: center;
+      }
+
+      th:last-child {
+        border-radius: 0 12px 0 0;
+      }
+
+      td {
+        padding: 14px 16px;
+        border-bottom: 1px solid rgba(189, 165, 104, 0.2);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr:hover {
+        background: rgba(189, 165, 104, 0.1);
+      }
+
+      .checkbox-cell {
+        text-align: center;
+      }
+
+      .checkbox-cell input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        accent-color: #BDA568;
+      }
+
+      .content-cell {
+        max-width: 400px;
+        word-break: break-word;
+      }
+
+      .actions-cell {
+        white-space: nowrap;
+      }
+
+      .btn-small {
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 12px;
+        border: 2px solid;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        min-width: unset;
+      }
+
+      .btn-edit {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.3));
+        border-color: rgba(59, 130, 246, 0.5);
+        color: #1e40af;
+      }
+
+      .btn-edit:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.5));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      }
+
+      .btn-delete {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.3));
+        border-color: rgba(239, 68, 68, 0.5);
+        color: #991b1b;
+      }
+
+      .btn-delete:hover {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.4), rgba(220, 38, 38, 0.5));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.4));
+        border-color: rgba(239, 68, 68, 0.6);
+        color: #fff;
+      }
+
+      .btn-danger:hover {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.5), rgba(220, 38, 38, 0.6));
+        box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #2D5F1B;
+        font-size: 18px;
+      }
+
+      /* 모달 스타일 */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-content {
+        background: linear-gradient(135deg, 
+          rgba(255, 250, 240, 0.98) 0%, 
+          rgba(255, 248, 235, 0.98) 100%);
+        border: 3px solid #BDA568;
+        border-radius: 24px;
+        padding: 36px;
+        max-width: 600px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        position: relative;
+      }
+
+      .modal-header {
+        margin-bottom: 24px;
+      }
+
+      .modal-header h3 {
+        color: #BDA568;
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 32px;
+        cursor: pointer;
+        color: #2D5F1B;
+        line-height: 1;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+      }
+
+      .modal-close:hover {
+        color: #19330F;
+        transform: scale(1.1);
+      }
+
+      .modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+      }
+
+      .stats {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+      }
+
+      .stat-card {
+        flex: 1;
+        min-width: 150px;
+        background: linear-gradient(135deg, 
+          rgba(189, 165, 104, 0.2) 0%,
+          rgba(212, 200, 150, 0.3) 100%);
+        border: 2px solid rgba(189, 165, 104, 0.4);
+        border-radius: 16px;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #BDA568;
+        margin-bottom: 8px;
+      }
+
+      .stat-label {
+        font-size: 14px;
+        color: #2D5F1B;
+        font-weight: 600;
+      }
+
+      @media screen and (max-width: 768px) {
+        .admin-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .admin-actions-left,
+        .admin-actions-right {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .prayer-table {
+          padding: 16px;
+        }
+
+        table {
+          font-size: 14px;
+        }
+
+        th, td {
+          padding: 10px 8px;
+        }
+
+        .content-cell {
+          max-width: 200px;
+        }
+
+        .btn-small {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+
+        .modal-content {
+          padding: 24px;
+        }
+      }
+    </style>
+    <script type="module">
+      import { 
+        listPrayers, 
+        deletePrayer, 
+        updatePrayer, 
+        deleteMultiplePrayers,
+        deleteAllPrayers 
+      } from "./firebase.js";
+
+      let prayers = [];
+
+      // 기도제목 목록 로드
+      async function loadPrayers() {
+        try {
+          prayers = await listPrayers();
+          renderTable();
+          updateStats();
+        } catch (e) {
+          console.error(e);
+          alert("데이터를 불러오는데 실패했습니다.");
+        }
+      }
+
+      // 통계 업데이트
+      function updateStats() {
+        document.getElementById('totalCount').textContent = prayers.length;
+        const selected = document.querySelectorAll('.prayer-checkbox:checked').length;
+        document.getElementById('selectedCount').textContent = selected;
+      }
+
+      // 테이블 렌더링
+      function renderTable() {
+        const tbody = document.getElementById('prayersBody');
+        
+        if (prayers.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" class="empty-state">
+                📭 등록된 기도제목이 없습니다.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = prayers.map(prayer => `
+          <tr data-id="${prayer.id}">
+            <td class="checkbox-cell">
+              <input type="checkbox" class="prayer-checkbox" value="${prayer.id}">
+            </td>
+            <td class="content-cell">${escapeHtml(prayer.content)}</td>
+            <td>${escapeHtml(prayer.author || '익명')}</td>
+            <td>${new Date(prayer.createdAt).toLocaleString('ko-KR')}</td>
+            <td class="actions-cell">
+              <button class="btn-small btn-edit" onclick="window.editPrayer('${prayer.id}')">
+                ✏️ 수정
+              </button>
+              <button class="btn-small btn-delete" onclick="window.deleteSinglePrayer('${prayer.id}')">
+                🗑️ 삭제
+              </button>
+            </td>
+          </tr>
+        `).join('');
+
+        // 체크박스 이벤트
+        document.querySelectorAll('.prayer-checkbox').forEach(cb => {
+          cb.addEventListener('change', updateStats);
+        });
+      }
+
+      // HTML 이스케이프
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // 전체 선택/해제
+      window.toggleSelectAll = function() {
+        const checkboxes = document.querySelectorAll('.prayer-checkbox');
+        const selectAllBtn = document.getElementById('selectAllBtn');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+        
+        checkboxes.forEach(cb => {
+          cb.checked = !allChecked;
+        });
+        
+        selectAllBtn.textContent = allChecked ? '✅ 전체 선택' : '⬜ 전체 해제';
+        updateStats();
+      };
+
+      // 개별 삭제
+      window.deleteSinglePrayer = async function(id) {
+        if (!confirm('이 기도제목을 삭제하시겠습니까?')) return;
+        
+        try {
+          await deletePrayer(id);
+          await loadPrayers();
+          alert('삭제되었습니다.');
+        } catch (e) {
+          console.error(e);
+          alert('삭제 중 오류가 발생했습니다.');
+        }
+      };
+
+      // 선택 삭제
+      window.deleteSelected = async function() {
+        const selected = Array.from(document.querySelectorAll('.prayer-checkbox:checked'))
+          .map(cb => cb.value);
+        
+        if (selected.length === 0) {
+          alert('삭제할 항목을 선택해주세요.');
+          return;
+        }
+
+        if (!confirm(`선택한 ${selected.length}개의 기도제목을 삭제하시겠습니까?`)) return;
+
+        try {
+          await deleteMultiplePrayers(selected);
+          await loadPrayers();
+          alert('삭제되었습니다.');
+        } catch (e) {
+          console.error(e);
+          alert('삭제 중 오류가 발생했습니다.');
+        }
+      };
+
+      // 전체 삭제
+      window.deleteAll = async function() {
+        if (!confirm('⚠️ 모든 기도제목을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다.')) return;
+        if (!confirm('정말로 전체 삭제하시겠습니까?')) return;
+
+        try {
+          await deleteAllPrayers();
+          await loadPrayers();
+          alert('모든 기도제목이 삭제되었습니다.');
+        } catch (e) {
+          console.error(e);
+          alert('삭제 중 오류가 발생했습니다.');
+        }
+      };
+
+      // 수정 모달 열기
+      window.editPrayer = function(id) {
+        const prayer = prayers.find(p => p.id === id);
+        if (!prayer) return;
+
+        document.getElementById('editId').value = id;
+        document.getElementById('editContent').value = prayer.content;
+        document.getElementById('editAuthor').value = prayer.author;
+        document.getElementById('editModal').classList.add('show');
+      };
+
+      // 수정 모달 닫기
+      window.closeEditModal = function() {
+        document.getElementById('editModal').classList.remove('show');
+      };
+
+      // 수정 저장
+      window.saveEdit = async function() {
+        const id = document.getElementById('editId').value;
+        const content = document.getElementById('editContent').value.trim();
+        const author = document.getElementById('editAuthor').value.trim();
+
+        if (!content) {
+          alert('기도제목을 입력해주세요.');
+          return;
+        }
+
+        try {
+          await updatePrayer(id, { content, author });
+          await loadPrayers();
+          closeEditModal();
+          alert('수정되었습니다.');
+        } catch (e) {
+          console.error(e);
+          alert('수정 중 오류가 발생했습니다.');
+        }
+      };
+
+      // 새로고침
+      window.refreshList = function() {
+        loadPrayers();
+      };
+
+      // 초기 로드
+      window.addEventListener('DOMContentLoaded', loadPrayers);
+
+      // 모달 외부 클릭시 닫기
+      document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+          closeEditModal();
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div class="admin-container">
+      <div class="admin-header">
+        <h1>🔐 관리자 페이지</h1>
+        <p style="color: #e0e7ff; margin-top: 8px;">기도제목 관리</p>
+      </div>
+
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="totalCount">0</div>
+          <div class="stat-label">전체 기도제목</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="selectedCount">0</div>
+          <div class="stat-label">선택된 항목</div>
+        </div>
+      </div>
+
+      <div class="admin-actions">
+        <div class="admin-actions-left">
+          <button class="btn btn-secondary" id="selectAllBtn" onclick="toggleSelectAll()">
+            <span class="btn-icon">✅</span>
+            <span class="btn-text">전체 선택</span>
+          </button>
+          <button class="btn btn-primary" onclick="refreshList()">
+            <span class="btn-icon">🔄</span>
+            <span class="btn-text">새로고침</span>
+          </button>
+        </div>
+        <div class="admin-actions-right">
+          <button class="btn btn-danger" onclick="deleteSelected()">
+            <span class="btn-icon">🗑️</span>
+            <span class="btn-text">선택 삭제</span>
+          </button>
+          <button class="btn btn-danger" onclick="deleteAll()">
+            <span class="btn-icon">⚠️</span>
+            <span class="btn-text">전체 삭제</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="prayer-table">
+        <table>
+          <thead>
+            <tr>
+              <th>선택</th>
+              <th>기도제목</th>
+              <th>작성자</th>
+              <th>작성일시</th>
+              <th>관리</th>
+            </tr>
+          </thead>
+          <tbody id="prayersBody">
+            <tr>
+              <td colspan="5" class="empty-state">로딩 중...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="margin-top: 24px; text-align: center;">
+        <a class="btn btn-secondary" href="index.html">
+          <span class="btn-icon">🏠</span>
+          <span class="btn-text">홈으로</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 수정 모달 -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeEditModal()">×</button>
+        <div class="modal-header">
+          <h3>✏️ 기도제목 수정</h3>
+        </div>
+        <form id="editForm" onsubmit="event.preventDefault(); saveEdit();">
+          <input type="hidden" id="editId">
+          <label>기도제목</label>
+          <textarea id="editContent" rows="5" required placeholder="기도제목을 입력하세요"></textarea>
+          <label>작성자</label>
+          <input type="text" id="editAuthor" placeholder="작성자 이름">
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" onclick="closeEditModal()">
+              <span class="btn-text">취소</span>
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <span class="btn-icon">💾</span>
+              <span class="btn-text">저장</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+

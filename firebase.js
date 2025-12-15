@@ -5,6 +5,9 @@ import {
   push,
   get,
   child,
+  remove,
+  update,
+  set,
 } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
 // 기존 프로젝트 설정 반영
@@ -66,5 +69,36 @@ export async function pickRandom() {
   const all = await listPrayers();
   if (!all.length) return null;
   return all[Math.floor(Math.random() * all.length)];
+}
+
+// 관리자 기능: 개별 삭제
+export async function deletePrayer(id) {
+  const prayerRef = ref(db, `${PRAYERS_PATH}/${id}`);
+  await remove(prayerRef);
+}
+
+// 관리자 기능: 수정
+export async function updatePrayer(id, { content, author }) {
+  const prayerRef = ref(db, `${PRAYERS_PATH}/${id}`);
+  await update(prayerRef, {
+    content,
+    author: author?.trim() || "익명",
+    updatedAt: Date.now(),
+  });
+}
+
+// 관리자 기능: 여러 개 삭제
+export async function deleteMultiplePrayers(ids) {
+  const updates = {};
+  ids.forEach(id => {
+    updates[`${PRAYERS_PATH}/${id}`] = null;
+  });
+  await update(ref(db), updates);
+}
+
+// 관리자 기능: 전체 삭제
+export async function deleteAllPrayers() {
+  const prayersRef = ref(db, PRAYERS_PATH);
+  await remove(prayersRef);
 }
 
