@@ -85,21 +85,26 @@
         position: absolute;
         width: 240px;
         background: linear-gradient(135deg, 
-          rgba(255, 255, 255, 0.12) 0%, 
-          rgba(255, 255, 255, 0.06) 100%);
-        border: 2px solid rgba(255, 255, 255, 0.2);
+          rgba(255, 250, 240, 0.96) 0%, 
+          rgba(255, 248, 235, 0.98) 50%,
+          rgba(250, 245, 235, 0.96) 100%);
+        border: 3px solid #BDA568;
         border-radius: 20px;
-        padding: 24px;
-        color: #fff;
+        padding: 28px;
+        padding-top: 32px;
+        color: #19330F;
         backdrop-filter: blur(16px) saturate(180%);
         box-shadow: 
-          0 12px 48px rgba(0, 0, 0, 0.4),
-          0 0 30px rgba(16, 185, 129, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.25);
+          0 16px 56px rgba(25, 51, 15, 0.4),
+          0 6px 24px rgba(189, 165, 104, 0.3),
+          inset 0 2px 0 rgba(255, 255, 255, 0.9),
+          inset 0 -1px 0 rgba(189, 165, 104, 0.3);
         transform: rotate(calc(-8deg + 16deg * var(--r)));
         transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         animation: floatIn 1.2s ease-out backwards;
         animation-delay: calc(var(--r) * 0.8s);
+        position: relative;
+        overflow: visible;
       }
 
       @keyframes floatIn {
@@ -116,33 +121,53 @@
       .display-note::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
+        top: 16px;
+        left: 24px;
+        right: 24px;
+        height: 1px;
         background: linear-gradient(90deg, 
-          transparent, 
-          rgba(255, 215, 0, 0.6),
-          rgba(16, 185, 129, 0.6),
+          transparent,
+          #BDA568 20%,
+          #BDA568 80%,
           transparent);
-        border-radius: 20px 20px 0 0;
+        opacity: 0.5;
+      }
+
+      .display-note::after {
+        content: '';
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        background: linear-gradient(135deg, 
+          #BDA568 0%,
+          #d4c896 25%,
+          #BDA568 50%,
+          #a89158 75%,
+          #BDA568 100%);
+        border-radius: 20px;
+        z-index: -1;
+        opacity: 0.4;
       }
 
       .display-note-content {
         font-size: 18px;
-        line-height: 1.6;
-        color: #f0f9ff;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        line-height: 1.7;
+        color: #19330F;
+        text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
         font-weight: 500;
         margin-bottom: 16px;
+        margin-top: 4px;
       }
 
       .display-note-author {
-        font-size: 16px;
-        color: #cbd5e1;
+        font-size: 15px;
+        color: #2D5F1B;
         font-style: italic;
-        opacity: 0.9;
+        opacity: 0.85;
         text-align: right;
+        font-weight: 600;
       }
 
       .display-footer {

@@ -121,30 +121,92 @@ p {
 
 .card {
   background: linear-gradient(135deg, 
-    rgba(255, 255, 255, 0.1) 0%, 
-    rgba(255, 255, 255, 0.05) 100%);
-  border: 2px solid rgba(255, 255, 255, 0.18);
+    rgba(255, 250, 240, 0.95) 0%, 
+    rgba(255, 248, 235, 0.98) 50%,
+    rgba(250, 245, 235, 0.95) 100%);
+  border: 3px solid #BDA568;
   border-radius: 16px;
-  padding: 18px;
+  padding: 20px;
   max-width: 260px;
-  color: #fff;
+  color: #19330F;
   backdrop-filter: blur(12px) saturate(180%);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  box-shadow: 
+    0 8px 32px rgba(189, 165, 104, 0.3),
+    0 4px 16px rgba(45, 95, 27, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
+/* 카드 모서리 장식 */
 .card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, 
+    #BDA568 0%,
+    #d4c896 25%,
+    #BDA568 50%,
+    #a89158 75%,
+    #BDA568 100%);
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* 카드 상단 장식 라인 */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 20px;
+  right: 20px;
+  height: 1px;
   background: linear-gradient(90deg, 
-    transparent, 
-    rgba(255, 215, 0, 0.5),
-    rgba(16, 185, 129, 0.5),
+    transparent,
+    #BDA568 20%,
+    #BDA568 80%,
     transparent);
+  opacity: 0.5;
+}
+
+/* 카드 코너 장식 */
+.card .card-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #BDA568;
+}
+
+.card .card-corner.top-left {
+  top: 8px;
+  left: 8px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.card .card-corner.top-right {
+  top: 8px;
+  right: 8px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.card .card-corner.bottom-left {
+  bottom: 8px;
+  left: 8px;
+  border-right: none;
+  border-top: none;
+}
+
+.card .card-corner.bottom-right {
+  bottom: 8px;
+  right: 8px;
+  border-left: none;
+  border-top: none;
 }
 
 .tree-stage {
@@ -255,39 +317,45 @@ p {
   width: 180px;
   transform: rotate(calc(-6deg + 12deg * var(--r)));
   box-shadow: 
-    0 10px 40px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(16, 185, 129, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    0 12px 40px rgba(25, 51, 15, 0.35),
+    0 4px 16px rgba(189, 165, 104, 0.25),
+    inset 0 2px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(189, 165, 104, 0.3);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   animation: fadeInUp 0.8s ease-out backwards;
   animation-delay: calc(var(--r) * 0.5s);
   cursor: pointer;
+  padding-top: 24px;
 }
 
 .note:hover {
   transform: rotate(0deg) scale(1.08) translateY(-8px);
   box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 40px rgba(16, 185, 129, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  border-color: rgba(16, 185, 129, 0.6);
+    0 20px 60px rgba(25, 51, 15, 0.45),
+    0 8px 32px rgba(189, 165, 104, 0.4),
+    inset 0 2px 0 rgba(255, 255, 255, 0.9),
+    0 0 30px rgba(189, 165, 104, 0.5);
+  border-color: #BDA568;
   z-index: 100;
 }
 
 .note div:first-child {
   font-size: 14px;
-  line-height: 1.5;
-  color: #f0f9ff;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  line-height: 1.6;
+  color: #19330F;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   font-weight: 500;
+  margin-top: 4px;
 }
 
 .small {
-  font-size: 12px;
-  color: #cbd5e1;
-  margin-top: 10px;
+  font-size: 11px;
+  color: #2D5F1B;
+  margin-top: 12px;
   font-style: italic;
-  opacity: 0.85;
+  opacity: 0.8;
+  text-align: right;
+  font-weight: 600;
 }
 
 textarea,
@@ -296,25 +364,28 @@ input {
   padding: 14px 18px;
   margin: 8px 0 16px;
   border-radius: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.08);
-  color: #fff;
+  border: 2px solid #BDA568;
+  background: rgba(255, 255, 255, 0.9);
+  color: #19330F;
   font-size: 15px;
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  box-shadow: inset 0 2px 4px rgba(25, 51, 15, 0.1);
 }
 
 textarea:focus,
 input:focus {
   outline: none;
-  border-color: rgba(16, 185, 129, 0.5);
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  border-color: #2D5F1B;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    inset 0 2px 4px rgba(25, 51, 15, 0.1),
+    0 0 0 3px rgba(189, 165, 104, 0.3);
 }
 
 textarea::placeholder,
 input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(45, 95, 27, 0.5);
 }
 
 button.btn {
@@ -330,38 +401,84 @@ button.btn:active {
 label {
   text-align: left;
   font-size: 14px;
+  color: #2D5F1B;
+  font-weight: 600;
 }
 
 form {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, 
+    rgba(255, 250, 240, 0.92) 0%, 
+    rgba(255, 248, 235, 0.95) 100%);
+  border: 3px solid #BDA568;
   border-radius: 20px;
-  padding: 32px;
+  padding: 36px;
   backdrop-filter: blur(10px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 12px 40px rgba(25, 51, 15, 0.3),
+    0 4px 16px rgba(189, 165, 104, 0.2),
+    inset 0 2px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+}
+
+form::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(135deg, 
+    #BDA568 0%,
+    #d4c896 50%,
+    #BDA568 100%);
+  border-radius: 20px;
+  z-index: -1;
+  opacity: 0.3;
 }
 
 #my .card,
 #random .card {
   text-align: left;
   margin: 0 auto;
-  padding: 24px;
+  padding: 28px;
+  padding-top: 32px;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 12px 40px rgba(25, 51, 15, 0.3),
+    0 4px 16px rgba(189, 165, 104, 0.2);
+  position: relative;
+}
+
+#my .card::before,
+#random .card::before {
+  opacity: 0.3;
 }
 
 #my .card:hover,
 #random .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(16, 185, 129, 0.3);
-  border-color: rgba(16, 185, 129, 0.4);
+  transform: translateY(-6px);
+  box-shadow: 
+    0 16px 50px rgba(25, 51, 15, 0.4),
+    0 8px 24px rgba(189, 165, 104, 0.35),
+    0 0 30px rgba(189, 165, 104, 0.3);
+  border-color: #BDA568;
+}
+
+#my .card > div:first-child,
+#random .card > div:first-child {
+  color: #19330F;
+  line-height: 1.7;
+  margin-top: 8px;
 }
 
 strong {
   font-size: 18px;
-  color: #ffd700;
+  color: #BDA568;
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 /* ============================================
