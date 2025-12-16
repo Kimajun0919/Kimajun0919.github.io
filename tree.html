@@ -2,8 +2,13 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>기도 트리</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="description" content="크리스마스 트리에 달린 모든 기도제목을 확인하세요" />
+    <meta name="theme-color" content="#0a1628" />
+    <!-- 성능 최적화 -->
+    <link rel="preconnect" href="https://www.gstatic.com" />
+    <link rel="dns-prefetch" href="https://www.gstatic.com" />
+    <title>기도 트리 - 크리스마스 기도 트리</title>
     <link rel="stylesheet" href="styles.css" />
     <script type="module">
       import { listPrayers } from "./firebase.js";
@@ -90,15 +95,63 @@
         });
       }
 
-      window.addEventListener("DOMContentLoaded", async () => {
+      let currentPrayers = [];
+      
+      async function loadAndRenderPrayers() {
         const stage = document.querySelector(".tree-stage");
+        
+        // 로딩 표시
+        let loadingEl = stage.querySelector('.loading-message');
+        if (!loadingEl) {
+          loadingEl = document.createElement('div');
+          loadingEl.className = 'loading-message';
+          loadingEl.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #e0e7ff;
+            font-size: 1.2rem;
+            text-align: center;
+            z-index: 100;
+          `;
+          loadingEl.innerHTML = '<div class="loading-spinner" style="margin: 0 auto 16px;"></div>로딩 중...';
+          stage.appendChild(loadingEl);
+        }
+        
         try {
-          const prayers = await listPrayers();
-          placeNotes(stage, prayers);
+          currentPrayers = await listPrayers();
+          // 기존 노트 제거
+          document.querySelectorAll('.note').forEach(note => note.remove());
+          placeNotes(stage, currentPrayers);
+          
+          // 로딩 메시지 제거
+          if (loadingEl) {
+            loadingEl.style.opacity = '0';
+            setTimeout(() => loadingEl.remove(), 300);
+          }
         } catch (e) {
           console.error(e);
-          alert("불러오기에 실패했습니다.");
+          if (loadingEl) {
+            loadingEl.innerHTML = '⚠️ 불러오기에 실패했습니다.';
+            loadingEl.style.color = '#ef4444';
+          }
         }
+      }
+
+      window.addEventListener("DOMContentLoaded", loadAndRenderPrayers);
+
+      // 반응형: 화면 크기 변경 시 재배치
+      let resizeTimer;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (currentPrayers.length > 0) {
+            const stage = document.querySelector(".tree-stage");
+            document.querySelectorAll('.note').forEach(note => note.remove());
+            placeNotes(stage, currentPrayers);
+          }
+        }, 250); // 리사이즈 디바운싱
       });
     </script>
   </head>

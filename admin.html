@@ -2,7 +2,13 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="description" content="크리스마스 기도 트리 관리자 페이지" />
+    <meta name="theme-color" content="#0a1628" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- 성능 최적화 -->
+    <link rel="preconnect" href="https://www.gstatic.com" />
+    <link rel="dns-prefetch" href="https://www.gstatic.com" />
     <title>관리자 페이지 - 크리스마스 기도 트리</title>
     <link rel="stylesheet" href="styles.css" />
     <style>
@@ -265,41 +271,188 @@
         font-weight: 600;
       }
 
+      @media screen and (max-width: 1024px) {
+        .prayer-table {
+          padding: 20px;
+        }
+
+        table {
+          font-size: 15px;
+        }
+
+        .content-cell {
+          max-width: 300px;
+        }
+      }
+
       @media screen and (max-width: 768px) {
+        .admin-container {
+          padding: 16px;
+        }
+
+        .admin-header h1 {
+          font-size: 2rem;
+        }
+
         .admin-actions {
           flex-direction: column;
           align-items: stretch;
+          gap: 10px;
         }
 
         .admin-actions-left,
         .admin-actions-right {
           width: 100%;
           justify-content: center;
+          flex-wrap: nowrap;
         }
 
-        .prayer-table {
-          padding: 16px;
-        }
-
-        table {
+        .admin-actions .btn {
+          flex: 1;
+          min-width: 0;
+          padding: 12px 16px;
           font-size: 14px;
         }
 
+        .stats {
+          gap: 12px;
+        }
+
+        .stat-card {
+          min-width: 120px;
+          padding: 16px;
+        }
+
+        .stat-value {
+          font-size: 28px;
+        }
+
+        .stat-label {
+          font-size: 13px;
+        }
+
+        .prayer-table {
+          padding: 12px;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+          font-size: 13px;
+          min-width: 600px;
+        }
+
         th, td {
-          padding: 10px 8px;
+          padding: 8px 6px;
         }
 
         .content-cell {
-          max-width: 200px;
-        }
-
-        .btn-small {
-          padding: 6px 12px;
+          max-width: 180px;
           font-size: 12px;
         }
 
+        .btn-small {
+          padding: 6px 10px;
+          font-size: 11px;
+          border-radius: 8px;
+        }
+
         .modal-content {
-          padding: 24px;
+          padding: 24px 20px;
+          width: 95%;
+        }
+
+        .modal-header h3 {
+          font-size: 20px;
+        }
+      }
+
+      @media screen and (max-width: 480px) {
+        .admin-container {
+          padding: 12px;
+        }
+
+        .admin-header h1 {
+          font-size: 1.5rem;
+        }
+
+        .admin-header p {
+          font-size: 14px;
+        }
+
+        .admin-actions .btn {
+          padding: 10px 12px;
+          font-size: 13px;
+        }
+
+        .btn-icon {
+          font-size: 16px;
+        }
+
+        .stats {
+          flex-direction: column;
+        }
+
+        .stat-card {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .prayer-table {
+          padding: 8px;
+        }
+
+        table {
+          font-size: 12px;
+        }
+
+        th, td {
+          padding: 6px 4px;
+        }
+
+        .content-cell {
+          max-width: 140px;
+          font-size: 11px;
+        }
+
+        .actions-cell {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          white-space: normal;
+        }
+
+        .actions-cell .btn-small {
+          padding: 5px 8px;
+          font-size: 10px;
+          width: 100%;
+          white-space: nowrap;
+        }
+
+        /* 테이블 가로 스크롤 힌트 */
+        .prayer-table::after {
+          content: '← 옆으로 스크롤 →';
+          display: block;
+          text-align: center;
+          color: rgba(45, 95, 27, 0.6);
+          font-size: 11px;
+          margin-top: 8px;
+          font-style: italic;
+        }
+
+        .modal-content {
+          padding: 20px 16px;
+        }
+
+        .modal-header h3 {
+          font-size: 18px;
+          padding-right: 32px;
+        }
+
+        .modal-close {
+          top: 16px;
+          right: 16px;
+          font-size: 28px;
         }
       }
     </style>

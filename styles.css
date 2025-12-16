@@ -1,4 +1,25 @@
-* { box-sizing: border-box; }
+* { 
+  box-sizing: border-box;
+  /* 성능 최적화 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 스크롤 성능 최적화 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 하드웨어 가속 최적화 */
+.btn,
+.card,
+.note,
+.tree-container {
+  will-change: transform;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
 
 @keyframes starTwinkle {
   0%, 100% { opacity: 0.3; transform: scale(1); }
@@ -419,6 +440,31 @@ p {
   width: 100%;
   height: auto;
   display: block;
+  /* SVG 렌더링 최적화 */
+  shape-rendering: geometricPrecision;
+  text-rendering: optimizeLegibility;
+}
+
+/* 이미지 로딩 최적화 */
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 포커스 접근성 개선 */
+*:focus {
+  outline: 2px solid rgba(189, 165, 104, 0.6);
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid rgba(189, 165, 104, 0.8);
+  outline-offset: 2px;
 }
 
 
@@ -666,6 +712,30 @@ strong {
    반응형 미디어 쿼리
    ============================================ */
 
+/* 큰 데스크톱 (1440px 이상) */
+@media screen and (min-width: 1440px) {
+  .main {
+    max-width: 1400px;
+    padding: 32px;
+  }
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  h2 {
+    font-size: 3rem;
+  }
+
+  .hero-section {
+    padding: 64px 48px;
+  }
+
+  .tree-container {
+    width: 600px;
+  }
+}
+
 /* 태블릿 (768px ~ 1024px) */
 @media screen and (max-width: 1024px) {
   .main {
@@ -709,6 +779,7 @@ strong {
 
   .tree-stage {
     height: 70vh;
+    min-height: 500px;
   }
 
   .tree-container {
@@ -736,6 +807,8 @@ strong {
 @media screen and (max-width: 768px) {
   body {
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .main {
@@ -747,22 +820,26 @@ strong {
     font-size: 2rem;
     letter-spacing: 0;
     line-height: 1.2;
+    word-break: keep-all;
   }
 
   h2 {
     font-size: 1.75rem;
     letter-spacing: 0;
+    word-break: keep-all;
   }
 
   p {
     font-size: 14px;
     line-height: 1.5;
+    word-break: keep-all;
   }
 
   .hero-section {
     padding: 28px 20px;
     border-radius: 20px;
     margin: 12px auto;
+    border-width: 2px;
   }
 
   .hero-subtitle {
@@ -786,6 +863,14 @@ strong {
     padding: 16px 24px;
     font-size: 15px;
     min-width: unset;
+    border-radius: 16px;
+    /* 터치 최적화 */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .btn:active {
+    transform: scale(0.98);
   }
 
   .btn-icon {
@@ -817,11 +902,14 @@ strong {
     padding: 12px;
     padding-top: 18px;
     border-radius: 12px;
+    /* 터치 최적화 */
+    -webkit-tap-highlight-color: transparent;
   }
 
   .note div:first-child {
     font-size: 12px;
     line-height: 1.4;
+    word-break: keep-all;
   }
 
   .small {
@@ -833,25 +921,43 @@ strong {
     padding: 16px;
     border-radius: 12px;
     max-width: 100%;
+    border-width: 2px;
   }
 
   form {
     padding: 20px;
     border-radius: 16px;
+    border-width: 2px;
   }
 
   textarea {
     font-size: 14px;
     padding: 12px;
+    min-height: 120px;
+    resize: vertical;
+    /* 모바일 입력 최적화 */
+    -webkit-appearance: none;
+    appearance: none;
   }
 
   input {
     font-size: 14px;
     padding: 12px;
+    /* 모바일 입력 최적화 */
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* iOS에서 입력 필드 확대 방지 */
+  input[type="text"],
+  textarea {
+    font-size: 16px;
   }
 
   label {
     font-size: 13px;
+    display: block;
+    margin-bottom: 8px;
   }
 
   strong {
@@ -861,6 +967,34 @@ strong {
   #my .card,
   #random .card {
     padding: 18px;
+  }
+
+  /* 터치 디바이스 최적화 */
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 모바일에서 hover 효과 비활성화 (터치 디바이스) */
+  @media (hover: none) and (pointer: coarse) {
+    .btn:hover {
+      transform: none;
+    }
+
+    .btn:hover::before {
+      left: -100%;
+    }
+
+    .card:hover {
+      transform: none;
+    }
+
+    .note:hover {
+      transform: rotate(calc(-6deg + 12deg * var(--r)));
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 4px 16px rgba(189, 165, 104, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
   }
 }
 
@@ -872,10 +1006,12 @@ strong {
 
   h1 {
     font-size: 1.5rem;
+    margin-bottom: 12px;
   }
 
   h2 {
     font-size: 1.5rem;
+    margin-bottom: 12px;
   }
 
   p {
@@ -889,6 +1025,7 @@ strong {
 
   .hero-subtitle {
     font-size: 14px;
+    margin: 8px 0 20px;
   }
 
   .hero-tree {
@@ -896,11 +1033,17 @@ strong {
     margin: 20px auto;
   }
 
+  .hero-buttons {
+    gap: 10px;
+    margin-top: 24px;
+  }
+
   .btn {
     width: 100%;
-    padding: 16px;
+    padding: 14px 16px;
     font-size: 14px;
     gap: 8px;
+    border-radius: 14px;
   }
 
   .btn-icon {
@@ -910,16 +1053,19 @@ strong {
   .tree-stage {
     height: 50vh;
     min-height: 350px;
+    border-radius: 12px;
   }
 
   .tree-container {
     width: 240px;
+    max-width: 85vw;
   }
 
   .note {
     width: 120px;
     padding: 10px;
     padding-top: 16px;
+    border-radius: 10px;
   }
 
   .note div:first-child {
@@ -929,21 +1075,87 @@ strong {
 
   .small {
     font-size: 9px;
+    margin-top: 6px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: 10px;
   }
 
   form {
     padding: 16px;
+    border-radius: 12px;
   }
 
   textarea {
-    font-size: 13px;
+    font-size: 16px; /* iOS 확대 방지 */
     padding: 10px;
-    min-height: 80px;
+    min-height: 100px;
+    border-radius: 10px;
   }
 
   input {
-    font-size: 13px;
+    font-size: 16px; /* iOS 확대 방지 */
     padding: 10px;
+    border-radius: 10px;
+  }
+
+  label {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  strong {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  #my .card,
+  #random .card {
+    padding: 16px;
+  }
+}
+
+/* 매우 작은 모바일 (최대 360px) */
+@media screen and (max-width: 360px) {
+  h1 {
+    font-size: 1.35rem;
+  }
+
+  h2 {
+    font-size: 1.35rem;
+  }
+
+  .hero-section {
+    padding: 20px 12px;
+  }
+
+  .hero-subtitle {
+    font-size: 13px;
+  }
+
+  .btn {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .tree-container {
+    width: 200px;
+  }
+
+  .note {
+    width: 110px;
+    padding: 8px;
+    padding-top: 14px;
+  }
+
+  .note div:first-child {
+    font-size: 10px;
+  }
+
+  form {
+    padding: 14px;
   }
 }
 
@@ -951,15 +1163,239 @@ strong {
 @media screen and (max-height: 600px) and (orientation: landscape) {
   .tree-stage {
     height: 75vh;
+    min-height: 300px;
   }
 
   h1, h2 {
     margin-top: 8px;
     margin-bottom: 8px;
+    font-size: 1.8rem;
   }
 
   .main {
     padding: 12px;
+  }
+
+  .hero-section {
+    padding: 20px 16px;
+  }
+
+  .hero-tree {
+    min-height: 200px;
+    margin: 16px auto;
+  }
+
+  .hero-buttons {
+    margin-top: 20px;
+  }
+
+  p {
+    font-size: 13px;
+  }
+}
+
+/* 가로 모드 - 작은 높이 */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  h1, h2 {
+    font-size: 1.5rem;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  .hero-section {
+    padding: 16px 12px;
+  }
+
+  .hero-tree {
+    min-height: 180px;
+    margin: 12px auto;
+  }
+
+  .tree-container {
+    width: 220px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+/* 다크모드 대응 (선택적) */
+@media (prefers-color-scheme: dark) {
+  /* 다크모드가 선호되는 경우 기본 스타일이 이미 다크하므로 추가 조정 없음 */
+}
+
+/* 고대비 모드 대응 */
+@media (prefers-contrast: high) {
+  .btn {
+    border-width: 3px;
+  }
+
+  .card,
+  form {
+    border-width: 3px;
+  }
+
+  .hero-section {
+    border-width: 4px;
+  }
+}
+
+/* 애니메이션 감소 선호 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .note {
+    animation: none !important;
+  }
+
+  body::before {
+    animation: none !important;
+  }
+
+  .tree-container {
+    animation: none !important;
+  }
+}
+
+/* 로딩 상태 스타일 */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 22, 40, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.loading-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(189, 165, 104, 0.2);
+  border-top-color: #BDA568;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 버튼 로딩 상태 */
+.btn.loading {
+  pointer-events: none;
+  opacity: 0.7;
+  position: relative;
+}
+
+.btn.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* 스켈레톤 로딩 */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(189, 165, 104, 0.1) 25%,
+    rgba(189, 165, 104, 0.2) 50%,
+    rgba(189, 165, 104, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* 인터넷 연결 상태 표시 */
+.offline-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(239, 68, 68, 0.95);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 10000;
+  display: none;
+  animation: slideUp 0.3s ease;
+}
+
+.offline-indicator.show {
+  display: block;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* 프린트 최적화 */
+@media print {
+  body::before,
+  .tree-stage::before,
+  .tree-stage::after {
+    display: none;
+  }
+
+  .btn,
+  button {
+    display: none;
+  }
+
+  .main {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .hero-section {
+    border: 1px solid #000;
+  }
+
+  @page {
+    margin: 2cm;
   }
 }
 

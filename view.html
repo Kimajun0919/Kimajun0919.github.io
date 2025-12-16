@@ -2,8 +2,13 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>기도제목 보기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+    <meta name="description" content="내 기도제목과 다른 사람의 기도제목을 확인하세요" />
+    <meta name="theme-color" content="#0a1628" />
+    <!-- 성능 최적화 -->
+    <link rel="preconnect" href="https://www.gstatic.com" />
+    <link rel="dns-prefetch" href="https://www.gstatic.com" />
+    <title>기도제목 보기 - 크리스마스 기도 트리</title>
     <link rel="stylesheet" href="styles.css" />
     <script type="module">
       import { findMyLatest, pickRandom } from "./firebase.js";
@@ -28,15 +33,43 @@
       }
 
       window.addEventListener("DOMContentLoaded", async () => {
+        // 로딩 스켈레톤 표시
+        myEl.innerHTML = '<div class="card skeleton" style="height: 150px;"></div>';
+        randomEl.innerHTML = '<div class="card skeleton" style="height: 150px;"></div>';
+        
         try {
           const [mine, rand] = await Promise.all([findMyLatest(), pickRandom()]);
           render(myEl, "내가 작성한 기도제목", mine, "작성한 기도제목이 없습니다.");
           render(randomEl, "내가 기도할 기도제목", rand, "아직 기도제목이 없습니다.");
         } catch (e) {
           console.error(e);
-          alert("불러오기 실패");
+          myEl.innerHTML = '<div class="card"><strong>오류</strong><div class="small">데이터를 불러올 수 없습니다.</div></div>';
+          randomEl.innerHTML = '<div class="card"><strong>오류</strong><div class="small">데이터를 불러올 수 없습니다.</div></div>';
         }
       });
+
+      // 연결 상태 모니터링
+      function updateOnlineStatus() {
+        const indicator = document.getElementById('offline-indicator');
+        if (!navigator.onLine) {
+          if (!indicator) {
+            const div = document.createElement('div');
+            div.id = 'offline-indicator';
+            div.className = 'offline-indicator show';
+            div.textContent = '⚠️ 인터넷 연결이 끊어졌습니다';
+            document.body.appendChild(div);
+          }
+        } else {
+          if (indicator) {
+            indicator.classList.remove('show');
+            setTimeout(() => indicator.remove(), 300);
+          }
+        }
+      }
+
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+      updateOnlineStatus();
     </script>
   </head>
   <body>
