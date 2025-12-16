@@ -9,9 +9,10 @@
     <link rel="preconnect" href="https://www.gstatic.com" />
     <link rel="dns-prefetch" href="https://www.gstatic.com" />
     <title>기도 트리 - 크리스마스 기도 트리</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <script type="module">
-      import { listPrayers } from "./firebase.js";
+      import { listPrayers } from "../js/firebase.js";
+      import { debounce } from "../js/utils.js";
 
       function placeNotes(container, items) {
         const { width, height } = container.getBoundingClientRect();
@@ -142,17 +143,14 @@
       window.addEventListener("DOMContentLoaded", loadAndRenderPrayers);
 
       // 반응형: 화면 크기 변경 시 재배치
-      let resizeTimer;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          if (currentPrayers.length > 0) {
-            const stage = document.querySelector(".tree-stage");
-            document.querySelectorAll('.note').forEach(note => note.remove());
-            placeNotes(stage, currentPrayers);
-          }
-        }, 250); // 리사이즈 디바운싱
-      });
+      const handleResize = debounce(() => {
+        if (currentPrayers.length > 0) {
+          const stage = document.querySelector(".tree-stage");
+          document.querySelectorAll('.note').forEach(note => note.remove());
+          placeNotes(stage, currentPrayers);
+        }
+      }, 250);
+      window.addEventListener("resize", handleResize);
     </script>
   </head>
   <body>
@@ -224,7 +222,7 @@
         </div>
       </div>
       <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
-        <a class="btn btn-secondary" href="index.html">
+        <a class="btn btn-secondary" href="../index.html">
           <span class="btn-icon">🏠</span>
           <span class="btn-text">홈으로</span>
         </a>

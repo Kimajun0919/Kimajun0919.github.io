@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://www.gstatic.com" />
     <link rel="dns-prefetch" href="https://www.gstatic.com" />
     <title>크리스마스 기도 트리 - 전시</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <style>
       /* 전시용 추가 스타일 */
       body {
@@ -542,7 +542,8 @@
       }
     </style>
     <script type="module">
-      import { listPrayers } from "./firebase.js";
+      import { listPrayers } from "../js/firebase.js";
+      import { debounce } from "../js/utils.js";
 
       function placeNotesDisplay(container, items) {
         const { width, height } = container.getBoundingClientRect();
@@ -676,13 +677,10 @@
       });
 
       // 반응형: 화면 크기 변경 시 재배치
-      let resizeTimer;
-      window.addEventListener("resize", () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          loadAndDisplay();
-        }, 300); // 리사이즈 디바운싱
-      });
+      const handleResize = debounce(() => {
+        loadAndDisplay();
+      }, 300);
+      window.addEventListener("resize", handleResize);
 
       // 풀스크린 토글 (F11 또는 'f' 키)
       document.addEventListener('keydown', (e) => {
